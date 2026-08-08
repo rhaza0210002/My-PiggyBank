@@ -75,7 +75,7 @@ export default function BilanBank() {
           href="/monthbudget"
           className="w-full max-w-[360px] rounded-[1.75rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-4 text-center text-[clamp(1.2rem,2vw,1.6rem)] font-black text-[#fff8f5] shadow-[0_6px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] hover:shadow-[0_4px_0_rgba(171,98,77,0.85)]"
         >
-          Voir le détail mensuel
+          Voir le détail Bilan mensuel
         </Link>
       </div>
 
@@ -129,7 +129,6 @@ export default function BilanBank() {
             </div>
           ))}
         </div>
-
         <div className="mt-6 rounded-[2rem] border-[3px] border-[#d7b59d] border-dashed bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)]">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[840px] border-collapse text-left">
