@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import Link from 'next/link';
 
 const MONTHS = [
   { label: 'Janvier', key: 'janvier' },
@@ -49,6 +50,11 @@ const chartPalette = ['#e7b5a5', '#f0d77c', '#86bcb1', '#d6a5e6', '#9ebf7f', '#f
 export default function BilanBank() {
   return (
     <div className="min-h-screen bg-[#ebcfc6] px-4 py-6 text-[#5b473d] sm:px-6 lg:px-10">
+      <div className="flex justify-center mb-5">
+        <Link className="w-90 rounded-[1.75rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-4 text-center text-[clamp(1.5rem,2vw,2.1rem)] font-black text-[#fff8f5] shadow-[0_6px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] hover:shadow-[0_4px_0_rgba(171,98,77,0.85)]" href="/monthbudget">
+          Voir le détail mensuel
+        </Link>
+      </div>
       <div className="mx-auto max-w-[1200px] rounded-[2.2rem] border-[3px] border-[#d8b6a5] bg-[#f2e6d8] p-4 shadow-[inset_0_0_0_3px_rgba(255,255,255,0.18)] sm:p-5">
 
         <div className="space-y-6">
@@ -154,11 +160,7 @@ export default function BilanBank() {
           </div>
         </div>
 
-        <div className="mt-6 flex justify-center">
-          <button className="w-full max-w-[560px] rounded-[1.75rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-4 text-center text-[clamp(1.5rem,2vw,2.1rem)] font-black text-[#fff8f5] shadow-[0_6px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] hover:shadow-[0_4px_0_rgba(171,98,77,0.85)]">
-            Voir le détail mensuel
-          </button>
-        </div>
+
       </div>
     </div>
   );
