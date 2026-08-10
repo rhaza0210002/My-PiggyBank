@@ -1,6 +1,6 @@
 "use client";
 
-import AsideCards, { Transaction } from "@/Components/Features/Homecards/AsideCards";
+import AsideCards, { Transaction } from "@/components/features/homecards/AsideCards";
 import styles from "@/app/dashboard/Dashboard.module.css";
 
 export default function DashboardPage() {
