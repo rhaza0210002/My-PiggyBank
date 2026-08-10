@@ -33,7 +33,7 @@ export default function Header({ userName = 'Mallaury' }: HeaderProps) {
         },
         {
             name: "Bilan",
-            href: "/budget",
+            href: "/budgetannual",
             icon: "📊",
             isActive: true,
             ariaLabel: "Accéder au bilan financier"
