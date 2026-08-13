@@ -45,9 +45,17 @@ export default function DashboardPage() {
   const handleViewAllHistory = () => {
     console.log("Affichage de l'historique complet");
   };
+  const user = localStorage.getItem('piggy_current_user');
+  const isAuthen = user ? JSON.parse(user) : console.log("Aucun utilisateur trouvé dans le localStorage");
 
   return (
     <section className="mt-5 mx-5 ${styles.dashboardPage}">
+        {isAuthen && (
+          <h1 className="text-[2.2rem] font-black tracking-[-0.05em] text-[#5d4d44] mb-6 font-sans">
+            Bienvenue <span className="text-[#a36351]">{isAuthen.pseudo}</span> !
+          </h1>
+        )}
+        {/* Le reste de ton code... */}
       <div className={styles.dashboardInner}>
         <div className="rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-4 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#c86445]">

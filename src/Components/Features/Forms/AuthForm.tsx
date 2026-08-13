@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import useLocalStorage from '@/hooks/useStorage';
 
 interface AuthFormData {
   email: string;
@@ -17,6 +18,9 @@ interface AuthFormProps {
 }
 
 export default function AuthForm({ mode, onSubmit, isLoading = false }: AuthFormProps) {
+  // Intégration du hook local storage (ajuste la clé selon ton besoin, ex: "piggy_user")
+  const [currentUser, setCurrentUser] = useLocalStorage<AuthFormData | null>('piggy_current_user', null);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -55,7 +59,18 @@ export default function AuthForm({ mode, onSubmit, isLoading = false }: AuthForm
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    onSubmit({ email: email.trim(), password, ...(isRegister ? { pseudo: pseudo.trim(), confirmPassword } : {}) });
+
+    const formData: AuthFormData = {
+      email: email.trim(),
+      password,
+      ...(isRegister ? { pseudo: pseudo.trim() } : { pseudo: email.split('@')[0] })
+    };
+
+    // Sauvegarde de l'utilisateur dans le localStorage pour y accéder partout
+    setCurrentUser(formData);
+
+    // Déclenchement de la fonction de soumission parente
+    onSubmit(formData);
   };
 
   return (
