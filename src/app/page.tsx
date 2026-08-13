@@ -1,14 +1,12 @@
-import Image from "next/image";
-import DashboardPage from "./dashboard/page";
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <>
-      <div className="flex items-center justify-center font-sans">
-        <main className="flex w-full items-center sm:items-start">
-          <DashboardPage />
-        </main>
-      </div>
-    </>
-  );
+  // TODO: Remplacer cette condition par la vraie vérification de session (ex: cookie, token, etc.)
+  const isAuthenticated = false;
+
+  if (isAuthenticated) {
+    redirect('/dashboard');
+  } else {
+    redirect('/login');
+  }
 }
