@@ -38,6 +38,13 @@ export default function Header({ userName = 'Mallaury' }: HeaderProps) {
             isActive: true,
             ariaLabel: "Accéder au bilan financier"
         },
+        {
+            name: "CSV",
+            href: "/csvUploader",
+            icon: "📂",
+            isActive: true,
+            ariaLabel: "Accéder à l'import de fichiers CSV"
+        },
 
     ];
 
