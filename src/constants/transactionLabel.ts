@@ -9,6 +9,7 @@ export const LIBELLETRANSACT = [
   { label: "pharmacie", key: "health", id_cat: "4" },
   { label: "caf", key: "salaires", id_cat: "5" },
   { label: "proxi", key: "alimentation", id_cat: "3" },
+  { label: "e.leclerc", key: "alimentation", id_cat: "3" },
   { label: "arhvi", key: "alimentation", id_cat: "3" },
   { label: "amazon", key: "ecommerce", id_cat: "7" },
   { label: "uber", key: "alimentation", id_cat: "3" },
@@ -17,6 +18,7 @@ export const LIBELLETRANSACT = [
   { label: "jazz", key: "bank", id_cat: "8" },
   { label: "sncf", key: "transport", id_cat: "9" },
   { label: "chantilly", key: "tabac", id_cat: "10" },
+  { label: "lpv", key: "tabac", id_cat: "10" },
   { label: "jean-claude", key: "loyer", id_cat: "11" },
 ] as const;
 
