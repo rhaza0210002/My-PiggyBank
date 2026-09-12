@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { startTransition, useState, useEffect } from 'react';
 import Link from 'next/link';
 import FormBilan from '@/components/features/forms/FormBilan';
 import BudgetTotalsSection from '@/components/features/tables/BudgetTableSection';
@@ -8,18 +8,27 @@ import { useBudget } from '@/hooks/useBudget';
 import { formatCurrency } from '@/utils/budgetCalculations';
 import { BUDGET_MODES, BudgetMode } from '@/constants/budgetTypes';
 import { TABLE_STYLES, MONTHS } from '@/constants/tableStyles';
+import { RowData } from '@/types/budget';
 
 // Fonction de gestion du switch pour adapter l'affichage des lignes selon le mode
-const handleBudgetDisplay = (groupRows: any[], mode: BudgetMode, monthIndex: number) => {
+interface DisplayRow {
+  category: string;
+  value: number | string;
+}
+
+const handleBudgetDisplay = (groupRows: RowData[], mode: BudgetMode, monthIndex: number): DisplayRow[] => {
   switch (mode) {
     case BUDGET_MODES.MENSUEL:
-      return (groupRows || []).map((row) => ({
+      return groupRows.map((row) => ({
         category: row.category,
         value: row?.values?.[monthIndex] !== undefined ? row.values[monthIndex] : '-',
       }));
 
     case BUDGET_MODES.ANNUEL:
-      return groupRows;
+      return groupRows.map((row) => ({
+        category: row.category,
+        value: row.values[monthIndex] !== undefined ? row.values[monthIndex] : '-',
+      }));
 
     default:
       throw new Error("Mode de budget inconnu");
@@ -37,7 +46,7 @@ export default function MonthBudgetPage() {
   useEffect(() => {
     const nowMonth = new Date().getMonth();
     if (nowMonth >= 0 && nowMonth < MONTHS.length) {
-      setCurrentMonthIndex(nowMonth);
+      startTransition(() => setCurrentMonthIndex(nowMonth));
     }
   }, []);
 
@@ -149,7 +158,7 @@ export default function MonthBudgetPage() {
                           </td>
                         </tr>
                       ) : (
-                        rowsForDisplay.map((item: any, index: number) => (
+                        rowsForDisplay.map((item, index) => (
                           <tr
                             key={`${group.key}-${item.category}-${index}`}
                             className={index % 2 === 0 ? TABLE_STYLES.rowEven : TABLE_STYLES.rowOdd}

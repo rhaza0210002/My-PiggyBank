@@ -43,7 +43,7 @@ const emptyDataGroups: DataGroup[] = [
 const chartPalette = ['#e7b5a5', '#f0d77c', '#86bcb1', '#d6a5e6', '#9ebf7f', '#f2c6a6'];
 
 export default function BilanBank() {
-  const [dataGroups, setDataGroups] = useState<DataGroup[]>(() => {
+  const [dataGroups] = useState<DataGroup[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('bilanAnnualData');
       return saved ? JSON.parse(saved) : emptyDataGroups;

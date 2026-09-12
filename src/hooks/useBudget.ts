@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { startTransition, useState, useEffect } from "react";
 import { DataGroup } from "@/types/budget";
 
 const initialData: DataGroup[] = [
@@ -27,12 +27,12 @@ export const useBudget = () => {
     const saved = localStorage.getItem("bilanAnnualData");
     if (saved) {
       try {
-        setDataGroups(JSON.parse(saved));
+        startTransition(() => setDataGroups(JSON.parse(saved)));
       } catch (e) {
         console.error("Erreur de parsing du localStorage", e);
       }
     }
-    setIsLoaded(true);
+    startTransition(() => setIsLoaded(true));
   }, []);
 
   useEffect(() => {
