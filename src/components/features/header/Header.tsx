@@ -45,6 +45,13 @@ export default function Header({ userName = 'Mallaury' }: HeaderProps) {
             isActive: true,
             ariaLabel: "Accéder à l'import de fichiers CSV"
         },
+        {
+            name: "Dépenses réelles",
+            href: "/depense-reelle",
+            icon: "🪙",
+            isActive: true,
+            ariaLabel: "Accéder aux dépenses réelles"
+        },
 
     ];
 
