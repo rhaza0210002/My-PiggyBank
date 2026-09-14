@@ -1,47 +1,51 @@
 "use client";
 
-import { startTransition, useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DataGroup } from "@/types/budget";
+import { getTransactCatGroupKeys } from "@/services/transactCatGroupKeyService";
 
-const initialData: DataGroup[] = [
-  {
-    title: "Décaissement services",
-    key: "decaissement",
-    rows: [],
-    accent: "bg-[#f0d8c8]",
-  },
-  {
-    title: "Réserve de frais",
-    key: "reserve",
-    rows: [],
-    accent: "bg-[#e5f0d9]",
-  },
-  { title: "Revenus", key: "revenus", rows: [], accent: "bg-[#dfeaf7]" },
-];
+const fallbackData: DataGroup[] = [];
 
 export const useBudget = () => {
-  const [dataGroups, setDataGroups] = useState<DataGroup[]>(initialData);
+  const [dataGroups, setDataGroups] = useState<DataGroup[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("bilanAnnualData");
-    if (saved) {
+    let isMounted = true;
+
+    const fetchGroups = async () => {
       try {
-        startTransition(() => setDataGroups(JSON.parse(saved)));
-      } catch (e) {
-        console.error("Erreur de parsing du localStorage", e);
+        const data = await getTransactCatGroupKeys();
+
+        if (!isMounted) return;
+
+        const mappedGroups: DataGroup[] = data.map((item) => ({
+          title: item.label,
+          key: item.key,
+          rows: [],
+          accent: "#e59a86",
+        }));
+
+        setDataGroups(mappedGroups);
+      } catch (error) {
+        console.error("Erreur récupération des groupes:", error);
+        if (isMounted) {
+          setDataGroups(fallbackData);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoaded(true);
+        }
       }
-    }
-    startTransition(() => setIsLoaded(true));
+    };
+
+    fetchGroups();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem("bilanAnnualData", JSON.stringify(dataGroups));
-    }
-  }, [dataGroups, isLoaded]);
-
-  // Fonction d'ajout ou de mise à jour unifiée intégrée au hook
   const updateRowValue = (
     groupKey: string,
     category: string,
@@ -65,6 +69,7 @@ export const useBudget = () => {
             while (newValues.length < 12) {
               newValues.push("-");
             }
+
             newValues[monthIndex] = parsedAmount;
             updatedRows[existingRowIndex] = {
               ...updatedRows[existingRowIndex],
@@ -72,16 +77,17 @@ export const useBudget = () => {
             };
 
             return { ...group, rows: updatedRows };
-          } else {
-            const defaultValues = Array(12).fill("-");
-            defaultValues[monthIndex] = parsedAmount;
-
-            return {
-              ...group,
-              rows: [...group.rows, { category, values: defaultValues }],
-            };
           }
+
+          const defaultValues = Array(12).fill("-");
+          defaultValues[monthIndex] = parsedAmount;
+
+          return {
+            ...group,
+            rows: [...group.rows, { category, values: defaultValues }],
+          };
         }
+
         return group;
       }),
     );

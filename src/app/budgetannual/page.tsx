@@ -6,6 +6,7 @@ import BudgetTotalsSection from '@/components/features/tables/BudgetTableSection
 import { MONTHS, TABLE_STYLES } from '@/constants/tableStyles';
 import { BUDGET_MODES } from '@/constants/budgetTypes';
 import { formatCurrency } from '@/utils/budgetCalculations';
+import { getTransactCatGroupKeys } from '@/services/transactCatGroupKeyService';
 
 interface RowData {
   category: string;
@@ -19,41 +20,55 @@ interface DataGroup {
   accent: string;
 }
 
-const emptyDataGroups: DataGroup[] = [
-  {
-    title: 'Décaissement services',
-    key: 'decaissement',
-    rows: [],
-    accent: 'bg-[#f0d8c8]',
-  },
-  {
-    title: 'Réserve de frais',
-    key: 'reserve',
-    rows: [],
-    accent: 'bg-[#e5f0d9]',
-  },
-  {
-    title: 'Revenus',
-    key: 'revenus',
-    rows: [],
-    accent: 'bg-[#dfeaf7]',
-  },
-];
-
 const chartPalette = ['#e7b5a5', '#f0d77c', '#86bcb1', '#d6a5e6', '#9ebf7f', '#f2c6a6'];
 
 export default function BilanBank() {
-  const [dataGroups] = useState<DataGroup[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('bilanAnnualData');
-      return saved ? JSON.parse(saved) : emptyDataGroups;
-    }
-    return emptyDataGroups;
-  });
+  const [dataGroups, setDataGroups] = useState<DataGroup[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('bilanAnnualData', JSON.stringify(dataGroups));
-  }, [dataGroups]);
+    let isMounted = true;
+
+    const fetchGroups = async () => {
+      try {
+        const data = await getTransactCatGroupKeys();
+
+        if (!isMounted) return;
+
+        const mappedGroups: DataGroup[] = data.map((item) => ({
+          title: item.label,
+          key: item.key,
+          rows: [],
+          accent: 'bg-[#f0d8c8]',
+        }));
+
+        setDataGroups(mappedGroups);
+      } catch (error) {
+        console.error('Erreur récupération des groupes annuels:', error);
+        if (isMounted) {
+          setDataGroups([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoaded(true);
+        }
+      }
+    };
+
+    fetchGroups();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (!isLoaded) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#ebcfc6] text-[#5b473d]">
+        <p className="text-sm font-semibold">Chargement...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#ebcfc6] px-4 py-6 text-[#5b473d] sm:px-6 lg:px-10">
