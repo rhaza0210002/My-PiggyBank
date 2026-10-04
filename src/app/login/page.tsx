@@ -1,26 +1,27 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import AuthForm from '@/components/features/forms/AuthForm';
+import { loginUser } from '@/services/authService';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [successPseudo, setSuccessPseudo] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleLoginSubmit = (data: { email: string; password: string }) => {
+  const handleLoginSubmit = async (data: { email: string; password: string }) => {
     setIsLoading(true);
-    console.log("Tentative de connexion :", data);
+    setErrorMessage(null);
 
-    setTimeout(() => {
+    try {
+      await loginUser(data);
+      router.push('/dashboard');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Connexion impossible.');
+    } finally {
       setIsLoading(false);
-
-      // Extrait le pseudo de l'email (ex: "test@test.fr" -> "Test")
-      const rawPseudo = data.email.split('@')[0];
-      const pseudo = rawPseudo.charAt(0).toUpperCase() + rawPseudo.slice(1);
-
-      // Déclenche l'affichage de la modale
-      setSuccessPseudo(pseudo);
-    }, 1000);
+    }
   };
 
   return (
@@ -31,30 +32,8 @@ export default function LoginPage() {
         isLoading={isLoading}
       />
 
-      {/* Modale globale au premier plan (fixed z-50) */}
-      {successPseudo && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-[400px] rounded-[2.2rem] bg-[#fff8f5] border-[3px] border-[#d8b6a5] p-6 text-center space-y-4 shadow-2xl">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#e59a86] text-white shadow-md mb-2">
-              🎉
-            </div>
-            <h2 className="text-[1.6rem] font-black text-[#5d4d44]">
-              Connecté avec succès !
-            </h2>
-            <p className="text-[1.1rem] font-bold text-[#a36351]">
-              Bonjour {successPseudo}
-            </p>
-            <p className="text-[0.95rem] text-[#8c7366]">
-              Heureux de te revoir sur My PiggyBank.
-            </p>
-            <button
-              onClick={() => window.location.href = '/dashboard'}
-              className="w-full rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] py-3 font-bold text-[#fff8f5] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-all hover:translate-y-[2px]"
-            >
-              Accéder à mon tableau de bord
-            </button>
-          </div>
-        </div>
+      {errorMessage && (
+        <p role="alert" className="mt-4 text-center font-semibold text-red-700">{errorMessage}</p>
       )}
     </main>
   );

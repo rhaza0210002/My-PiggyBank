@@ -7,6 +7,7 @@ import { MONTHS, TABLE_STYLES } from '@/constants/tableStyles'; // <-- Vérifie 
 interface BudgetTotalsSectionProps {
   dataGroups: Array<{
     key: string;
+    title?: string;
     rows: Array<{ values: (number | string)[] }>;
   }>;
   currentMode: BudgetMode;
@@ -20,30 +21,44 @@ export default function BudgetTotalsSection({
   currentMonthIndex,
   currentMonthLabel,
 }: BudgetTotalsSectionProps) {
-  // Calculs par mois (pour le mode annuel) ou pour le mois spécifique (pour le mode mensuel)
-  const getValuesByMonth = (groupKey: string) => {
-    const group = (dataGroups || []).find((g) => g.key === groupKey);
-    if (!group || !group.rows) return MONTHS.map(() => 0);
+  const normalizeGroupName = (value: string) =>
+    value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '');
+
+  const getValuesByGroup = (matchesGroup: (groupName: string) => boolean) => {
+    const matchingGroups = dataGroups.filter((group) =>
+      matchesGroup(normalizeGroupName(`${group.key} ${group.title ?? ''}`)),
+    );
 
     return MONTHS.map((_, monthIdx) => {
-      return group.rows.reduce((sum, row) => {
-        const val = Number(row?.values?.[monthIdx]) || 0;
-        return Number(sum) + val;
-      }, 0);
+      return matchingGroups.reduce(
+        (groupTotal, group) =>
+          groupTotal +
+          group.rows.reduce((rowTotal, row) => {
+            const value = Number(row.values[monthIdx]);
+            return rowTotal + (Number.isFinite(value) ? value : 0);
+          }, 0),
+        0,
+      );
     });
   };
 
-  const decaissementValues = getValuesByMonth('decaissement');
-  const reserveValues = getValuesByMonth('reserve');
-  const revenusValues = getValuesByMonth('revenus');
+  const decaissementValues = getValuesByGroup((name) =>
+    name.includes('decaissement') && !name.includes('frais') && !name.includes('reserve'),
+  );
+  const reserveValues = getValuesByGroup((name) =>
+    name.includes('reserve') || name.includes('frais'),
+  );
+  const revenusValues = getValuesByGroup((name) => name.includes('revenu'));
 
-  // Calculs des restants par mois
   const restantAvecReserveValues = MONTHS.map((_, idx) => {
-    return revenusValues[idx] - (decaissementValues[idx] + reserveValues[idx]);
-  });
-
-  const restantLibreValues = MONTHS.map((_, idx) => {
     return revenusValues[idx] - decaissementValues[idx];
+  });
+  const restantLibreValues = MONTHS.map((_, idx) => {
+    return restantAvecReserveValues[idx] - reserveValues[idx];
   });
 
   // Si on est en mode mensuel, on extrait uniquement la valeur du mois sélectionné
@@ -51,7 +66,7 @@ export default function BudgetTotalsSection({
     const decVal = decaissementValues[currentMonthIndex] || 0;
     const resVal = reserveValues[currentMonthIndex] || 0;
     const revVal = revenusValues[currentMonthIndex] || 0;
-    const restResVal = restantAvecReserveValues[currentMonthIndex] || 0;
+    const restAvecReserveVal = restantAvecReserveValues[currentMonthIndex] || 0;
     const restLibVal = restantLibreValues[currentMonthIndex] || 0;
 
     return (
@@ -83,7 +98,7 @@ export default function BudgetTotalsSection({
               </tr>
               <tr className={TABLE_STYLES.rowOdd}>
                 <td className={TABLE_STYLES.cellCategory}>Total restant avec la réserve</td>
-                <td className={TABLE_STYLES.cellAmount}>{formatCurrency(restResVal)}</td>
+                <td className={TABLE_STYLES.cellAmount}>{formatCurrency(restAvecReserveVal)}</td>
               </tr>
               <tr className={`${TABLE_STYLES.rowOdd} font-bold`}>
                 <td className={TABLE_STYLES.cellCategory}>Total restant libre</td>

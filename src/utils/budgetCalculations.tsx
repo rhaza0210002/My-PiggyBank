@@ -22,7 +22,10 @@ export const calculateTotal = (rows: BudgetRow[], monthIndex: number) => {
 
 export const formatCurrency = (value: number | string) => {
   const num = typeof value === 'number' ? value : parseFloat(String(value));
-  return isNaN(num) ? '—' : `${num.toFixed(0)}€`;
+  if (!Number.isFinite(num)) return '—';
+
+  const roundedAmount = Math.round((num + Number.EPSILON) * 100) / 100;
+  return `${roundedAmount.toFixed(2)}€`;
 };
 
 export const formatBudgetForView = (dataGroups: BudgetGroup[], mode: BudgetMode, monthIndex?: number) => {

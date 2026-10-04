@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { startTransition, useState, useEffect } from "react";
 
 export default function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(initialValue);
@@ -11,12 +11,12 @@ export default function useLocalStorage<T>(key: string, initialValue: T) {
     try {
       const item = window.localStorage.getItem(key);
       if (item !== null) {
-        setStoredValue(JSON.parse(item));
+        startTransition(() => setStoredValue(JSON.parse(item)));
       }
     } catch (error) {
       console.error(`Erreur de lecture localStorage pour "${key}":`, error);
     } finally {
-      setIsHydrated(true);
+      startTransition(() => setIsHydrated(true));
     }
   }, [key]);
 

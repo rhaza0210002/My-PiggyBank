@@ -29,11 +29,11 @@ export async function registerUser({ email, password, pseudo }: AuthCredentials)
   if (user) {
     const { error: profileError } = await supabase
       .from('users')
-      .insert({
+      .upsert({
         id: user.id,
         email: email,
         pseudo: pseudo || null,
-      });
+      }, { onConflict: 'id' });
 
     if (profileError) {
       console.error("Erreur lors de la création du profil public :", profileError.message);
@@ -70,8 +70,10 @@ export async function logoutUser() {
   }
 }
 
-export default {
+const authService = {
   registerUser,
   loginUser,
   logoutUser,
 };
+
+export default authService;

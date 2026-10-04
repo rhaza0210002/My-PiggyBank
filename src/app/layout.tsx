@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import "./globals.css";
 import Header from "@/components/features/header/Header";
 
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
   description: "Suivi budgétaire et rapprochement bancaire",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr" className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-[#f5efe8] text-[#5b473d]">

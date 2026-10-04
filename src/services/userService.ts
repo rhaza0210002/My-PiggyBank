@@ -1,12 +1,7 @@
 import { supabase } from '@/lib/supabaseClient';
+import { UserProfileRow } from '@/types/database';
 
-export interface UserProfile {
-    id: string;
-    email: string;
-    pseudo?: string | null;
-    created_at?: string;
-    updated_at?: string;
-}
+export type UserProfile = UserProfileRow;
 
 /**
  * Récupère le profil de l'utilisateur connecté
@@ -16,7 +11,7 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
         .from('users')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
     if (error) {
         console.error("Erreur lors de la récupération du profil :", error.message);
@@ -29,11 +24,11 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
 /**
  * Met à jour le profil de l'utilisateur connecté
  */
-export async function updateUserProfile(userId: string, updates: Partial<UserProfile>) {
+export async function updateUserProfile(userId: string, updates: Pick<UserProfile, 'pseudo'>) {
     const { data, error } = await supabase
         .from('users')
         .update({
-            ...updates,
+                        pseudo: updates.pseudo,
             updated_at: new Date().toISOString(),
         })
         .eq('id', userId)

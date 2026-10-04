@@ -1,4 +1,12 @@
 import { LIBELLETRANSACT } from "@/constants/transactionLabel";
+import {
+  getCsvColumnIndex,
+  getCsvSeparator,
+  isCsvAmountCell,
+  isCsvDateCell,
+  normalizeCsvCell,
+  parseCsvAmount,
+} from "@/utils/csvParsing";
 
 export interface RawRowData {
   id: string;
@@ -39,79 +47,13 @@ export class SocieteGeneraleParser {
     this.csvText = csvText;
   }
 
-  private normalizeCell(value: string): string {
-    return value.trim().replace(/^"|"$/g, "").replace(/""/g, '"');
-  }
-
-  private getSeparator(line: string): string {
-    if (line.includes(";")) return ";";
-    if (line.includes(",")) return ",";
-    return "\t";
-  }
-
-  private getColumnIndex(headers: string[], candidates: string[]): number {
-    const normalizedHeaders = headers.map((header) =>
-      this.normalizeCell(header)
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]/g, ""),
-    );
-
-    const normalizedCandidates = candidates.map((candidate) =>
-      candidate
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]/g, ""),
-    );
-
-    return normalizedHeaders.findIndex((header) =>
-      normalizedCandidates.some((candidate) => header.includes(candidate)),
-    );
-  }
-
-  private isDateCell(value: string): boolean {
-    const normalized = this.normalizeCell(value);
-    return (
-      /^\d{1,2}[/-]\d{1,2}[/-]\d{2,4}$/.test(normalized) ||
-      /^\d{4}-\d{2}-\d{2}$/.test(normalized)
-    );
-  }
-
-  private isAmountCell(value: string): boolean {
-    const normalized = this.normalizeCell(value)
-      .replace(/€|\s/g, "")
-      .replace(/\u00a0/g, "")
-      .replace(/^\((.*)\)$/, "-$1");
-
-    return (
-      /^[-+]?\d{1,3}(?:[\s.]\d{3})*(?:,\d+)?$/.test(normalized) ||
-      /^[-+]?\d+(?:,\d+)?$/.test(normalized)
-    );
-  }
-
-  private parseAmount(value: string): number | null {
-    const trimmed = this.normalizeCell(value)
-      .replace(/€|\s/g, "")
-      .replace(/\u00a0/g, "")
-      .replace(/^\((.*)\)$/, "-$1")
-      .replace(/\./g, "")
-      .replace(",", ".");
-
-    if (!trimmed || trimmed === "-" || trimmed === "+") return null;
-
-    const parsed = Number(trimmed);
-    return Number.isFinite(parsed) ? parsed : null;
-  }
-
   private inferTransactionIndexes(rows: RawRowData[]) {
     for (const row of rows) {
       const dateIndex = row.columns.findIndex((value) =>
-        this.isDateCell(value),
+        isCsvDateCell(value),
       );
       const amountIndex = row.columns.findIndex((value) =>
-        this.isAmountCell(value),
+        isCsvAmountCell(value),
       );
 
       if (dateIndex === -1 || amountIndex === -1) continue;
@@ -121,8 +63,8 @@ export class SocieteGeneraleParser {
           index !== dateIndex &&
           index !== amountIndex &&
           value.trim().length > 0 &&
-          !this.isDateCell(value) &&
-          !this.isAmountCell(value),
+          !isCsvDateCell(value) &&
+          !isCsvAmountCell(value),
       );
 
       if (labelIndex !== -1) {
@@ -169,16 +111,16 @@ export class SocieteGeneraleParser {
       return { headers: [], rows: [] };
     }
 
-    const separator = this.getSeparator(tableLines[0]);
+    const separator = getCsvSeparator(tableLines[0]);
 
     const headers = tableLines[0]
       .split(separator)
-      .map((header) => this.normalizeCell(header));
+      .map(normalizeCsvCell);
 
     const rows: RawRowData[] = tableLines.slice(1).map((line, index) => {
       const columns = line
         .split(separator)
-        .map((col) => this.normalizeCell(col));
+        .map(normalizeCsvCell);
 
       return {
         id: `row-index-${index}`,
@@ -221,13 +163,13 @@ export class SocieteGeneraleParser {
       return [];
     }
 
-    let dateIndex = this.getColumnIndex(headers, [
+    let dateIndex = getCsvColumnIndex(headers, [
       "date",
       "dateoperation",
       "dateoperationbancaire",
     ]);
 
-    const detailIndex = this.getColumnIndex(headers, [
+    const detailIndex = getCsvColumnIndex(headers, [
       "detailecriture",
       "detaildecriture",
       "detaildelcriture",
@@ -236,7 +178,7 @@ export class SocieteGeneraleParser {
       "libellédétaillé",
     ]);
 
-    let labelIndex = this.getColumnIndex(headers, [
+    let labelIndex = getCsvColumnIndex(headers, [
       "libelle",
       "libellé",
       "description",
@@ -246,7 +188,7 @@ export class SocieteGeneraleParser {
       "transaction",
     ]);
 
-    let amountIndex = this.getColumnIndex(headers, [
+    let amountIndex = getCsvColumnIndex(headers, [
       "montant",
       "amount",
       "debit",
@@ -278,7 +220,7 @@ export class SocieteGeneraleParser {
         const date = row.columns[dateIndex] ?? "";
         const detail = row.columns[targetTextIndex] ?? "";
         const amountValue = row.columns[amountIndex] ?? "";
-        const amount = this.parseAmount(amountValue);
+        const amount = parseCsvAmount(amountValue);
 
         if (!date || !detail || amount === null) {
           return null;
