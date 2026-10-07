@@ -1,4 +1,3 @@
-import { LIBELLETRANSACT } from "@/constants/transactionLabel";
 import {
   getCsvColumnIndex,
   getCsvSeparator,
@@ -7,6 +6,7 @@ import {
   normalizeCsvCell,
   parseCsvAmount,
 } from "@/utils/csvParsing";
+import type { LibelleTransact } from "@/services/transactionCategoryService";
 
 export interface RawRowData {
   id: string;
@@ -21,11 +21,13 @@ export interface ParseResult {
 export interface BankTransaction {
   id: string;
   date: string;
-  label: string; // Libellé brut de la ligne
-  detail: string; // Détails de l'écriture (pour boucler sur tes constantes)
+  label: string;
+  detail: string;
   amount: number;
-  categoryId: string | null; // ID de catégorie déduit automatiquement si match
-  type: "VIREMENT_ENTRANT" | "VIREMENT_SORTANT" | "AUTRE"; // Type de transaction détecté
+  categoryId: string | null;
+  categoryLabel: string | null;
+  categoryKey: string | null;
+  type: "VIREMENT_ENTRANT" | "VIREMENT_SORTANT" | "AUTRE";
 }
 
 export interface ColumnObservation {
@@ -42,9 +44,14 @@ export interface ColumnMapResult {
 
 export class SocieteGeneraleParser {
   private csvText: string;
+  private transactionLabels: LibelleTransact[];
 
-  constructor(csvText: string) {
+  constructor(
+    csvText: string,
+    transactionLabels: LibelleTransact[] = [],
+  ) {
     this.csvText = csvText;
+    this.transactionLabels = transactionLabels;
   }
 
   private inferTransactionIndexes(rows: RawRowData[]) {
@@ -73,6 +80,14 @@ export class SocieteGeneraleParser {
     }
 
     return null;
+  }
+
+  private normalizeMatchText(value: string): string {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
   }
 
   public parseAllColumns(): ParseResult {
@@ -154,7 +169,7 @@ export class SocieteGeneraleParser {
 
   /**
    * Analyse et associe chaque ligne avec le détail de l'écriture
-   * pour permettre le bouclage direct sur les constantes.
+  * en utilisant les correspondances de libelle_transacts chargées depuis la base.
    */
   public parse(): BankTransaction[] {
     const { headers, rows } = this.parseAllColumns();
@@ -236,23 +251,27 @@ export class SocieteGeneraleParser {
             amount > 0 ? "VIREMENT_ENTRANT" : "VIREMENT_SORTANT";
         }
 
-        const matchedConstant = LIBELLETRANSACT.find((item) =>
-          detail.toLowerCase().includes(item.label.toLowerCase()),
-        );
-        const simplifiedLabel = matchedConstant?.label ?? detail;
-        const category = matchedConstant?.key ?? "";
-        const lowerDetail = [category, simplifiedLabel]
+        const normalizedCsvLine = this.normalizeMatchText(row.columns.join(' '));
+        const matchedLabel = this.transactionLabels.find((item) => {
+          const normalizedLabel = this.normalizeMatchText(item.label);
+          return normalizedLabel.length > 0 && normalizedCsvLine.includes(normalizedLabel);
+        });
+        const categoryKey = matchedLabel?.key ?? '';
+        const simplifiedLabel = matchedLabel?.label ?? detail;
+        const normalizedDetail = [categoryKey, simplifiedLabel]
           .filter(Boolean)
-          .join(" ")
+          .join(' ')
           .toLowerCase();
 
         return {
           id: `tx-${index}`,
           date,
-          label: matchedConstant?.label ?? "",
-          detail: lowerDetail,
+          label: matchedLabel?.label ?? '',
+          detail: normalizedDetail,
           amount,
-          categoryId: matchedConstant ? matchedConstant.id_cat : null,
+          categoryId: matchedLabel?.id_cat ?? null,
+          categoryLabel: matchedLabel?.key ?? null,
+          categoryKey: matchedLabel?.key ?? null,
           type: transactionType,
         } satisfies BankTransaction;
       })
@@ -260,22 +279,6 @@ export class SocieteGeneraleParser {
         (transaction): transaction is BankTransaction => transaction !== null,
       );
   }
-}
-
-/**
- * Simplifie le libellé brut de la banque pour n'afficher que le nom propre de l'entreprise s'il est reconnu.
- */
-export function getSimplifiedMerchantName(detail: string): string {
-  const found = LIBELLETRANSACT.find((item) =>
-    detail.toLowerCase().includes(item.label.toLowerCase()),
-  );
-  if (found) {
-    return (
-      found.label.charAt(0).toUpperCase() + found.label.slice(1).toLowerCase()
-    );
-  }
-
-  return detail;
 }
 
 export default SocieteGeneraleParser;

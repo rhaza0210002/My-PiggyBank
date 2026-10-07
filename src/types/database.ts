@@ -20,7 +20,7 @@ export interface CategoryGroupRow {
 }
 
 export interface TransactionLabelRow {
-  id: number;
+  id: string;
   label: string;
   key: string;
   id_cat: string;

@@ -16,7 +16,7 @@ export interface Category {
 }
 
 export interface LibelleTransact {
-  id: number;
+  id: string;
   label: string;
   key: string;
   id_cat: string;

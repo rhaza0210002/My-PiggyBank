@@ -4,22 +4,26 @@ import { useState, type ChangeEvent } from 'react';
 import Link from 'next/link';
 import CsvTransactionsTable from '@/components/features/tables/CsvTransactionsTable';
 import { SocieteGeneraleParser, type BankTransaction } from '@/services/csvParser';
+import { getLibelleTransacts } from '@/services/transactionCategoryService';
 
 export default function CsvUploaderPage() {
   const [transactions, setTransactions] = useState<BankTransaction[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoadingMappings, setIsLoadingMappings] = useState(false);
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setFileName(file.name);
     setError(null);
+    setTransactions([]);
+    setIsLoadingMappings(true);
 
     const reader = new FileReader();
     reader.readAsText(file, 'windows-1252');
 
-    reader.onload = (fileEvent: ProgressEvent<FileReader>) => {
+    reader.onload = async (fileEvent: ProgressEvent<FileReader>) => {
       try {
         const text = fileEvent.target?.result as string;
         if (!text) {
@@ -27,7 +31,14 @@ export default function CsvUploaderPage() {
           return;
         }
 
-        const parser = new SocieteGeneraleParser(text);
+        const transactionLabels = await getLibelleTransacts();
+        if (transactionLabels.length === 0) {
+          throw new Error(
+            "La table libelle_transacts ne contient aucune règle visible. Exécutez supabase/seed-libelle-transacts.sql dans Supabase, puis vérifiez la politique RLS SELECT de cette table.",
+          );
+        }
+
+        const parser = new SocieteGeneraleParser(text, transactionLabels);
         const parsed = parser.parse();
 
         if (parsed.length === 0) {
@@ -38,7 +49,13 @@ export default function CsvUploaderPage() {
         setTransactions(parsed);
       } catch (err: unknown) {
         console.error(err);
-        setError("Erreur lors de la lecture du fichier CSV.");
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Erreur lors de la lecture du fichier CSV.",
+        );
+      } finally {
+        setIsLoadingMappings(false);
       }
     };
   };
@@ -70,7 +87,11 @@ export default function CsvUploaderPage() {
               📂
             </div>
             <span className="text-[1.2rem] font-bold text-[#5a473d]">
-              {fileName ? `Fichier sélectionné : ${fileName}` : "Glisse ton fichier CSV ici ou clique pour parcourir"}
+              {isLoadingMappings
+                ? 'Chargement des catégories et libellés...'
+                : fileName
+                  ? `Fichier sélectionné : ${fileName}`
+                  : "Glisse ton fichier CSV ici ou clique pour parcourir"}
             </span>
             <span className="text-[0.95rem] italic text-[#8c7366]">
               Traitement local sécurisé (aucun fichier brut stocké en base de données)

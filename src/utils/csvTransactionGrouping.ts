@@ -1,4 +1,3 @@
-import { LIBELLETRANSACT_CATEGORIES } from '@/constants/transactionLabel';
 import type { BankTransaction } from '@/services/csvParser';
 
 export interface CategoryTransactionGroup {
@@ -8,19 +7,12 @@ export interface CategoryTransactionGroup {
   records: BankTransaction[];
 }
 
-function getCategoryLabel(categoryId: string | null): string {
-  if (!categoryId) return 'Non catégorisé';
-
-  const category = LIBELLETRANSACT_CATEGORIES.find((item) => item.key === categoryId);
-  return category?.label ?? 'Autre';
-}
-
 export function groupTransactionsByCategory(
   transactions: BankTransaction[],
 ): CategoryTransactionGroup[] {
   const groups = transactions.reduce<Record<string, CategoryTransactionGroup>>(
     (result, transaction) => {
-      const categoryLabel = getCategoryLabel(transaction.categoryId);
+      const categoryLabel = transaction.categoryKey ?? 'Non catégorisé';
       const group = result[categoryLabel] ?? {
         categoryLabel,
         categoryId: transaction.categoryId,
