@@ -78,7 +78,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <section className="mt-5 mx-5 ${styles.dashboardPage}">
+    <section className={`mt-5 mx-5 ${styles.dashboardPage}`}>
       <div className={styles.dashboardInner}>
         <div className="rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-4 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#c86445]">

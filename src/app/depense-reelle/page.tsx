@@ -3,8 +3,9 @@
 import React, { startTransition, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { MONTHS, TABLE_STYLES } from '@/constants/tableStyles';
-import { SocieteGeneraleParser, BankTransaction, getSimplifiedMerchantName } from '@/services/csvParser';
-import { LIBELLETRANSACT_CATEGORIES } from '@/constants/transactionLabel';
+import { SocieteGeneraleParser, BankTransaction } from '@/services/csvParser';
+import { getLibelleTransacts } from '@/services/transactionCategoryService';
+import { getBudgetGroupPalette } from '@/constants/budgetGroupPalette';
 import FormBilan from '@/components/features/forms/FormBilan';
 import { useBudget } from '@/hooks/useBudget';
 import { BUDGET_MODES } from '@/constants/budgetTypes';
@@ -28,10 +29,14 @@ const CATEGORY_BACKGROUNDS: Record<string, string> = {
   "10": "bg-[#dda0dd]/80",
 };
 
-function getCategoryLabel(categoryId: string | null): string {
-  if (!categoryId) return "Non catégorisé";
-  const cat = LIBELLETRANSACT_CATEGORIES.find((c) => c.key === categoryId);
-  return cat ? cat.label : "Autre";
+function getCategoryLabel(tx: BankTransaction): string {
+  if (!tx.categoryLabel) return "Non catégorisé";
+  return tx.categoryLabel.charAt(0).toUpperCase() + tx.categoryLabel.slice(1);
+}
+
+function getMerchantName(tx: BankTransaction): string {
+  if (!tx.label) return tx.detail;
+  return tx.label.charAt(0).toUpperCase() + tx.label.slice(1).toLowerCase();
 }
 
 type CategoryGroup = {
@@ -43,7 +48,7 @@ type CategoryGroup = {
 
 function groupTransactionsByCategory(transactions: BankTransaction[]): CategoryGroup[] {
   const groups = transactions.reduce<Record<string, CategoryGroup>>((acc, tx) => {
-    const categoryLabel = getCategoryLabel(tx.categoryId);
+    const categoryLabel = getCategoryLabel(tx);
 
     if (!acc[categoryLabel]) {
       acc[categoryLabel] = {
@@ -108,7 +113,7 @@ export default function DepenseReellePage() {
     const reader = new FileReader();
     reader.readAsText(file, 'windows-1252');
 
-    reader.onload = (fileEvent: ProgressEvent<FileReader>) => {
+    reader.onload = async (fileEvent: ProgressEvent<FileReader>) => {
       try {
         const text = fileEvent.target?.result as string;
         if (!text) {
@@ -116,7 +121,8 @@ export default function DepenseReellePage() {
           return;
         }
 
-        const parser = new SocieteGeneraleParser(text);
+        const transactionLabels = await getLibelleTransacts();
+        const parser = new SocieteGeneraleParser(text, transactionLabels);
         const parsed = parser.parse();
 
         if (parsed.length === 0) {
@@ -134,8 +140,8 @@ export default function DepenseReellePage() {
 
   const groupedTransactions = groupTransactionsByCategory(transactions);
 
-  const handleAddRow = (data: { groupKey: string; category: string; amount: string; monthIndex: number }) => {
-    updateRowValue(data.groupKey, data.category, data.monthIndex, data.amount);
+  const handleAddRow = async (data: { groupKey: string; category: string; amount: string; monthIndex: number }) => {
+    await updateRowValue(data.groupKey, data.category, data.monthIndex, data.amount);
   };
 
   const activeMonth = MONTHS[currentMonthIndex];
@@ -251,7 +257,7 @@ export default function DepenseReellePage() {
                                     {group.records.map((tx) => (
                                       <tr key={tx.id} className="border-t border-[#d8b7a5]/40 align-top">
                                         <td className="px-2 py-2 text-[#5d4d44] sm:px-3">{tx.date}</td>
-                                        <td className="max-w-[160px] px-2 py-2 text-[#5d4d44] break-words sm:px-3">{getSimplifiedMerchantName(tx.detail)}</td>
+                                        <td className="max-w-[160px] px-2 py-2 text-[#5d4d44] break-words sm:px-3">{getMerchantName(tx)}</td>
                                         <td className={`px-2 py-2 text-right font-semibold sm:px-3 ${tx.amount < 0 ? 'text-[#b94a48]' : 'text-[#3c763d]'}`}>
                                           {tx.amount.toFixed(2)} €
                                         </td>
@@ -270,7 +276,7 @@ export default function DepenseReellePage() {
               </table>
             </div>
 
-            <FormBilan groups={dataGroups} months={MONTHS} onAddRow={handleAddRow} />
+            <FormBilan groups={dataGroups} monthIndex={currentMonthIndex} onAddRow={handleAddRow} />
 
             <div className="space-y-6">
               {(dataGroups || []).map((group) => {
@@ -285,7 +291,7 @@ export default function DepenseReellePage() {
                     <div className="w-full overflow-x-auto rounded-xl border border-[#d8b7a5]/50 bg-white/40 shadow-inner">
                       <table className="w-full min-w-[320px] border-collapse text-left" role="region" aria-label={`Tableau de ${group.title}`}>
                         <thead>
-                          <tr className={`${group.accent} text-[#5a473d]`}>
+                          <tr className={`${getBudgetGroupPalette(group.key, group.title).header} text-[#5a473d]`}>
                             <th scope="col" className={TABLE_STYLES.thCategory}>Catégorie</th>
                             <th scope="col" className={TABLE_STYLES.thAmount}>
                               Montant {currentMode === BUDGET_MODES.MENSUEL ? `(${activeMonth.label})` : ''}
