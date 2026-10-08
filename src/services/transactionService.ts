@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { requireUserId } from '@/lib/currentUser';
 import type { BankTransaction } from '@/services/csvParser';
 import type { TransactionRow } from '@/types/database';
+import { fingerprint, sanitizeBankLabel } from '@/utils/bankPrivacy';
 import { prepareTransactionsForStorage } from '@/utils/transactionDedupe';
 
 export type StoredTransaction = Pick<
@@ -37,7 +38,15 @@ export async function saveImportedTransactions(
   transactions: BankTransaction[],
 ): Promise<SaveTransactionsResult> {
   const userId = await requireUserId('Vous devez être connecté pour enregistrer les transactions.');
-  const { rows, invalid } = prepareTransactionsForStorage(transactions);
+  const { rows: plainRows, invalid } = prepareTransactionsForStorage(transactions);
+  // Minimisation : libellé masqué (carte, IBAN, e-mail) et clé anti-doublon réduite à une empreinte.
+  const rows = await Promise.all(
+    plainRows.map(async (row) => ({
+      ...row,
+      label: sanitizeBankLabel(row.label),
+      dedupe_key: await fingerprint(row.dedupe_key),
+    })),
+  );
 
   let inserted = 0;
 
