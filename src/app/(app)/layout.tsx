@@ -13,13 +13,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     <div className="flex h-dvh flex-col overflow-hidden">
       <SkipLink />
       <AppHeader />
-      {/* pb : laisse la place à la barre du bas sur mobile. */}
-      <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto pb-[4.75rem] outline-none md:pb-2">
+      <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto pb-2 outline-none">
         {children}
-        {/* Mobile : le pied de page complet se trouve en bas de la page (la ligne compacte est réservée au bureau). */}
-        <div className="md:hidden">
-          <Footer />
-        </div>
       </main>
       <Footer variant="compact" />
       <BottomNav />

@@ -6,6 +6,8 @@ import { hasContactEmail } from '@/constants/legal';
 const LINK =
   'inline-flex min-h-8 items-center rounded px-1 text-[#5a4d41] underline-offset-2 hover:underline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]';
 
+const LINK_COMPACT = LINK.replace('min-h-8', 'min-h-6 md:min-h-8');
+
 const LEGAL_LINKS = [
   { href: LEGAL_ROUTES.legalNotice, label: 'Mentions légales' },
   { href: LEGAL_ROUTES.terms, label: 'Conditions d’utilisation' },
@@ -22,15 +24,16 @@ interface FooterProps {
 export default function Footer({ variant = 'full' }: FooterProps) {
   if (variant === 'compact') {
     return (
-      <footer className="hidden shrink-0 border-t border-[#E5C4B4] bg-[#FFF5EE] px-4 py-1 text-xs text-[#5a4d41] md:block">
+      // Sur mobile, le bas du pied de page se prolonge sous la barre de navigation fixe (pb) : il reste lisible au-dessus.
+      <footer className="shrink-0 border-t border-[#E5C4B4] bg-[#FFF5EE] px-3 pb-[calc(4.25rem+env(safe-area-inset-bottom))] pt-1 text-[0.7rem] text-[#5a4d41] md:px-4 md:pb-1 md:text-xs">
         <nav aria-label="Informations légales" className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-3">
           <span>© {LEGAL.year} {LEGAL.appName}</span>
           {LEGAL_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className={LINK}>
+            <Link key={link.href} href={link.href} className={LINK_COMPACT}>
               {link.label}
             </Link>
           ))}
-          <Link href={ROUTES.myData} className={LINK}>Mes données</Link>
+          <Link href={ROUTES.myData} className={LINK_COMPACT}>Mes données</Link>
         </nav>
       </footer>
     );
