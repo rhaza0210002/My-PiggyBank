@@ -30,6 +30,43 @@ function findScrollParent(element: HTMLElement): HTMLElement | null {
   return null;
 }
 
+const SCROLL_DURATION_MS = 650;
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+/**
+ * Défilement animé (départ et arrivée en douceur). La cible est recalculée à chaque image : les blocs qui
+ * apparaissent en chemin ne font pas sauter l'animation. Un geste de l'utilisateur la coupe aussitôt.
+ */
+function animateScroll(parent: HTMLElement, getTargetTop: () => number, onDone: () => void): () => void {
+  const startTop = parent.scrollTop;
+  const startTime = performance.now();
+  let frame = 0;
+
+  const stop = () => {
+    cancelAnimationFrame(frame);
+    parent.removeEventListener('wheel', stop);
+    parent.removeEventListener('touchstart', stop);
+    parent.removeEventListener('keydown', stop);
+  };
+
+  const step = (now: number) => {
+    const progress = Math.min(1, (now - startTime) / SCROLL_DURATION_MS);
+    parent.scrollTop = startTop + (getTargetTop() - startTop) * easeInOutCubic(progress);
+    if (progress < 1) {
+      frame = requestAnimationFrame(step);
+    } else {
+      stop();
+      onDone();
+    }
+  };
+
+  parent.addEventListener('wheel', stop, { passive: true });
+  parent.addEventListener('touchstart', stop, { passive: true });
+  parent.addEventListener('keydown', stop);
+  frame = requestAnimationFrame(step);
+  return stop;
+}
+
 /**
  * Plusieurs blocs à la suite, dans une seule zone qui défile. Une barre de raccourcis mène à chaque bloc
  * (défilement doux), indique celui qu'on lit, et chaque bloc apparaît quand on y arrive : le contenu n'est
@@ -39,6 +76,7 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
+  const cancelScrollRef = useRef<(() => void) | null>(null);
   const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [revealed, setRevealed] = useState<ReadonlySet<string>>(() => new Set(sections.slice(0, 1).map((s) => s.id)));
   const [activeId, setActiveId] = useState<string | undefined>(sections[0]?.id);
@@ -121,14 +159,21 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
   const goTo = (id: string) => {
     const element = sectionRefs.current[id];
     if (!element) return;
-    setRevealed((previous) => new Set([...previous, id]));
     setActiveId(id);
+    // Tous les blocs jusqu'à la cible sont montés d'avance : la distance à parcourir ne change plus en route.
+    const targetIndex = sections.findIndex((section) => section.id === id);
+    setRevealed((previous) => new Set([...previous, ...sections.slice(0, targetIndex + 1).map((section) => section.id)]));
+
     const parent = findScrollParent(element);
+    cancelScrollRef.current?.();
     if (parent) {
       // La rangée de puces collante masque le haut de la zone : on s'arrête juste dessous.
-      const stickyOffset = navRef.current?.offsetHeight ?? 0;
-      const top = element.getBoundingClientRect().top - parent.getBoundingClientRect().top + parent.scrollTop - stickyOffset;
-      parent.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+      const getTargetTop = () => {
+        const stickyOffset = navRef.current?.offsetHeight ?? 0;
+        return element.getBoundingClientRect().top - parent.getBoundingClientRect().top + parent.scrollTop - stickyOffset;
+      };
+      if (prefersReducedMotion()) parent.scrollTop = getTargetTop();
+      else cancelScrollRef.current = animateScroll(parent, getTargetTop, () => (cancelScrollRef.current = null));
     }
     element.focus({ preventScroll: true });
   };
@@ -136,7 +181,7 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
   return (
     <div className="flex min-h-0 flex-1 flex-col">
 
-      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 scroll-smooth motion-reduce:scroll-auto md:overflow-y-auto">
+      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 md:overflow-y-auto">
         <nav
           ref={navRef}
           aria-label={label}

@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import type { DataGroup } from '@/types/budget';
 import { formatCurrency } from '@/utils/budgetCalculations';
 import { createArcPath } from '@/utils/donutGeometry';
+import { playWhenVisible } from '@/utils/playWhenVisible';
 
 interface BudgetDonutProps {
   dataGroups: DataGroup[];
@@ -118,11 +119,11 @@ export default function BudgetDonut({
     // GSAP n'est chargé qu'au moment d'animer : il ne pèse pas sur les pages sans graphique.
     let isCancelled = false;
     let revert: (() => void) | undefined;
+    let stopWatching: (() => void) | undefined;
 
-    void Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([{ gsap }, { ScrollTrigger }]) => {
+    void import('gsap').then(({ gsap }) => {
     if (isCancelled) return;
     const context = gsap.context(() => {
-      gsap.registerPlugin(ScrollTrigger);
       const chartSegments = section.querySelectorAll('.chart-segment');
       const prefersReducedMotion = window.matchMedia(
         '(prefers-reduced-motion: reduce)',
@@ -136,14 +137,9 @@ export default function BudgetDonut({
         return;
       }
 
-      const timeline = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 78%',
-          once: true,
-        },
-      });
+      // En pause : l'animation ne démarre que lorsque le graphique est visible à l'écran.
+      const timeline = gsap.timeline({ defaults: { ease: 'power3.out' }, paused: true });
+      stopWatching = playWhenVisible(section, () => timeline.play());
       const heading = section.querySelector('.chart-heading');
       const donut = section.querySelector('.chart-donut');
       const legendItems = section.querySelectorAll('.chart-legend-item');
@@ -194,6 +190,7 @@ export default function BudgetDonut({
 
     return () => {
       isCancelled = true;
+      stopWatching?.();
       revert?.();
     };
   }, [dataGroups, monthIndex, monthLabel]);

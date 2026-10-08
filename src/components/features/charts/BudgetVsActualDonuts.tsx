@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { getBudgetEntries, type BudgetEntry } from '@/services/budgetService';
 import type { Category, CategoryGroup } from '@/services/transactionCategoryService';
 import type { StoredTransaction } from '@/services/transactionService';
+import { playWhenVisible } from '@/utils/playWhenVisible';
 import { euroFormatter } from '@/utils/formatEuro';
 import { buildBudgetVsActualSlices, type BudgetVsActualSlice } from '@/utils/budgetVsActual';
 import { createArcPath } from '@/utils/donutGeometry';
@@ -134,6 +135,7 @@ export default function BudgetVsActualDonuts({
     // GSAP n'est chargé qu'au moment d'animer : il ne pèse pas sur les pages sans graphique.
     let isCancelled = false;
     let revert: (() => void) | undefined;
+    let stopWatching: (() => void) | undefined;
 
     void import('gsap').then(({ gsap }) => {
       if (isCancelled) return;
@@ -151,7 +153,9 @@ export default function BudgetVsActualDonuts({
         gsap.set(section.querySelectorAll('[data-arc-index]'), { strokeDashoffset: 100 });
         gsap.set(rows, { autoAlpha: 0, x: 16 });
 
-        const timeline = gsap.timeline({ defaults: { ease: 'power2.out' }, delay: 0.2 });
+        // En pause : l'animation ne démarre que lorsque le graphique est visible à l'écran.
+        const timeline = gsap.timeline({ defaults: { ease: 'power2.out' }, delay: 0.2, paused: true });
+        stopWatching = playWhenVisible(section, () => timeline.play());
 
         slices.forEach((slice, index) => {
           const at = index * STEP_SECONDS;
@@ -181,6 +185,7 @@ export default function BudgetVsActualDonuts({
 
     return () => {
       isCancelled = true;
+      stopWatching?.();
       revert?.();
       showTotals(finalTotals);
     };
