@@ -61,7 +61,9 @@ export default function ConfidentialitePage() {
       </div>
       <p>
         {LEGAL.appName} ne se connecte pas à ta banque : seules les opérations que <strong>tu importes toi-même</strong>{' '}
-        (fichier CSV) sont enregistrées. Les libellés peuvent contenir le nom de tiers (un virement, un commerçant) :
+        (fichier CSV) sont enregistrées. Le fichier lui-même est lu dans ton navigateur : il n’est jamais envoyé ni
+        conservé. Avant l’enregistrement, les numéros de carte, IBAN, adresses e-mail et longues références sont
+        masqués dans les libellés. Ceux-ci peuvent encore contenir le nom d’un tiers (un virement, un commerçant) :
         ils restent visibles uniquement par toi.
       </p>
       <p>
