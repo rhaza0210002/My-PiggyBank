@@ -42,6 +42,8 @@ export default function RapprochementPage() {
   const [notice, setNotice] = useState<string | null>(null);
   const { data: progress, refresh: refreshProgress } = useGamification();
   const wasMonthComplete = useRef<boolean | null>(null);
+  const previousLevel = useRef<number | null>(null);
+  const [noticeCount, setNoticeCount] = useState(0);
   const [celebration, setCelebration] = useState<string | null>(null);
 
   useEffect(() => {
@@ -72,6 +74,12 @@ export default function RapprochementPage() {
       setCelebration('Mois bouclé ! Toutes les opérations du mois sont pointées. Bravo, c’est gagné pour de bon.');
     }
     wasMonthComplete.current = isComplete;
+
+    const { level, title } = progress.levelInfo;
+    if (previousLevel.current !== null && level > previousLevel.current && !isComplete) {
+      setCelebration(`Niveau ${level} : ${title} ! Tu progresses à ton rythme, continue comme ça.`);
+    }
+    previousLevel.current = level;
   }, [progress]);
 
   const setBusy = (ids: string[], busy: boolean) => {
@@ -125,6 +133,8 @@ export default function RapprochementPage() {
           },
         );
         setNotice(`+${ids.length * XP_PER_OPERATION} points : ${ids.length} opération${ids.length > 1 ? 's' : ''} pointée${ids.length > 1 ? 's' : ''}. Bien joué !`);
+        setCelebration(null);
+        setNoticeCount((count) => count + 1);
         refreshProgress();
       },
     );
@@ -189,7 +199,12 @@ export default function RapprochementPage() {
         )}
 
         {notice && !celebration && (
-          <p role="status" className="rounded-lg border border-[#9fc3a1] bg-[#eaf4e6] p-2 text-center text-sm font-semibold text-[#1f4d25]">
+          <p
+            key={noticeCount}
+            role="status"
+            className="motion-safe:animate-[pop_0.5s_ease-out_1] rounded-2xl border-2 border-[#9fc3a1] bg-[#eaf4e6] p-2.5 text-center text-sm font-black text-[#1f4d25]"
+          >
+            <span aria-hidden="true">✨ </span>
             {notice}
           </p>
         )}
