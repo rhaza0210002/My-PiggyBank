@@ -4,7 +4,6 @@ import { startTransition, useEffect, useState } from 'react';
 import { MONTHS, TABLE_STYLES } from '@/constants/tableStyles';
 import { getBudgetGroupPalette } from '@/constants/budgetGroupPalette';
 import { getBudgetEntries } from '@/services/budgetService';
-import type { CategoryTransactionGroup } from '@/utils/csvTransactionGrouping';
 import {
   getCategories,
   getCategoriesGroupKey,
@@ -13,8 +12,18 @@ import {
 } from '@/services/transactionCategoryService';
 import { formatCurrency } from '@/utils/budgetCalculations';
 
+/** Montant réel cumulé d'une catégorie, quelle que soit l'origine des transactions. */
+export interface ComparisonGroup {
+  categoryId: string | null;
+  totalAmount: number;
+  records: readonly unknown[];
+}
+
 interface MonthlyBudgetComparisonProps {
-  groups: CategoryTransactionGroup[];
+  groups: ComparisonGroup[];
+  /** Si renseignés, le mois et l'année sont pilotés par le parent et le sélecteur de mois est masqué. */
+  monthIndex?: number;
+  year?: number;
 }
 
 interface BudgetComparisonRow {
@@ -38,9 +47,16 @@ interface LoadedBudgetEntry {
   year: number;
 }
 
-export default function MonthlyBudgetComparison({ groups }: MonthlyBudgetComparisonProps) {
-  const [currentYear, setCurrentYear] = useState<number | null>(null);
-  const [monthIndex, setMonthIndex] = useState(0);
+export default function MonthlyBudgetComparison({
+  groups,
+  monthIndex: controlledMonthIndex,
+  year: controlledYear,
+}: MonthlyBudgetComparisonProps) {
+  const [internalYear, setInternalYear] = useState<number | null>(null);
+  const [internalMonthIndex, setInternalMonthIndex] = useState(0);
+  const currentYear = controlledYear ?? internalYear;
+  const monthIndex = controlledMonthIndex ?? internalMonthIndex;
+  const isMonthControlled = controlledMonthIndex !== undefined;
   const [budgetEntries, setBudgetEntries] = useState<LoadedBudgetEntry[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryGroups, setCategoryGroups] = useState<CategoryGroup[]>([]);
@@ -50,8 +66,8 @@ export default function MonthlyBudgetComparison({ groups }: MonthlyBudgetCompari
   useEffect(() => {
     const now = new Date();
     startTransition(() => {
-      setCurrentYear(now.getFullYear());
-      setMonthIndex(now.getMonth());
+      setInternalYear(now.getFullYear());
+      setInternalMonthIndex(now.getMonth());
     });
   }, []);
 
@@ -170,14 +186,19 @@ export default function MonthlyBudgetComparison({ groups }: MonthlyBudgetCompari
           <h3 id="monthly-comparison-title" className="text-lg font-black text-[#5d4d44]">
             Comparaison budget / réel
           </h3>
-          <p className="text-sm text-[#766356]">Le réel reprend le cumul par catégorie affiché dans la liste des transactions importées.</p>
+          <p className="text-sm text-[#766356]">
+            {isMonthControlled
+              ? 'Le réel reprend les transactions enregistrées pour ce mois.'
+              : 'Le réel reprend le cumul par catégorie affiché dans la liste des transactions importées.'}
+          </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
+          {!isMonthControlled && (
           <label className="flex items-center gap-2 text-sm font-semibold text-[#5d4d44]">
             Mois
             <select
               value={monthIndex}
-              onChange={(event) => setMonthIndex(Number(event.target.value))}
+              onChange={(event) => setInternalMonthIndex(Number(event.target.value))}
               className="rounded-lg border border-[#d8b7a5] bg-white px-3 py-2"
             >
               {MONTHS.map((month, index) => (
@@ -185,10 +206,11 @@ export default function MonthlyBudgetComparison({ groups }: MonthlyBudgetCompari
               ))}
             </select>
           </label>
+          )}
         </div>
       </div>
       <p className="text-xs text-[#766356]">
-        Budget {MONTHS[monthIndex].label} {currentYear} comparé au cumul du fichier CSV importé.
+        Budget {MONTHS[monthIndex].label} {currentYear} comparé au réel {isMonthControlled ? 'enregistré' : 'du fichier CSV importé'}.
       </p>
 
       {isLoading ? (

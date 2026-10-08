@@ -102,11 +102,37 @@ export interface MonthTotals {
   count: number;
 }
 
+/** Bornes [début, début du mois suivant[ d'un mois (monthIndex : 0 = janvier). */
+function getMonthRange(year: number, monthIndex: number): { start: string; next: string } {
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return {
+    start: `${year}-${pad(monthIndex + 1)}-01`,
+    next: monthIndex === 11 ? `${year + 1}-01-01` : `${year}-${pad(monthIndex + 2)}-01`,
+  };
+}
+
+/** Toutes les transactions d'un mois, de la plus récente à la plus ancienne. */
+export async function getTransactionsForMonth(
+  year: number,
+  monthIndex: number,
+): Promise<StoredTransaction[]> {
+  const { start, next } = getMonthRange(year, monthIndex);
+
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(COLUMNS)
+    .gte('booked_on', start)
+    .lt('booked_on', next)
+    .order('booked_on', { ascending: false })
+    .order('created_at', { ascending: false });
+
+  if (error) throw toServiceError(error, 'Lecture des transactions du mois impossible');
+  return data ?? [];
+}
+
 /** Revenus, dépenses et solde net d'un mois (monthIndex : 0 = janvier). */
 export async function getMonthTotals(year: number, monthIndex: number): Promise<MonthTotals> {
-  const pad = (value: number) => String(value).padStart(2, '0');
-  const start = `${year}-${pad(monthIndex + 1)}-01`;
-  const next = monthIndex === 11 ? `${year + 1}-01-01` : `${year}-${pad(monthIndex + 2)}-01`;
+  const { start, next } = getMonthRange(year, monthIndex);
 
   const { data, error } = await supabase
     .from('transactions')
@@ -116,9 +142,12 @@ export async function getMonthTotals(year: number, monthIndex: number): Promise<
 
   if (error) throw toServiceError(error, 'Calcul du solde du mois impossible');
 
-  const totals = (data ?? []).reduce(
-    (sum, row) => {
-      const amount = Number(row.amount);
+  return summarizeAmounts((data ?? []).map((row) => Number(row.amount)));
+}
+
+export function summarizeAmounts(amounts: number[]): MonthTotals {
+  const totals = amounts.reduce(
+    (sum, amount) => {
       if (amount >= 0) sum.income += amount;
       else sum.expenses += amount;
       return sum;
@@ -130,6 +159,6 @@ export async function getMonthTotals(year: number, monthIndex: number): Promise<
     income: totals.income,
     expenses: totals.expenses,
     net: totals.income + totals.expenses,
-    count: data?.length ?? 0,
+    count: amounts.length,
   };
 }

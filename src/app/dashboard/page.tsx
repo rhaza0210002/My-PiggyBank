@@ -12,13 +12,7 @@ import {
   type MonthTotals,
   type StoredTransaction,
 } from '@/services/transactionService';
-
-const euroFormatter = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
-const signedEuroFormatter = new Intl.NumberFormat('fr-FR', {
-  style: 'currency',
-  currency: 'EUR',
-  signDisplay: 'exceptZero',
-});
+import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 
 function toCardItem(transaction: StoredTransaction): Transaction {
   const amount = Number(transaction.amount);
