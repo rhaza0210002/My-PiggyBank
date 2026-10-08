@@ -58,7 +58,7 @@ export default function ReconcileCard({
       aria-labelledby="reconcile-title"
       className="space-y-2.5 rounded-[1.6rem] border-[3px] border-[#d7b59d] bg-[#fff8f2] p-3 shadow-[0_4px_0_rgba(140,103,86,0.14)] motion-safe:animate-[pop_0.35s_ease-out_1] sm:p-4"
     >
-      <div className="flex items-end justify-between gap-3">
+      <div className="flex flex-col items-center gap-1 text-center">
         <div className="min-w-0">
           <p className="text-xs font-bold uppercase tracking-[0.1em] text-[#6b574c]">
             Il en reste {remaining} · <span className="capitalize">{formatDate(transaction.booked_on)}</span>
@@ -73,13 +73,13 @@ export default function ReconcileCard({
             {transaction.label}
           </h2>
         </div>
-        <p className={`shrink-0 text-2xl font-black sm:text-3xl ${amount < 0 ? 'text-[#9c3633]' : 'text-[#2f5d32]'}`}>
+        <p className={`shrink-0 rounded-full px-4 py-0.5 text-2xl font-black sm:text-3xl ${amount < 0 ? 'bg-[#f8e5da] text-[#9c3633]' : 'bg-[#eaf4e6] text-[#2f5d32]'}`}>
           {signedEuroFormatter.format(amount)}
         </p>
       </div>
 
       {quickCategories.length > 0 && (
-        <div role="group" aria-label="Catégories fréquentes" className="flex flex-wrap gap-1.5">
+        <div role="group" aria-label="Catégories fréquentes" className="flex flex-wrap justify-center gap-1.5">
           {quickCategories.map((item) => (
             <button
               key={item.id}
@@ -96,7 +96,7 @@ export default function ReconcileCard({
       )}
 
       <div>
-        <label htmlFor="reconcile-category" className="block text-sm font-bold text-[#5d4d44]">
+        <label htmlFor="reconcile-category" className="block text-center text-sm font-bold text-[#5d4d44]">
           Catégorie
           {category && <span className="ml-2 font-semibold text-[#2f5d32]">✓ choisie</span>}
         </label>
@@ -105,7 +105,7 @@ export default function ReconcileCard({
           value={transaction.category_id ?? ''}
           disabled={isBusy}
           onChange={(event) => onChangeCategory(event.target.value)}
-          className="mt-1 min-h-12 w-full rounded-xl border-2 border-[#9c7560] bg-white px-3 text-base text-[#5d4d44] disabled:opacity-50"
+          className="mt-1 min-h-12 w-full rounded-xl border-2 border-[#9c7560] bg-white px-3 text-center text-base text-[#5d4d44] disabled:opacity-50"
         >
           <option value="">— Choisir une catégorie —</option>
           {categoryGroups.map((group) => {
@@ -160,7 +160,7 @@ export default function ReconcileCard({
           <button
             type="button"
             onClick={() => setIsRuleOpen(true)}
-            className="min-h-11 rounded-lg px-1 text-sm font-bold text-[#8c4a38] underline underline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+            className="mx-auto flex min-h-11 items-center rounded-lg px-1 text-center text-sm font-bold text-[#8c4a38] underline underline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
           >
             Retenir ce libellé pour les prochains imports
           </button>

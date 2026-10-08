@@ -65,7 +65,7 @@ export default function CsvUploaderPage() {
   return (
     <ScreenCard
       flow
-      title="Importer ton relevé"
+      title="Importer ton relevé" icon="📥"
       subtitle="Dépose le fichier CSV de ta banque : les opérations reconnues sont rangées pour toi."
     >
       <div className="mx-auto max-w-3xl space-y-4">

@@ -12,7 +12,7 @@ import { getUserProfile, updateUserProfile } from '@/services/userService';
 const CARD = 'rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-4 shadow-sm';
 const INPUT = 'mt-1 min-h-11 w-full rounded-xl border-2 border-[#9c7560] bg-white px-3 text-[#5a4d41]';
 const BUTTON =
-  'min-h-11 rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] px-4 py-2 text-sm font-semibold text-[#8f3d24] transition-colors hover:bg-[#f2c4b6] focus:outline-hidden focus:ring-2 focus:ring-[#5b473d] disabled:opacity-60';
+  'mx-auto flex min-h-11 items-center justify-center rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] px-4 py-2 text-sm font-semibold text-[#8f3d24] transition-colors hover:bg-[#f2c4b6] focus:outline-hidden focus:ring-2 focus:ring-[#5b473d] disabled:opacity-60';
 const MIN_PASSWORD_LENGTH = 8;
 
 interface Feedback {
@@ -125,15 +125,15 @@ export default function ProfilePage() {
   };
 
   return (
-    <ScreenCard title="Ton espace personnel">
+    <ScreenCard title="Ton espace personnel" icon="🧸">
       <div className="grid gap-3 md:grid-cols-2">
 
       <section aria-labelledby="identity-title" className={CARD}>
-        <h2 id="identity-title" className="text-lg font-bold text-[#5a4d41]">Identité</h2>
+        <h2 id="identity-title" className="text-center text-lg font-bold text-[#5a4d41]">Identité</h2>
         {isLoading ? (
           <p className="mt-2 text-sm text-[#6b574c]" role="status">Chargement…</p>
         ) : (
-          <form onSubmit={handleProfileSubmit} className="mt-2 max-w-md space-y-2">
+          <form onSubmit={handleProfileSubmit} className="mx-auto mt-2 max-w-md space-y-2">
             <label className="block text-sm font-semibold text-[#5a4d41]">
               Adresse e-mail
               <input type="email" value={email} readOnly className={`${INPUT} bg-[#f5eadf] text-[#6b574c]`} />
@@ -157,8 +157,8 @@ export default function ProfilePage() {
       </section>
 
       <section aria-labelledby="password-title" className={CARD}>
-        <h2 id="password-title" className="text-lg font-bold text-[#5a4d41]">Mot de passe</h2>
-        <form onSubmit={handlePasswordSubmit} className="mt-2 max-w-md space-y-2">
+        <h2 id="password-title" className="text-center text-lg font-bold text-[#5a4d41]">Mot de passe</h2>
+        <form onSubmit={handlePasswordSubmit} className="mx-auto mt-2 max-w-md space-y-2">
           <label className="block text-sm font-semibold text-[#5a4d41]">
             Nouveau mot de passe
             <input
@@ -187,15 +187,15 @@ export default function ProfilePage() {
       </section>
 
       <section aria-labelledby="session-title" className={CARD}>
-        <h2 id="session-title" className="text-lg font-bold text-[#5a4d41]">Session</h2>
-        <p className="mt-1 text-sm text-[#6b574c]">
+        <h2 id="session-title" className="text-center text-lg font-bold text-[#5a4d41]">Session</h2>
+        <p className="mt-1 text-center text-sm text-[#6b574c]">
           Termine ta session sur cet appareil. Tu devras te reconnecter pour accéder à tes budgets.
         </p>
-        <LogoutButton className="mt-4" />
+        <LogoutButton className="mt-4 flex flex-col items-center" />
       </section>
 
       <section aria-labelledby="legal-title" className={`${CARD} md:col-span-2`}>
-        <h2 id="legal-title" className="text-lg font-bold text-[#5a4d41]">Données et informations légales</h2>
+        <h2 id="legal-title" className="text-center text-lg font-bold text-[#5a4d41]">Données et informations légales</h2>
         <ul className="mt-2 grid gap-x-4 sm:grid-cols-3">
           {[
             [ROUTES.myData, 'Mes données (exporter, supprimer)'],

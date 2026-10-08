@@ -7,24 +7,34 @@ interface ScreenCardProps {
   children: ReactNode;
   /** Mobile : la page s'allonge et défile avec l'écran, au lieu d'un petit cadre qui défile à l'intérieur. */
   flow?: boolean;
+  /** Petite mascotte dans une bulle, décorative. */
+  icon?: string;
 }
 
 /**
  * Cadre d'une page : même identité (bordure crème, coins arrondis) mais hauteur bornée à l'écran.
  * Le titre reste visible, seul le contenu défile si l'écran est trop petit.
  */
-export default function ScreenCard({ title, subtitle, actions, children, flow = false }: ScreenCardProps) {
+export default function ScreenCard({ title, subtitle, actions, children, flow = false, icon }: ScreenCardProps) {
   return (
     <div className={`mx-auto flex min-h-0 w-full ${flow ? 'md:h-full' : 'h-full'} max-w-[1200px] flex-col px-3 py-2 sm:px-5`}>
       <div className={`flex min-h-0 flex-col gap-2 rounded-[1.6rem] border-[3px] border-[#d8b6a5] bg-[#f2e6d8] p-3 shadow-[inset_0_0_0_3px_rgba(255,255,255,0.18)] sm:rounded-[2rem] sm:p-4 ${flow ? 'md:flex-1' : 'flex-1'}`}>
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-1">
-          <div className="min-w-0">
-            <h1 className="text-[clamp(1.25rem,2vw,1.75rem)] font-black leading-tight tracking-[-0.04em] text-[#5d4d44]">
+        <div className="flex flex-col items-center gap-1 px-1 text-center">
+          <div className="flex items-center justify-center gap-2.5">
+            {icon && (
+              <span
+                aria-hidden="true"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-white/70 bg-[#F8D5CB] text-xl shadow-[0_2px_0_rgba(171,98,77,0.35)] motion-safe:animate-[float_3s_ease-in-out_infinite]"
+              >
+                {icon}
+              </span>
+            )}
+            <h1 className="text-[clamp(1.35rem,2.2vw,1.9rem)] font-black leading-tight tracking-[-0.04em] text-[#5d4d44]">
               {title}
             </h1>
-            {subtitle && <p className="hidden text-sm text-[#6b574c] sm:block">{subtitle}</p>}
           </div>
-          {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+          {subtitle && <p className="hidden max-w-xl text-sm sm:block text-[#6b574c]">{subtitle}</p>}
+          {actions && <div className="mt-1 flex flex-wrap items-center justify-center gap-2">{actions}</div>}
         </div>
         <div className={flow ? 'md:min-h-0 md:flex-1 md:overflow-y-auto' : 'min-h-0 flex-1 overflow-y-auto'}>{children}</div>
       </div>

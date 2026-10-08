@@ -161,7 +161,7 @@ export default function RapprochementPage() {
   return (
     <ScreenCard
       flow
-      title="Pointer"
+      title="Pointer" icon="🎯"
       subtitle="Une opération à la fois : choisis la catégorie, puis pointe."
     >
       <div className="mx-auto max-w-2xl space-y-3">

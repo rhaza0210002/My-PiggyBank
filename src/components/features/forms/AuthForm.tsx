@@ -181,7 +181,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             ) : (
               <Link
                 href={ROUTES.forgotPassword}
-                className="inline-flex min-h-11 items-center px-1 text-sm font-bold text-[#8c4a38] underline underline-offset-4"
+                className="mx-auto flex min-h-11 w-fit items-center px-1 text-sm font-bold text-[#8c4a38] underline underline-offset-4"
               >
                 Mot de passe oublié ?
               </Link>
