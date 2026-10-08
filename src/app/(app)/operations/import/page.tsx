@@ -6,6 +6,7 @@ import CsvTransactionsTable from '@/components/features/tables/CsvTransactionsTa
 import ScreenCard from '@/components/ui/ScreenCard';
 import { ROUTES } from '@/constants/routes';
 import { SocieteGeneraleParser, type BankTransaction } from '@/services/csvParser';
+import { buildDemoTransactions } from '@/utils/demoStatement';
 import { getLibelleTransacts } from '@/services/transactionCategoryService';
 
 export default function CsvUploaderPage() {
@@ -13,11 +14,13 @@ export default function CsvUploaderPage() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoadingMappings, setIsLoadingMappings] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setFileName(file.name);
+    setIsDemo(false);
     setError(null);
     setTransactions([]);
     setIsLoadingMappings(true);
@@ -62,6 +65,22 @@ export default function CsvUploaderPage() {
     };
   };
 
+  const showDemo = async () => {
+    setError(null);
+    setFileName(null);
+    setIsLoadingMappings(true);
+    try {
+      setTransactions(buildDemoTransactions(await getLibelleTransacts()));
+      setIsDemo(true);
+    } catch {
+      // Sans règles lisibles, l'exemple reste utile : il s'affiche simplement non catégorisé.
+      setTransactions(buildDemoTransactions([]));
+      setIsDemo(true);
+    } finally {
+      setIsLoadingMappings(false);
+    }
+  };
+
   return (
     <ScreenCard
       flow
@@ -92,12 +111,20 @@ export default function CsvUploaderPage() {
               className="sr-only"
             />
           </label>
+          <button
+            type="button"
+            onClick={showDemo}
+            disabled={isLoadingMappings}
+            className="mt-3 rounded-full border-2 border-[#d7b59d] bg-white/70 px-4 py-2 text-sm font-bold text-[#5a473d] focus:outline-none focus:ring-2 focus:ring-[#5b473d] disabled:opacity-55"
+          >
+            🧪 Essayer avec un exemple
+          </button>
           {error && <p role="alert" className="mt-3 font-semibold text-red-700">{error}</p>}
         </div>
 
-        <CsvTransactionsTable transactions={transactions} />
+        <CsvTransactionsTable transactions={transactions} isDemo={isDemo} />
 
-        {transactions.length > 0 && (
+        {transactions.length > 0 && !isDemo && (
           <p className="text-center text-sm text-[#6b574c]">
             Une fois les transactions enregistrées, passe à l’étape suivante.{' '}
             <Link href={ROUTES.reconciliation} className="font-black text-[#8c4a38] underline underline-offset-4">
