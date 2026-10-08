@@ -50,6 +50,9 @@ export const REMINDERS_CRON_ROUTE = '/api/rappels';
 /** Service worker des notifications : doit rester lisible sans session. */
 export const SERVICE_WORKER_PATH = '/sw.js';
 
+/** Manifeste d'installation : le navigateur le lit sans session. */
+export const MANIFEST_PATH = '/manifest.webmanifest';
+
 /** Chemins accessibles sans session (et sans redirection quand on est connecté). */
 export const OPEN_ROUTES: readonly string[] = Object.values(LEGAL_ROUTES);
 
