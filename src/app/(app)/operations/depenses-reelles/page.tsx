@@ -10,7 +10,7 @@ import MonthlyBudgetComparison, {
 } from '@/components/features/tables/MonthlyBudgetComparison';
 import BudgetVsActualDonuts from '@/components/features/charts/BudgetVsActualDonuts';
 import ScreenCard from '@/components/ui/ScreenCard';
-import Tabs from '@/components/ui/Tabs';
+import SectionStack from '@/components/ui/SectionStack';
 import StoredTransactionsBreakdown from '@/components/features/tables/StoredTransactionsBreakdown';
 import {
   getCategories,
@@ -191,9 +191,9 @@ export default function DepenseReellePage() {
                 />
               </dl>
 
-              <Tabs
-                label="Vues des dépenses du mois"
-                tabs={[
+              <SectionStack
+                label="Parties des dépenses du mois"
+                sections={[
                   {
                     id: 'overview',
                     label: 'Budget et réel',
