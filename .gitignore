@@ -13,3 +13,4 @@ next-env.d.ts
 
 # Claude Code (réglages locaux)
 .claude/settings.local.json
+.superpowers/
