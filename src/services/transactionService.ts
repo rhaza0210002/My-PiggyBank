@@ -2,6 +2,8 @@ import { supabase } from '@/lib/supabaseClient';
 import { requireUserId } from '@/lib/currentUser';
 import type { BankTransaction } from '@/services/csvParser';
 import type { TransactionRow } from '@/types/database';
+import { getArchivedMonthActuals, getArchivedMonths } from '@/services/archiveService';
+import { archivedActivityRows, archivedToTransactions } from '@/utils/archive';
 import { fingerprint, sanitizeBankLabel } from '@/utils/bankPrivacy';
 import { prepareTransactionsForStorage } from '@/utils/transactionDedupe';
 
@@ -14,6 +16,8 @@ export interface SaveTransactionsResult {
   inserted: number;
   duplicates: number;
   invalid: number;
+  /** Opérations d'un mois déjà archivé : ignorées, le détail de ce mois n'est plus conservé. */
+  archived: number;
 }
 
 const COLUMNS = 'id, booked_on, label, amount, category_id, category_key, type, reconciled_at';
@@ -38,7 +42,12 @@ export async function saveImportedTransactions(
   transactions: BankTransaction[],
 ): Promise<SaveTransactionsResult> {
   const userId = await requireUserId('Vous devez être connecté pour enregistrer les transactions.');
-  const { rows: plainRows, invalid } = prepareTransactionsForStorage(transactions);
+  const { rows: allRows, invalid } = prepareTransactionsForStorage(transactions);
+  const archivedKeys = new Set(
+    (await getArchivedMonths()).map((month) => `${month.year}-${String(month.month_index + 1).padStart(2, '0')}`),
+  );
+  const plainRows = allRows.filter((row) => !archivedKeys.has(row.booked_on.slice(0, 7)));
+  const archived = allRows.length - plainRows.length;
   // Minimisation : libellé masqué (carte, IBAN, e-mail) et clé anti-doublon réduite à une empreinte.
   const rows = await Promise.all(
     plainRows.map(async (row) => ({
@@ -62,7 +71,7 @@ export async function saveImportedTransactions(
     inserted += data?.length ?? 0;
   }
 
-  return { inserted, duplicates: rows.length - inserted, invalid: invalid.length };
+  return { inserted, duplicates: rows.length - inserted, invalid: invalid.length, archived };
 }
 
 export async function getRecentTransactions(limit: number): Promise<StoredTransaction[]> {
@@ -178,7 +187,11 @@ export async function getTransactionsForMonth(
     .order('created_at', { ascending: false });
 
   if (error) throw toServiceError(error, 'Lecture des transactions du mois impossible');
-  return data ?? [];
+  if (data && data.length > 0) return data;
+
+  // Mois archivé : plus de lignes bancaires, seulement un total par catégorie.
+  const archived = await getArchivedMonthActuals(year, monthIndex);
+  return archived ? archivedToTransactions(archived.actuals, year, monthIndex, archived.completedAt) : [];
 }
 
 /** Revenus, dépenses et solde net d'un mois (monthIndex : 0 = janvier). */
@@ -192,8 +205,10 @@ export async function getMonthTotals(year: number, monthIndex: number): Promise<
     .lt('booked_on', next);
 
   if (error) throw toServiceError(error, 'Calcul du solde du mois impossible');
+  if (data && data.length > 0) return summarizeAmounts(data.map((row) => Number(row.amount)));
 
-  return summarizeAmounts((data ?? []).map((row) => Number(row.amount)));
+  const archived = await getArchivedMonthActuals(year, monthIndex);
+  return summarizeAmounts((archived?.actuals ?? []).map((actual) => Number(actual.amount)));
 }
 
 export function summarizeAmounts(amounts: number[]): MonthTotals {
@@ -232,5 +247,7 @@ export async function getReconciliationActivity(): Promise<Array<Pick<StoredTran
     if (!data || data.length < ACTIVITY_PAGE_SIZE) break;
   }
 
+  // Les mois archivés comptent toujours pour les points et les mois bouclés.
+  rows.push(...archivedActivityRows(await getArchivedMonths()));
   return rows;
 }

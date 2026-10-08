@@ -12,6 +12,7 @@ import BudgetVsActualDonuts from '@/components/features/charts/BudgetVsActualDon
 import BalanceToggle, { revealAmount, useBalanceVisibility } from '@/components/ui/BalanceToggle';
 import ScreenCard from '@/components/ui/ScreenCard';
 import SectionStack from '@/components/ui/SectionStack';
+import ArchiveMonthPanel from '@/components/features/tables/ArchiveMonthPanel';
 import StoredTransactionsBreakdown from '@/components/features/tables/StoredTransactionsBreakdown';
 import {
   getCategories,
@@ -66,6 +67,7 @@ export default function DepenseReellePage() {
   const [year, setYear] = useState(() => new Date().getFullYear());
   const [monthIndex, setMonthIndex] = useState(() => new Date().getMonth());
   const [loaded, setLoaded] = useState<LoadedMonth | null>(null);
+  const [reloadCount, setReloadCount] = useState(0);
 
   const requestKey = `${year}-${monthIndex}`;
   const isLoading = loaded?.requestKey !== requestKey;
@@ -92,7 +94,7 @@ export default function DepenseReellePage() {
     return () => {
       isCurrent = false;
     };
-  }, [year, monthIndex, requestKey]);
+  }, [year, monthIndex, requestKey, reloadCount]);
 
   const goToMonth = (offset: number) => {
     const target = year * 12 + monthIndex + offset;
@@ -197,6 +199,14 @@ export default function DepenseReellePage() {
                   tone={breakdown.uncategorized.length > 0 ? 'warning' : 'neutral'}
                 />
               </dl>
+
+              <ArchiveMonthPanel
+                year={year}
+                monthIndex={monthIndex}
+                monthLabel={MONTHS[monthIndex].label}
+                transactions={data.transactions}
+                onArchived={() => setReloadCount((count) => count + 1)}
+              />
 
               {breakdown.uncategorized.length > 0 && (
                 <Link

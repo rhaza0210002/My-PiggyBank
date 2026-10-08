@@ -64,7 +64,8 @@ export default function ConfidentialitePage() {
         (fichier CSV) sont enregistrées. Le fichier lui-même est lu dans ton navigateur : il n’est jamais envoyé ni
         conservé. Avant l’enregistrement, les numéros de carte, IBAN, adresses e-mail et longues références sont
         masqués dans les libellés. Ceux-ci peuvent encore contenir le nom d’un tiers (un virement, un commerçant) :
-        ils restent visibles uniquement par toi.
+        ils restent visibles uniquement par toi. Tu peux aussi, mois par mois, archiver un mois entièrement pointé : le détail
+        des opérations est alors effacé et seuls les totaux par catégorie sont conservés.
       </p>
       <p>
         Nous ne collectons aucune donnée de santé ni aucune information sur ton état de santé. Aucune donnée n’est

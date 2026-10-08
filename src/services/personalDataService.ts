@@ -34,7 +34,7 @@ export async function exportMyData(): Promise<DataExport> {
   if (authError || !authData.user) throw new Error('Vous devez être connecté pour exporter vos données.');
   const userId = authData.user.id;
 
-  const [profileResult, settingsResult, transactions, budgetEntries, labelRules, categories, categoryGroups] =
+  const [profileResult, settingsResult, transactions, budgetEntries, labelRules, categories, categoryGroups, archivedActuals] =
     await Promise.all([
       supabase.from('users').select('email, pseudo, created_at').eq('id', userId).maybeSingle(),
       supabase.from('user_settings').select('notify_reconcile, notify_budget_overrun').maybeSingle(),
@@ -49,6 +49,10 @@ export async function exportMyData(): Promise<DataExport> {
       supabase.from('libelle_transacts').select('label, key, id_cat').eq('user_id', userId),
       getCategories(),
       getCategoriesGroupKey(),
+      readAll<{ year: number; month_index: number; category_id: string; amount: number; operations_count: number }>(
+        'monthly_actuals',
+        'year, month_index, category_id, amount, operations_count',
+      ),
     ]);
 
   if (profileResult.error) throw new Error(`Lecture du profil impossible : ${profileResult.error.message}`);
@@ -64,6 +68,7 @@ export async function exportMyData(): Promise<DataExport> {
     labelRules: labelRules.data ?? [],
     categories,
     categoryGroups,
+    archivedActuals,
   });
 }
 

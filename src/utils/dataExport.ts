@@ -16,6 +16,8 @@ export interface ExportInput {
   settings: { notify_reconcile: boolean; notify_budget_overrun: boolean } | null;
   categories: Category[];
   categoryGroups: CategoryGroup[];
+  /** Totaux réels des mois archivés (le détail des opérations de ces mois n'existe plus). */
+  archivedActuals?: Array<{ year: number; month_index: number; category_id: string; amount: number | string; operations_count: number }>;
 }
 
 export interface DataExport {
@@ -26,6 +28,7 @@ export interface DataExport {
   transactions: Array<{ date: string; libelle: string; montant: number; categorie: string | null; type: string; pointee_le: string | null }>;
   budget: Array<{ annee: number; mois: number; groupe: string | null; categorie: string; montant: number }>;
   reglesDeLibelle: Array<{ motCle: string; categorie: string | null }>;
+  totauxArchives: Array<{ annee: number; mois: number; categorie: string; montant: number; operations: number }>;
 }
 
 /**
@@ -60,6 +63,13 @@ export function buildDataExport(input: ExportInput): DataExport {
         montant: Number(entry.amount),
       };
     }),
+    totauxArchives: (input.archivedActuals ?? []).map((actual) => ({
+      annee: actual.year,
+      mois: actual.month_index + 1,
+      categorie: categoryName(actual.category_id) ?? 'Catégorie supprimée',
+      montant: Number(actual.amount),
+      operations: actual.operations_count,
+    })),
     reglesDeLibelle: input.labelRules.map((rule) => ({ motCle: rule.label, categorie: categoryName(rule.id_cat) ?? rule.key })),
   };
 }
