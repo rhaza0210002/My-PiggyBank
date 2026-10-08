@@ -1,6 +1,7 @@
 "use client";
 
 import { startTransition, useEffect, useState } from 'react';
+import BalanceToggle, { revealAmount, useBalanceVisibility } from '@/components/ui/BalanceToggle';
 import { MONTHS, TABLE_STYLES } from '@/constants/tableStyles';
 import { getBudgetGroupPalette } from '@/constants/budgetGroupPalette';
 import { getBudgetEntries } from '@/services/budgetService';
@@ -54,6 +55,7 @@ export default function MonthlyBudgetComparison({
   monthIndex: controlledMonthIndex,
   year: controlledYear,
 }: MonthlyBudgetComparisonProps) {
+  const balance = useBalanceVisibility();
   const [internalYear, setInternalYear] = useState<number | null>(null);
   const [internalMonthIndex, setInternalMonthIndex] = useState(0);
   const currentYear = controlledYear ?? internalYear;
@@ -182,6 +184,8 @@ export default function MonthlyBudgetComparison({
       groupTotal + group.rows.reduce((sum, row) => sum + getDifference(group.isIncome, row.budget, row.actual), 0),
     0,
   );
+  // Tant que le solde est caché, la couleur de fond ne doit pas non plus laisser deviner son signe.
+  const shownDifference = balance.isShown ? totalDifference : 0;
   const uncategorizedGroup = groups.find((group) => group.categoryId === null);
   return (
     <section className="space-y-4" aria-labelledby="monthly-comparison-title">
@@ -342,35 +346,43 @@ export default function MonthlyBudgetComparison({
             );
           })}
 
-          <div className={`rounded-xl border p-3 md:hidden ${totalDifference > 0 ? 'border-[#83b5a6] bg-[#d2e9df]' : totalDifference < 0 ? 'border-[#d8846d] bg-[#f8e5da]' : 'border-[#b88f78] bg-[#efe0d6]'}`}>
-            <h4 className="mb-2 text-sm font-black text-[#5d4d44]">Solde général (revenus − dépenses)</h4>
+          <div className={`rounded-xl border p-3 md:hidden ${shownDifference > 0 ? 'border-[#83b5a6] bg-[#d2e9df]' : shownDifference < 0 ? 'border-[#d8846d] bg-[#f8e5da]' : 'border-[#b88f78] bg-[#efe0d6]'}`}>
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <h4 className="text-sm font-black text-[#5d4d44]">Solde général (revenus − dépenses)</h4>
+              <BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} subject="le solde général" />
+            </div>
             <dl className="grid grid-cols-3 gap-2">
               <div className="min-w-0">
                 <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Budget</dt>
-                <dd className="break-words text-sm font-black">{formatCurrency(totalBudget)}</dd>
+                <dd className="break-words text-sm font-black">{revealAmount(balance.isShown, formatCurrency(totalBudget))}</dd>
               </div>
               <div className="min-w-0">
                 <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Réel</dt>
-                <dd className="break-words text-sm font-black">{formatCurrency(totalActual)}</dd>
+                <dd className="break-words text-sm font-black">{revealAmount(balance.isShown, formatCurrency(totalActual))}</dd>
               </div>
               <div className="min-w-0">
                 <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Écart</dt>
-                <dd className={`break-words text-sm font-black ${totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
-                  {formatCurrency(totalDifference)}
+                <dd className={`break-words text-sm font-black ${balance.isShown && totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
+                  {revealAmount(balance.isShown, formatCurrency(totalDifference))}
                 </dd>
               </div>
             </dl>
           </div>
 
-          <div className={`hidden overflow-x-auto rounded-xl border md:block ${totalDifference > 0 ? 'border-[#83b5a6] bg-[#d2e9df]' : totalDifference < 0 ? 'border-[#d8846d] bg-[#f8e5da]' : 'border-[#b88f78] bg-[#efe0d6]'}`}>
+          <div className={`hidden overflow-x-auto rounded-xl border md:block ${shownDifference > 0 ? 'border-[#83b5a6] bg-[#d2e9df]' : shownDifference < 0 ? 'border-[#d8846d] bg-[#f8e5da]' : 'border-[#b88f78] bg-[#efe0d6]'}`}>
             <table className="w-full min-w-[620px] border-collapse text-left" aria-label="Solde général de la comparaison">
               <tbody>
-                <tr className={`font-black ${totalDifference > 0 ? 'bg-[#d2e9df]' : totalDifference < 0 ? 'bg-[#f8e5da]' : 'bg-[#efe0d6]'}`}>
-                  <td className={TABLE_STYLES.cellCategory}>Solde général (revenus − dépenses)</td>
-                  <td className={TABLE_STYLES.cellAmount}>{formatCurrency(totalBudget)}</td>
-                  <td className={TABLE_STYLES.cellAmount}>{formatCurrency(totalActual)}</td>
-                  <td className={`${TABLE_STYLES.cellAmount} ${totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
-                    {formatCurrency(totalDifference)}
+                <tr className={`font-black ${shownDifference > 0 ? 'bg-[#d2e9df]' : shownDifference < 0 ? 'bg-[#f8e5da]' : 'bg-[#efe0d6]'}`}>
+                  <td className={TABLE_STYLES.cellCategory}>
+                    <span className="flex items-center gap-2">
+                      <BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} subject="le solde général" />
+                      Solde général (revenus − dépenses)
+                    </span>
+                  </td>
+                  <td className={TABLE_STYLES.cellAmount}>{revealAmount(balance.isShown, formatCurrency(totalBudget))}</td>
+                  <td className={TABLE_STYLES.cellAmount}>{revealAmount(balance.isShown, formatCurrency(totalActual))}</td>
+                  <td className={`${TABLE_STYLES.cellAmount} ${balance.isShown && totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
+                    {revealAmount(balance.isShown, formatCurrency(totalDifference))}
                   </td>
                 </tr>
               </tbody>

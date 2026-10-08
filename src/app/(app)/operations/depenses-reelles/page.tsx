@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MONTHS } from '@/constants/tableStyles';
@@ -9,6 +9,7 @@ import MonthlyBudgetComparison, {
   type ComparisonGroup,
 } from '@/components/features/tables/MonthlyBudgetComparison';
 import BudgetVsActualDonuts from '@/components/features/charts/BudgetVsActualDonuts';
+import BalanceToggle, { revealAmount, useBalanceVisibility } from '@/components/ui/BalanceToggle';
 import ScreenCard from '@/components/ui/ScreenCard';
 import SectionStack from '@/components/ui/SectionStack';
 import StoredTransactionsBreakdown from '@/components/features/tables/StoredTransactionsBreakdown';
@@ -38,6 +39,7 @@ interface SummaryCardProps {
   label: string;
   value: string;
   tone?: 'neutral' | 'positive' | 'negative' | 'warning';
+  action?: ReactNode;
 }
 
 const TONE_CLASSES: Record<NonNullable<SummaryCardProps['tone']>, string> = {
@@ -47,16 +49,20 @@ const TONE_CLASSES: Record<NonNullable<SummaryCardProps['tone']>, string> = {
   warning: 'text-[#8a4a1c]',
 };
 
-function SummaryCard({ label, value, tone = 'neutral' }: SummaryCardProps) {
+function SummaryCard({ label, value, tone = 'neutral', action }: SummaryCardProps) {
   return (
     <div className="rounded-xl border border-[#d8b7a5] bg-[#fff8f2] px-2 py-1.5 shadow-sm sm:rounded-2xl sm:px-3 sm:py-2">
       <dt className="text-[0.6rem] font-semibold uppercase leading-tight tracking-[0.08em] text-[#6b574c] sm:text-[0.7rem]">{label}</dt>
-      <dd className={`text-sm font-black sm:text-lg ${TONE_CLASSES[tone]}`}>{value}</dd>
+      <dd className={`flex items-center justify-between gap-1 text-sm font-black sm:text-lg ${TONE_CLASSES[tone]}`}>
+        {value}
+        {action}
+      </dd>
     </div>
   );
 }
 
 export default function DepenseReellePage() {
+  const balance = useBalanceVisibility();
   const [year, setYear] = useState(() => new Date().getFullYear());
   const [monthIndex, setMonthIndex] = useState(() => new Date().getMonth());
   const [loaded, setLoaded] = useState<LoadedMonth | null>(null);
@@ -181,8 +187,9 @@ export default function DepenseReellePage() {
                 <SummaryCard label="Dépenses" value={euroFormatter.format(totals.expenses)} tone="negative" />
                 <SummaryCard
                   label="Solde du mois"
-                  value={signedEuroFormatter.format(totals.net)}
-                  tone={totals.net < 0 ? 'negative' : 'positive'}
+                  value={revealAmount(balance.isShown, signedEuroFormatter.format(totals.net))}
+                  tone={balance.isShown && totals.net < 0 ? 'negative' : 'positive'}
+                  action={<BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} className="size-9 text-base" />}
                 />
                 <SummaryCard
                   label="À catégoriser"

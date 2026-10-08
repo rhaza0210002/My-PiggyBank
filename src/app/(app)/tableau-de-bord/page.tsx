@@ -4,6 +4,7 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import BadgeShelf from '@/components/features/gamification/BadgeShelf';
 import MonthsStrip from '@/components/features/gamification/MonthsStrip';
+import BalanceToggle, { revealAmount, useBalanceVisibility } from '@/components/ui/BalanceToggle';
 import ProgressBar from '@/components/ui/ProgressBar';
 import { ROUTES } from '@/constants/routes';
 import { MONTHS } from '@/constants/tableStyles';
@@ -19,6 +20,7 @@ const PRIMARY_LINK =
   'inline-flex min-h-12 items-center justify-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 text-center font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] motion-reduce:transition-none';
 
 export default function DashboardPage() {
+  const balance = useBalanceVisibility();
   const { data: progress, error: progressError } = useGamification();
   const [pseudo, setPseudo] = useState('');
   const [monthTotals, setMonthTotals] = useState<MonthTotals | null>(null);
@@ -112,14 +114,17 @@ export default function DashboardPage() {
             </>
           )}
 
-          <p className="mt-auto text-sm text-[#6b574c]">
-            Solde du mois :{' '}
-            <strong className={hasBalance && monthTotals.net < 0 ? 'text-[#9c3633]' : 'text-[#2f5d32]'}>
-              {hasBalance ? signedEuroFormatter.format(monthTotals.net) : '—'}
-            </strong>
-            {hasBalance && (
-              <span className="text-xs"> ({euroFormatter.format(monthTotals.expenses)} dépensés)</span>
-            )}
+          <p className="mt-auto flex flex-wrap items-center gap-x-2 text-sm text-[#6b574c]">
+            <BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} />
+            <span>
+              Solde du mois :{' '}
+              <strong className={balance.isShown && hasBalance && monthTotals.net < 0 ? 'text-[#9c3633]' : 'text-[#2f5d32]'}>
+                {revealAmount(balance.isShown, hasBalance ? signedEuroFormatter.format(monthTotals.net) : '—')}
+              </strong>
+              {balance.isShown && hasBalance && (
+                <span className="text-xs"> ({euroFormatter.format(monthTotals.expenses)} dépensés)</span>
+              )}
+            </span>
           </p>
         </section>
 
