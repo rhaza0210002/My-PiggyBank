@@ -32,7 +32,20 @@ Les scripts SQL sont dans `supabase/` :
 ## Authentification
 
 La session Supabase est stockée dans des cookies (`@supabase/ssr`). `src/proxy.ts` redirige vers
-`/login` toute requête sans session valide ; seules `/login` et `/register` sont publiques.
+`/connexion` toute requête sans session valide ; seules `/connexion` et `/inscription` sont publiques.
+
+### Administrateur
+
+Les catégories (`transac_cat`) sont partagées entre tous les comptes : seul un utilisateur dont
+`app_metadata.role` vaut `admin` peut en créer, modifier ou supprimer (politiques RLS via
+`public.is_admin()`). Il les crée depuis la page Rapprochement. Pour nommer un administrateur, dans le
+SQL Editor (puis se reconnecter, le rôle est lu dans le jeton) :
+
+```sql
+update auth.users
+   set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role":"admin"}'
+ where email = 'votre@email';
+```
 
 ## Tests et CI
 

@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MONTHS } from '@/constants/tableStyles';
+import { ROUTES } from '@/constants/routes';
 import MonthlyBudgetComparison, {
   type ComparisonGroup,
 } from '@/components/features/tables/MonthlyBudgetComparison';
+import BudgetVsActualDonuts from '@/components/features/charts/BudgetVsActualDonuts';
 import StoredTransactionsBreakdown from '@/components/features/tables/StoredTransactionsBreakdown';
 import {
   getCategories,
@@ -39,7 +41,7 @@ interface SummaryCardProps {
 const TONE_CLASSES: Record<NonNullable<SummaryCardProps['tone']>, string> = {
   neutral: 'text-[#5d4d44]',
   positive: 'text-[#3c763d]',
-  negative: 'text-[#b94a48]',
+  negative: 'text-[#9c3633]',
   warning: 'text-[#8a4a1c]',
 };
 
@@ -147,7 +149,7 @@ export default function DepenseReellePage() {
             </div>
 
             <Link
-              href="/operations/import"
+              href={ROUTES.import}
               className="rounded-xl border border-[#b88f78] bg-white/70 px-4 py-2.5 text-sm font-bold text-[#5d4d44] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5d4d44]"
             >
               Importer un relevé
@@ -177,7 +179,7 @@ export default function DepenseReellePage() {
                 Importe un relevé CSV, puis clique sur « Enregistrer les transactions ».
               </p>
               <Link
-                href="/operations/import"
+                href={ROUTES.import}
                 className="mt-4 inline-block rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2.5 font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px]"
               >
                 Aller à l&apos;import CSV
@@ -199,6 +201,15 @@ export default function DepenseReellePage() {
                   tone={breakdown.uncategorized.length > 0 ? 'warning' : 'neutral'}
                 />
               </dl>
+
+              <BudgetVsActualDonuts
+                year={year}
+                monthIndex={monthIndex}
+                monthLabel={MONTHS[monthIndex].label}
+                transactions={data.transactions}
+                categories={data.categories}
+                categoryGroups={data.categoryGroups}
+              />
 
               <section className="rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4">
                 <MonthlyBudgetComparison

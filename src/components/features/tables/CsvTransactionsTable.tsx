@@ -69,7 +69,7 @@ function CategoryRows({
           </button>
         </td>
         <td className={TABLE_STYLES.cellCategory}>{group.records.length}</td>
-        <td className={`${TABLE_STYLES.cellAmount} ${group.totalAmount < 0 ? 'text-[#b94a48]' : 'text-[#3c763d]'}`}>
+        <td className={`${TABLE_STYLES.cellAmount} ${group.totalAmount < 0 ? 'text-[#9c3633]' : 'text-[#3c763d]'}`}>
           {group.totalAmount.toFixed(2)} €
         </td>
       </tr>
@@ -92,7 +92,7 @@ function CategoryRows({
                       <td className="max-w-[160px] break-words px-2 py-2 text-[#5d4d44] sm:px-3">
                         {transaction.label || transaction.detail}
                       </td>
-                      <td className={`px-2 py-2 text-right font-semibold sm:px-3 ${transaction.amount < 0 ? 'text-[#b94a48]' : 'text-[#3c763d]'}`}>
+                      <td className={`px-2 py-2 text-right font-semibold sm:px-3 ${transaction.amount < 0 ? 'text-[#9c3633]' : 'text-[#3c763d]'}`}>
                         {transaction.amount.toFixed(2)} €
                       </td>
                     </tr>

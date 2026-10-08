@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import NewCategoryForm from '@/components/features/forms/NewCategoryForm';
+import { isCurrentUserAdmin } from '@/services/adminService';
+import { ROUTES } from '@/constants/routes';
 import {
   getCategories,
   getCategoriesGroupKey,
@@ -38,6 +41,7 @@ export default function RapprochementPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [busyIds, setBusyIds] = useState<ReadonlySet<string>>(new Set());
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     let isCurrent = true;
@@ -50,6 +54,10 @@ export default function RapprochementPage() {
         if (!isCurrent) return;
         setLoadError(error instanceof Error ? error.message : 'Impossible de charger les opérations.');
       });
+
+    isCurrentUserAdmin().then((admin) => {
+      if (isCurrent) setIsAdmin(admin);
+    });
 
     return () => {
       isCurrent = false;
@@ -156,6 +164,23 @@ export default function RapprochementPage() {
           </p>
         )}
 
+        {data && isAdmin && (
+          <NewCategoryForm
+            groups={data.categoryGroups}
+            categories={data.categories}
+            onCreated={(category) =>
+              setData((current) =>
+                current && {
+                  ...current,
+                  categories: [...current.categories, category].sort((first, second) =>
+                    first.label.localeCompare(second.label, 'fr'),
+                  ),
+                },
+              )
+            }
+          />
+        )}
+
         {data && transactions.length === 0 && (
           <div className="rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-8 text-center">
             <p className="text-lg font-bold text-[#5a473d]">Tout est rapproché.</p>
@@ -163,7 +188,7 @@ export default function RapprochementPage() {
               Les nouvelles opérations apparaîtront ici après un import de relevé.
             </p>
             <Link
-              href="/operations/import"
+              href={ROUTES.import}
               className="mt-4 inline-block rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2.5 font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px]"
             >
               Importer un relevé
@@ -198,7 +223,7 @@ export default function RapprochementPage() {
                       {monthLabel && <span className="sr-only"> ({monthLabel})</span>}
                     </div>
                     <div className="min-w-0 break-words text-sm font-bold text-[#5d4d44]">{transaction.label}</div>
-                    <div className={`text-sm font-black ${amount < 0 ? 'text-[#b94a48]' : 'text-[#3c763d]'}`}>
+                    <div className={`text-sm font-black ${amount < 0 ? 'text-[#9c3633]' : 'text-[#3c763d]'}`}>
                       {signedEuroFormatter.format(amount)}
                     </div>
 
