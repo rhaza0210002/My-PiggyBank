@@ -14,6 +14,9 @@ export interface Transaction {
 interface BalanceCardProps {
   balance: string;
   encouragingMessage: string;
+  balanceLabel?: string;
+  reconcileEmptyText?: string;
+  historyEmptyText?: string;
 }
 
 interface AsideCardsProps {
@@ -30,6 +33,9 @@ export default function AsideCards({
   onViewAllHistory,
   balance,
   encouragingMessage,
+  balanceLabel = 'Ton solde',
+  reconcileEmptyText = 'Rien à rapprocher pour le moment.',
+  historyEmptyText = 'Aucune transaction pour le moment.',
 }: AsideCardsProps & BalanceCardProps) {
   return (
     <div className={styles.dashboardCards}>
@@ -42,6 +48,11 @@ export default function AsideCards({
             </div>
 
             <ul className={styles.cardList}>
+              {reconcileItems.length === 0 && (
+                <li className={styles.cardItem}>
+                  <p className={styles.cardItemMeta}>{reconcileEmptyText}</p>
+                </li>
+              )}
               {reconcileItems.map((item) => (
                 <li key={item.id} className={styles.cardItem}>
                   <div className={styles.cardItemText}>
@@ -67,7 +78,7 @@ export default function AsideCards({
       <aside aria-label="Solde actuel" className={`${styles.card} ${styles.cardBalance} ${styles.balancePanel}`}>
         <div className={styles.cardInner}>
           <div>
-            <h2 className={styles.balanceHeader}>Ton solde</h2>
+            <h2 className={styles.balanceHeader}>{balanceLabel}</h2>
             <p className={styles.balanceAmount}>{balance}</p>
             <p className={styles.balanceMessage}>{encouragingMessage}</p>
           </div>
@@ -90,6 +101,11 @@ export default function AsideCards({
             </div>
 
             <ul className={styles.cardList}>
+              {historyItems.length === 0 && (
+                <li className={styles.cardItem}>
+                  <p className={styles.cardItemMeta}>{historyEmptyText}</p>
+                </li>
+              )}
               {historyItems.map((item) => (
                 <li key={item.id} className={`${styles.cardItem} ${styles.cardItemHistory}`}>
                   <div className={styles.cardItemText}>

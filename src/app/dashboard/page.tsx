@@ -1,12 +1,53 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import AsideCards, { Transaction } from "@/components/features/homecards/AsideCards";
 import styles from "@/app/dashboard/Dashboard.module.css";
 import { supabase } from '@/lib/supabaseClient';
 import { getUserProfile } from '@/services/userService';
+import {
+  getMonthTotals,
+  getRecentTransactions,
+  getUncategorizedTransactions,
+  type MonthTotals,
+  type StoredTransaction,
+} from '@/services/transactionService';
+
+const euroFormatter = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
+const signedEuroFormatter = new Intl.NumberFormat('fr-FR', {
+  style: 'currency',
+  currency: 'EUR',
+  signDisplay: 'exceptZero',
+});
+
+function toCardItem(transaction: StoredTransaction): Transaction {
+  const amount = Number(transaction.amount);
+  return {
+    id: transaction.id,
+    title: transaction.label,
+    amount: signedEuroFormatter.format(amount),
+    date: new Date(`${transaction.booked_on}T00:00:00`).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+    }),
+    type: amount >= 0 ? 'income' : 'expense',
+  };
+}
+
+function getEncouragingMessage(totals: MonthTotals | null, hasError: boolean): string {
+  if (hasError) return "Impossible de charger tes données.";
+  if (!totals || totals.count === 0) return "Importe un relevé CSV pour commencer.";
+  if (totals.net >= 0) return "Tu tiens la bonne voie !";
+  return "Ce mois-ci, tes dépenses dépassent tes revenus.";
+}
 
 export default function DashboardPage() {
-  const [userName, setUserName] = useState<string>("Mallaury");
+  const router = useRouter();
+  const [userName, setUserName] = useState<string>("");
+  const [reconcileItems, setReconcileItems] = useState<Transaction[]>([]);
+  const [historyItems, setHistoryItems] = useState<Transaction[]>([]);
+  const [monthTotals, setMonthTotals] = useState<MonthTotals | null>(null);
+  const [dataError, setDataError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchUserData() {
@@ -35,47 +76,42 @@ export default function DashboardPage() {
     fetchUserData();
   }, []);
 
-  const reconcileItems: Transaction[] = [
-    {
-      id: "1",
-      title: "Supermarché",
-      amount: "-25,00 €",
-      date: "18 avril",
-      type: "expense",
-    },
-    {
-      id: "2",
-      title: "Abonnement Musique",
-      amount: "-9,99 €",
-      date: "15 avril",
-      type: "expense",
-    },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+    const now = new Date();
 
-  const historyItems: Transaction[] = [
-    {
-      id: "1",
-      title: "Salaire",
-      amount: "+1 500,00 €",
-      date: "02 avril",
-      type: "income",
-    },
-    {
-      id: "2",
-      title: "Facture Internet",
-      amount: "-40,00 €",
-      date: "28 mars",
-      type: "expense",
-    },
-  ];
+    Promise.all([
+      getUncategorizedTransactions(3),
+      getRecentTransactions(5),
+      getMonthTotals(now.getFullYear(), now.getMonth()),
+    ])
+      .then(([toReconcile, recent, totals]) => {
+        if (!isMounted) return;
+        setReconcileItems(toReconcile.map(toCardItem));
+        setHistoryItems(recent.map(toCardItem));
+        setMonthTotals(totals);
+        setDataError(null);
+      })
+      .catch((error: unknown) => {
+        if (!isMounted) return;
+        console.error("Erreur lors du chargement du dashboard :", error);
+        setDataError(error instanceof Error ? error.message : "Chargement impossible.");
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleStartReconcile = () => {
-    console.log("Lancement du rapprochement bancaire");
+    router.push('/csvUploader');
   };
 
   const handleViewAllHistory = () => {
     console.log("Affichage de l'historique complet");
   };
+
+  const balance = monthTotals && monthTotals.count > 0 ? euroFormatter.format(monthTotals.net) : '—';
 
   return (
     <section className={`mt-5 mx-5 ${styles.dashboardPage}`}>
@@ -88,11 +124,16 @@ export default function DashboardPage() {
             Vue d’ensemble
           </p>
           <h1 className="mt-2 text-2xl font-bold text-[#5a4d41]">
-            Ta tirelire est en bonne forme, .
+            Ta tirelire est en bonne forme{userName ? `, ${userName}` : ''}.
           </h1>
           <p className="mt-2 text-sm text-[#7b655a]">
             Gère tes rapprochements, suis ton solde et garde un œil sur tes dernières opérations.
           </p>
+          {dataError && (
+            <p role="alert" className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
+              {dataError}
+            </p>
+          )}
         </div>
 
         <AsideCards
@@ -100,8 +141,10 @@ export default function DashboardPage() {
           historyItems={historyItems}
           onStartReconcile={handleStartReconcile}
           onViewAllHistory={handleViewAllHistory}
-          balance="1 234,56 €"
-          encouragingMessage="Tu tiens la bonne voie !"
+          balance={balance}
+          balanceLabel="Solde du mois"
+          encouragingMessage={getEncouragingMessage(monthTotals, dataError !== null)}
+          reconcileEmptyText="Aucune opération sans catégorie."
         />
       </div>
     </section>
