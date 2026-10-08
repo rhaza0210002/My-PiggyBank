@@ -20,7 +20,7 @@ export default function ProgressBar({ value, max, label, valueText }: ProgressBa
       className="h-3 w-full overflow-hidden rounded-full border border-[#d8b6a5] bg-[#efe3d8]"
     >
       <div
-        className="h-full rounded-full bg-[#a3452a] transition-[width] duration-700 ease-out motion-reduce:transition-none"
+        className="grow h-full rounded-full bg-[#a3452a] transition-[width] duration-700 ease-out motion-reduce:transition-none"
         style={{ width: `${percent}%` }}
       />
     </div>

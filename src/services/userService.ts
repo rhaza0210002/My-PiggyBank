@@ -1,12 +1,18 @@
 import { supabase } from '@/lib/supabaseClient';
 import { UserProfileRow } from '@/types/database';
+import { cachedLoad, invalidateCache } from '@/utils/memoryCache';
 
 export type UserProfile = UserProfileRow;
 
 /**
  * Récupère le profil de l'utilisateur connecté
  */
-export async function getUserProfile(userId: string): Promise<UserProfile | null> {
+export function getUserProfile(userId: string): Promise<UserProfile | null> {
+    // L'en-tête et la page lisent le même profil : une seule requête.
+    return cachedLoad(`profile:${userId}`, 60_000, () => fetchUserProfile(userId));
+}
+
+async function fetchUserProfile(userId: string): Promise<UserProfile | null> {
     const { data, error } = await supabase
         .from('users')
         .select('*')
@@ -40,6 +46,7 @@ export async function updateUserProfile(userId: string, updates: Pick<UserProfil
         throw new Error(error.message);
     }
 
+    invalidateCache(`profile:${userId}`);
     return data;
 }
 

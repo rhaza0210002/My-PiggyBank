@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
+import { invalidateCache } from '@/utils/memoryCache';
 import { getCategories, getCategoriesGroupKey } from '@/services/transactionCategoryService';
 import { buildDataExport, type DataExport } from '@/utils/dataExport';
 
@@ -6,6 +7,7 @@ const PAGE_SIZE = 1000;
 
 /** Vide les données gardées sur l'appareil (cache du budget) : à appeler à la déconnexion et à la suppression. */
 export function clearLocalPersonalData(): void {
+  invalidateCache();
   try {
     window.localStorage.removeItem('bilanAnnualData');
   } catch {

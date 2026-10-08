@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { gsap } from 'gsap';
 import { getBudgetEntries, type BudgetEntry } from '@/services/budgetService';
 import type { Category, CategoryGroup } from '@/services/transactionCategoryService';
 import type { StoredTransaction } from '@/services/transactionService';
@@ -133,47 +132,57 @@ export default function BudgetVsActualDonuts({
       });
     };
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      gsap.set(section.querySelectorAll('[data-arc-index]'), { strokeDashoffset: 0 });
-      gsap.set(rows, { autoAlpha: 1, x: 0 });
-      showTotals(finalTotals);
-      return;
-    }
+    // GSAP n'est chargé qu'au moment d'animer : il ne pèse pas sur les pages sans graphique.
+    let isCancelled = false;
+    let revert: (() => void) | undefined;
 
-    const context = gsap.context(() => {
-      const running = { budget: 0, actual: 0 };
-      showTotals(running);
-      gsap.set(section.querySelectorAll('[data-arc-index]'), { strokeDashoffset: 100 });
-      gsap.set(rows, { autoAlpha: 0, x: 16 });
+    void import('gsap').then(({ gsap }) => {
+      if (isCancelled) return;
 
-      const timeline = gsap.timeline({ defaults: { ease: 'power2.out' }, delay: 0.2 });
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.set(section.querySelectorAll('[data-arc-index]'), { strokeDashoffset: 0 });
+        gsap.set(rows, { autoAlpha: 1, x: 0 });
+        showTotals(finalTotals);
+        return;
+      }
 
-      slices.forEach((slice, index) => {
-        const at = index * STEP_SECONDS;
+      const context = gsap.context(() => {
+        const running = { budget: 0, actual: 0 };
+        showTotals(running);
+        gsap.set(section.querySelectorAll('[data-arc-index]'), { strokeDashoffset: 100 });
+        gsap.set(rows, { autoAlpha: 0, x: 16 });
 
-        timeline.to(arcElements(index), { strokeDashoffset: 0, duration: STEP_SECONDS * 1.4 }, at);
-        timeline.to(
-          section.querySelector(`[data-row-index="${index}"]`),
-          { autoAlpha: 1, x: 0, duration: 0.4 },
-          at,
-        );
-        timeline.to(
-          running,
-          {
-            budget: running.budget + slice.budget,
-            actual: running.actual + slice.actual,
-            duration: STEP_SECONDS * 1.4,
-            onUpdate: () => showTotals(running),
-          },
-          at,
-        );
-      });
+        const timeline = gsap.timeline({ defaults: { ease: 'power2.out' }, delay: 0.2 });
 
-      timeline.add(() => showTotals(finalTotals));
-    }, section);
+        slices.forEach((slice, index) => {
+          const at = index * STEP_SECONDS;
+
+          timeline.to(arcElements(index), { strokeDashoffset: 0, duration: STEP_SECONDS * 1.4 }, at);
+          timeline.to(
+            section.querySelector(`[data-row-index="${index}"]`),
+            { autoAlpha: 1, x: 0, duration: 0.4 },
+            at,
+          );
+          timeline.to(
+            running,
+            {
+              budget: running.budget + slice.budget,
+              actual: running.actual + slice.actual,
+              duration: STEP_SECONDS * 1.4,
+              onUpdate: () => showTotals(running),
+            },
+            at,
+          );
+        });
+
+        timeline.add(() => showTotals(finalTotals));
+      }, section);
+      revert = () => context.revert();
+    });
 
     return () => {
-      context.revert();
+      isCancelled = true;
+      revert?.();
       showTotals(finalTotals);
     };
   }, [slices, budgetTotal, actualTotal, replayCount]);

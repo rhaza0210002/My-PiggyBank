@@ -1,5 +1,9 @@
 // src/services/transactionCategoryService.ts
 import { supabase } from '@/lib/supabaseClient';
+import { cachedLoad, invalidateCache } from '@/utils/memoryCache';
+
+/** Groupes et catégories changent très rarement : on les garde 5 minutes (et on les oublie à chaque création). */
+const REFERENCE_TTL_MS = 5 * 60 * 1000;
 
 export interface CategoryGroup {
   id: number;
@@ -27,7 +31,11 @@ export interface LibelleTransact {
 /**
  * Récupère l'ensemble des groupes de catégories depuis Supabase.
  */
-export async function getCategoriesGroupKey(): Promise<CategoryGroup[]> {
+export function getCategoriesGroupKey(): Promise<CategoryGroup[]> {
+  return cachedLoad('categories:groups', REFERENCE_TTL_MS, loadCategoryGroups);
+}
+
+async function loadCategoryGroups(): Promise<CategoryGroup[]> {
   const { data, error } = await supabase
     .from('transac_cat_group')
     .select('*')
@@ -44,7 +52,11 @@ export async function getCategoriesGroupKey(): Promise<CategoryGroup[]> {
 /**
  * Récupère l'ensemble des catégories de transactions depuis Supabase.
  */
-export async function getCategories(): Promise<Category[]> {
+export function getCategories(): Promise<Category[]> {
+  return cachedLoad('categories:list', REFERENCE_TTL_MS, loadCategories);
+}
+
+async function loadCategories(): Promise<Category[]> {
   const { data, error } = await supabase
     .from('transac_cat')
     .select('*')
@@ -86,8 +98,10 @@ export async function createCategory(
     throw new Error(error.message);
   }
 
+  invalidateCache('categories:');
   return data;
 }
+
 /**
  * Récupère les règles de libellé visibles : celles par défaut et les personnelles. Les personnelles
  * viennent en premier : le parseur retient la première règle qui correspond, elles l'emportent donc.

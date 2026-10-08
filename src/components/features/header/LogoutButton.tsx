@@ -38,7 +38,7 @@ export default function LogoutButton({ variant = 'text', className = '' }: Logou
                 type="button"
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] font-semibold text-[#7a2f1a] transition-colors hover:bg-[#f2c4b6] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-60 ${isCompact ? 'px-3 text-sm' : 'px-4 text-sm'}`}
+                className={`inline-flex items-center justify-center gap-1.5 rounded-full border border-[#E5C4B4] bg-[#F8D5CB] font-semibold text-[#7a2f1a] transition-colors hover:bg-[#f2c4b6] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-60 ${isCompact ? 'min-h-10 px-3 text-xs' : 'min-h-11 px-4 text-sm'}`}
             >
                 <span aria-hidden="true">🚪</span>
                 <span>

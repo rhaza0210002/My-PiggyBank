@@ -54,3 +54,31 @@ body {
   25% { transform: rotate(-4deg); }
   75% { transform: rotate(4deg); }
 }
+
+/* Entrées douces : les blocs arrivent l'un après l'autre (délai = --i), puis restent immobiles. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rise {
+  animation: rise 0.45s ease-out backwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* Remplissage des barres de progression, de la gauche vers la droite. */
+@keyframes grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.grow {
+  transform-origin: left;
+  animation: grow 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+}
+
+/* Appui sur un bouton : il s'enfonce un peu, comme un vrai bouton. */
+button:not(:disabled):active,
+a[class*='shadow-[0_4px_0']:active {
+  scale: 0.97;
+}

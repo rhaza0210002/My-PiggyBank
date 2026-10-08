@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
+import { requireUserId } from '@/lib/currentUser';
 import type { BankTransaction } from '@/services/csvParser';
 import type { TransactionRow } from '@/types/database';
 import { prepareTransactionsForStorage } from '@/utils/transactionDedupe';
@@ -27,11 +28,6 @@ function toServiceError(error: { code?: string; message: string }, action: strin
   return new Error(`${action} : ${error.message}`);
 }
 
-async function requireUserId(message: string): Promise<string> {
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) throw new Error(message);
-  return data.user.id;
-}
 
 /**
  * Enregistre les transactions importées. Les opérations déjà présentes (même clé de

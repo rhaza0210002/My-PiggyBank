@@ -1,4 +1,5 @@
 import { MONTHS, MONTH_SHORT_LABELS } from '@/constants/tableStyles';
+import type { CSSProperties } from 'react';
 import type { MonthProgress, MonthStatus } from '@/utils/gamification';
 
 const STATUS_STYLE: Record<MonthStatus, { icon: string; text: string; className: string }> = {
@@ -24,7 +25,8 @@ export default function MonthsStrip({ months }: MonthsStripProps) {
         return (
           <li
             key={month.monthIndex}
-            className={`flex min-h-12 flex-col items-center justify-center rounded-xl border-2 px-1 py-1 text-center ${style.className}`}
+            style={{ '--i': month.monthIndex * 0.5 } as CSSProperties}
+            className={`rise flex min-h-12 flex-col items-center justify-center rounded-xl border-2 px-1 py-1 text-center ${style.className}`}
           >
             <span className="text-xs font-bold leading-tight" aria-hidden="true">
               {MONTH_SHORT_LABELS[month.monthIndex]}

@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { DataGroup } from '@/types/budget';
 import { formatCurrency } from '@/utils/budgetCalculations';
 import { createArcPath } from '@/utils/donutGeometry';
@@ -117,6 +115,12 @@ export default function BudgetDonut({
     const section = sectionRef.current;
     if (!section) return;
 
+    // GSAP n'est chargé qu'au moment d'animer : il ne pèse pas sur les pages sans graphique.
+    let isCancelled = false;
+    let revert: (() => void) | undefined;
+
+    void Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([{ gsap }, { ScrollTrigger }]) => {
+    if (isCancelled) return;
     const context = gsap.context(() => {
       gsap.registerPlugin(ScrollTrigger);
       const chartSegments = section.querySelectorAll('.chart-segment');
@@ -185,8 +189,13 @@ export default function BudgetDonut({
         );
       }
     }, section);
+    revert = () => context.revert();
+    });
 
-    return () => context.revert();
+    return () => {
+      isCancelled = true;
+      revert?.();
+    };
   }, [dataGroups, monthIndex, monthLabel]);
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import BadgeShelf from '@/components/features/gamification/BadgeShelf';
 import MonthsStrip from '@/components/features/gamification/MonthsStrip';
@@ -76,7 +76,7 @@ export default function DashboardPage() {
 
       <div className="grid shrink-0 gap-2 md:grid-cols-12">
         {/* Action du moment : toujours en premier, une seule chose à faire. */}
-        <section aria-labelledby="month-title" className={`${PANEL} flex flex-col gap-2 md:col-span-5`}>
+        <section aria-labelledby="month-title" style={{ '--i': 0 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-5`}>
           <h2 id="month-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
             {monthName}
           </h2>
@@ -123,7 +123,7 @@ export default function DashboardPage() {
           </p>
         </section>
 
-        <section aria-labelledby="level-title" className={`${PANEL} flex flex-col gap-2 md:col-span-4`}>
+        <section aria-labelledby="level-title" style={{ '--i': 1 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-4`}>
           <h2 id="level-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
             Ma progression
           </h2>
@@ -148,7 +148,7 @@ export default function DashboardPage() {
           )}
         </section>
 
-        <section aria-labelledby="tip-title" className={`${PANEL} flex flex-col gap-2 md:col-span-3`}>
+        <section aria-labelledby="tip-title" style={{ '--i': 2 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-3`}>
           <h2 id="tip-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
             Astuce du jour
           </h2>
@@ -164,7 +164,7 @@ export default function DashboardPage() {
         </section>
       </div>
 
-      <section aria-labelledby="months-title" className={`${PANEL} shrink-0`}>
+      <section aria-labelledby="months-title" style={{ '--i': 3 } as CSSProperties} className={`${PANEL} rise shrink-0`}>
         <div className="mb-2 flex flex-col items-center gap-0.5 text-center">
           <h2 id="months-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
             Mon année {today.getFullYear()}

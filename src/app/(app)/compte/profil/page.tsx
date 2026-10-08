@@ -49,9 +49,9 @@ export default function ProfilePage() {
     let isCurrent = true;
 
     supabase.auth
-      .getUser()
+      .getSession()
       .then(async ({ data }) => {
-        const user = data.user;
+        const user = data.session?.user;
         if (!user || !isCurrent) return;
         const profile = await getUserProfile(user.id);
         if (!isCurrent) return;
