@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from 'react';
-import { ArrowLeftRight, List } from 'lucide-react';
+import SectionStack from '@/components/ui/SectionStack';
 import { TABLE_STYLES } from '@/constants/tableStyles';
 import { saveImportedTransactionLabels } from '@/services/libelleTransactService';
 import { saveImportedTransactions } from '@/services/transactionService';
@@ -108,7 +108,6 @@ function CategoryRows({
 }
 
 export default function CsvTransactionsTable({ transactions }: CsvTransactionsTableProps) {
-  const [activeView, setActiveView] = useState<'transactions' | 'comparison'>('transactions');
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const [isSavingLabels, setIsSavingLabels] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -196,25 +195,14 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
 
   return (
     <section className="space-y-4 rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="px-2 text-[1.4rem] font-black text-[#5d4d44]">
-          {activeView === 'transactions' ? `Transactions lues (${transactions.length})` : 'Comparaison mensuelle'}
-        </h2>
-        <button
-          type="button"
-          onClick={() => setActiveView((view) => view === 'transactions' ? 'comparison' : 'transactions')}
-          aria-label={activeView === 'transactions' ? 'Afficher la comparaison avec le budget' : 'Revenir aux transactions lues'}
-          className="inline-flex items-center gap-2 rounded-lg border border-[#b88f78] bg-white/70 px-3 py-2 text-sm font-bold text-[#5d4d44] transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5d4d44]"
-        >
-          {activeView === 'transactions' ? <ArrowLeftRight size={16} /> : <List size={16} />}
-          {activeView === 'transactions' ? 'Comparer au budget' : 'Voir les transactions'}
-        </button>
-      </div>
-
-      {activeView === 'comparison' ? (
-        <MonthlyBudgetComparison groups={groups} />
-      ) : (
-        <>
+      <SectionStack
+        label="Parties de l'import"
+        sections={[
+          {
+            id: 'transactions',
+            label: `Transactions lues (${transactions.length})`,
+            content: (
+              <div className="space-y-4">
           <p className="px-2 text-sm font-semibold text-[#6b574c]" role="status">
             {categorizedCount} catégorisée{categorizedCount !== 1 ? 's' : ''} sur {transactions.length}
           </p>
@@ -287,8 +275,16 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
               Aucun libellé reconnu à enregistrer dans la table de correspondance.
             </p>
           )}
-        </>
-      )}
+              </div>
+            ),
+          },
+          {
+            id: 'comparison',
+            label: 'Comparaison avec le budget',
+            content: <MonthlyBudgetComparison groups={groups} />,
+          },
+        ]}
+      />
     </section>
   );
 }

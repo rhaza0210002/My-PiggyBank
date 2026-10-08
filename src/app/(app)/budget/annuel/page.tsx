@@ -7,7 +7,7 @@ import { BUDGET_MODES } from '@/constants/budgetTypes';
 import { getBudgetGroupPalette } from '@/constants/budgetGroupPalette';
 import { formatCurrency } from '@/utils/budgetCalculations';
 import ScreenCard from '@/components/ui/ScreenCard';
-import Tabs from '@/components/ui/Tabs';
+import SectionStack from '@/components/ui/SectionStack';
 import { useBudget } from '@/hooks/useBudget';
 import type { DataGroup } from '@/types/budget';
 
@@ -15,23 +15,25 @@ export default function BilanBank() {
   const { dataGroups, isLoaded } = useBudget();
 
   return (
-    <ScreenCard title="Budget annuel" icon="📅" subtitle="Vue des 12 mois, un bloc à la fois.">
+    <ScreenCard flow title="Budget annuel" icon="📅" subtitle="Vue des 12 mois, un bloc à la fois.">
       {!isLoaded ? (
         <p role="status" className="py-6 text-center font-semibold">Chargement...</p>
       ) : dataGroups.length === 0 ? (
         <p className="py-6 text-center font-semibold">Aucun groupe de budget trouvé.</p>
       ) : (
-        <Tabs
-          label="Blocs du budget annuel"
-          tabs={[
+        <SectionStack
+          label="Parties du budget annuel"
+          sections={[
             ...dataGroups.map((group) => ({
               id: group.key,
               label: group.title,
+              hideTitle: true,
               content: <BudgetAnnualGroupTable group={group} />,
             })),
             {
               id: 'totals',
               label: 'Totaux',
+              hideTitle: true,
               content: (
                 <BudgetTotalsSection
                   dataGroups={dataGroups}
@@ -41,7 +43,7 @@ export default function BilanBank() {
                 />
               ),
             },
-            { id: 'chart', label: 'Graphique', content: <BudgetDonut dataGroups={dataGroups} /> },
+            { id: 'chart', label: 'Graphique', hideTitle: true, content: <BudgetDonut dataGroups={dataGroups} /> },
           ]}
         />
       )}

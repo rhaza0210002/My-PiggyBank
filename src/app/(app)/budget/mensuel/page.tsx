@@ -9,7 +9,7 @@ import { useBudget } from '@/hooks/useBudget';
 import { BUDGET_MODES, BudgetMode } from '@/constants/budgetTypes';
 import { MONTHS } from '@/constants/tableStyles';
 import ScreenCard from '@/components/ui/ScreenCard';
-import Tabs from '@/components/ui/Tabs';
+import SectionStack from '@/components/ui/SectionStack';
 
 export default function MonthBudgetPage() {
   const { dataGroups, isLoaded, updateRowValue, saveMonthBudget } = useBudget();
@@ -141,6 +141,7 @@ export default function MonthBudgetPage() {
 
   return (
     <ScreenCard
+      flow
       title="Budget mensuel" icon="💰"
       subtitle={isPastMonth ? 'Mois passé : lecture seule.' : `Prévois ${activeMonth.label.toLowerCase()} bloc par bloc.`}
       actions={
@@ -153,19 +154,20 @@ export default function MonthBudgetPage() {
       {!isLoaded ? (
         <p role="status" className="py-6 text-center font-semibold">Chargement...</p>
       ) : (
-        <div className="flex h-full min-h-0 flex-col gap-1">
+        <div className="flex flex-col gap-1 md:h-full md:min-h-0">
           {budgetSaveMessage && (
             <p className="shrink-0 text-sm font-semibold text-[#1f4d25]" role="status">{budgetSaveMessage}</p>
           )}
           {budgetSaveError && (
             <p className="shrink-0 text-sm font-semibold text-[#9c3633]" role="alert">{budgetSaveError}</p>
           )}
-          <Tabs
-            label="Blocs du budget du mois"
-            tabs={[
+          <SectionStack
+            label="Parties du budget du mois"
+            sections={[
               ...dataGroups.map((group) => ({
                 id: group.key,
                 label: group.title,
+                hideTitle: true,
                 content: (
                   <BudgetGroupTable
                     group={group}
@@ -191,6 +193,7 @@ export default function MonthBudgetPage() {
               {
                 id: 'totals',
                 label: 'Totaux',
+                hideTitle: true,
                 content: (
                   <BudgetTotalsSection
                     dataGroups={dataGroups}
@@ -203,6 +206,7 @@ export default function MonthBudgetPage() {
               {
                 id: 'chart',
                 label: 'Graphique',
+                hideTitle: true,
                 content: (
                   <BudgetDonut dataGroups={dataGroups} monthIndex={currentMonthIndex} monthLabel={activeMonth.label} />
                 ),
