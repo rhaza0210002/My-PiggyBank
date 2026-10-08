@@ -6,6 +6,8 @@ export interface StackSection {
   id: string;
   label: string;
   content: ReactNode;
+  /** Le contenu porte déjà son propre titre visible : le titre du bloc reste lu par les lecteurs d'écran seulement. */
+  hideTitle?: boolean;
 }
 
 interface SectionStackProps {
@@ -25,6 +27,8 @@ const prefersReducedMotion = () =>
 export default function SectionStack({ sections, label }: SectionStackProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const navRef = useRef<HTMLElement>(null);
+  const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [revealed, setRevealed] = useState<ReadonlySet<string>>(() => new Set(sections.slice(0, 1).map((s) => s.id)));
   const [activeId, setActiveId] = useState<string | undefined>(sections[0]?.id);
 
@@ -67,6 +71,14 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
     };
   }, [sections]);
 
+  // Sur mobile la rangée de puces défile : la puce de la partie lue reste visible.
+  useEffect(() => {
+    const nav = navRef.current;
+    const chip = activeId ? chipRefs.current[activeId] : null;
+    if (!nav || !chip || nav.scrollWidth <= nav.clientWidth) return;
+    nav.scrollTo({ left: chip.offsetLeft - (nav.clientWidth - chip.offsetWidth) / 2, behavior: 'smooth' });
+  }, [activeId]);
+
   const goTo = (id: string) => {
     const element = sectionRefs.current[id];
     if (!element) return;
@@ -78,10 +90,17 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <nav aria-label={label} className="sticky top-0 z-10 flex shrink-0 flex-wrap justify-center gap-1.5 bg-[#f2e6d8] pb-1 md:static">
+      <nav
+        ref={navRef}
+        aria-label={label}
+        className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto bg-[#f2e6d8] pb-1 shadow-[0_6px_6px_-6px_rgba(93,77,68,0.25)] md:static md:flex-wrap md:justify-center md:overflow-visible md:shadow-none"
+      >
         {sections.map((section) => (
           <button
             key={section.id}
+            ref={(element) => {
+              chipRefs.current[section.id] = element;
+            }}
             type="button"
             onClick={() => goTo(section.id)}
             aria-current={activeId === section.id ? 'true' : undefined}
@@ -107,7 +126,10 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
               tabIndex={-1}
               className="scroll-mt-1 outline-none"
             >
-              <h2 id={`section-${section.id}-title`} className="mb-1 px-1 text-center text-base font-black text-[#5d4d44]">
+              <h2
+                id={`section-${section.id}-title`}
+                className={section.hideTitle ? 'sr-only' : 'mb-1 px-1 text-center text-base font-black text-[#5d4d44]'}
+              >
                 {section.label}
               </h2>
               <div
