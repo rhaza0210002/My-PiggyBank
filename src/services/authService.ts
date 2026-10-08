@@ -77,3 +77,13 @@ const authService = {
 };
 
 export default authService;
+/**
+ * Change le mot de passe de l'utilisateur connecté.
+ */
+export async function updatePassword(newPassword: string): Promise<void> {
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
