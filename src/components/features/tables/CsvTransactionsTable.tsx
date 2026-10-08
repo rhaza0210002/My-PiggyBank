@@ -178,6 +178,9 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
       if (result.duplicates > 0) {
         parts.push(`${result.duplicates} déjà présente${plural(result.duplicates)}`);
       }
+      if (result.archived > 0) {
+        parts.push(`${result.archived} ignorée${plural(result.archived)} (mois archivé)`);
+      }
       if (result.invalid > 0) {
         parts.push(`${result.invalid} ignorée${plural(result.invalid)} (date illisible)`);
       }
