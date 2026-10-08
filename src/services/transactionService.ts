@@ -5,7 +5,7 @@ import { prepareTransactionsForStorage } from '@/utils/transactionDedupe';
 
 export type StoredTransaction = Pick<
   TransactionRow,
-  'id' | 'booked_on' | 'label' | 'amount' | 'category_id' | 'category_key' | 'type'
+  'id' | 'booked_on' | 'label' | 'amount' | 'category_id' | 'category_key' | 'type' | 'reconciled_at'
 >;
 
 export interface SaveTransactionsResult {
@@ -14,7 +14,7 @@ export interface SaveTransactionsResult {
   invalid: number;
 }
 
-const COLUMNS = 'id, booked_on, label, amount, category_id, category_key, type';
+const COLUMNS = 'id, booked_on, label, amount, category_id, category_key, type, reconciled_at';
 const BATCH_SIZE = 500;
 
 function toServiceError(error: { code?: string; message: string }, action: string): Error {
@@ -70,6 +70,52 @@ export async function getRecentTransactions(limit: number): Promise<StoredTransa
 
   if (error) throw toServiceError(error, 'Lecture des transactions impossible');
   return data ?? [];
+}
+
+/** Opérations pas encore pointées par l'utilisateur (rapprochement), de la plus récente à la plus ancienne. */
+export async function getTransactionsToReconcile(limit: number): Promise<StoredTransaction[]> {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(COLUMNS)
+    .is('reconciled_at', null)
+    .order('booked_on', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) throw toServiceError(error, 'Lecture des opérations à rapprocher impossible');
+  return data ?? [];
+}
+
+export async function countTransactionsToReconcile(): Promise<number> {
+  const { count, error } = await supabase
+    .from('transactions')
+    .select('id', { count: 'exact', head: true })
+    .is('reconciled_at', null);
+
+  if (error) throw toServiceError(error, 'Comptage des opérations à rapprocher impossible');
+  return count ?? 0;
+}
+
+/** Rattache une opération à une catégorie (donc à la ligne de budget de cette catégorie et de son mois). */
+export async function updateTransactionCategory(id: string, categoryId: string | null): Promise<void> {
+  const { error } = await supabase
+    .from('transactions')
+    .update({ category_id: categoryId, category_key: null })
+    .eq('id', id);
+
+  if (error) throw toServiceError(error, 'Changement de catégorie impossible');
+}
+
+/** Pointe des opérations : elles ne sont plus à rapprocher. */
+export async function markTransactionsReconciled(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+
+  const { error } = await supabase
+    .from('transactions')
+    .update({ reconciled_at: new Date().toISOString() })
+    .in('id', ids);
+
+  if (error) throw toServiceError(error, 'Pointage des opérations impossible');
 }
 
 /** Opérations sans catégorie : celles qu'il reste à traiter. */

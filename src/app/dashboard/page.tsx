@@ -8,7 +8,7 @@ import { getUserProfile } from '@/services/userService';
 import {
   getMonthTotals,
   getRecentTransactions,
-  getUncategorizedTransactions,
+  getTransactionsToReconcile,
   type MonthTotals,
   type StoredTransaction,
 } from '@/services/transactionService';
@@ -75,7 +75,7 @@ export default function DashboardPage() {
     const now = new Date();
 
     Promise.all([
-      getUncategorizedTransactions(3),
+      getTransactionsToReconcile(3),
       getRecentTransactions(5),
       getMonthTotals(now.getFullYear(), now.getMonth()),
     ])
@@ -98,7 +98,7 @@ export default function DashboardPage() {
   }, []);
 
   const handleStartReconcile = () => {
-    router.push('/csvUploader');
+    router.push('/rapprochement');
   };
 
   const handleViewAllHistory = () => {
@@ -138,7 +138,7 @@ export default function DashboardPage() {
           balance={balance}
           balanceLabel="Solde du mois"
           encouragingMessage={getEncouragingMessage(monthTotals, dataError !== null)}
-          reconcileEmptyText="Aucune opération sans catégorie."
+          reconcileEmptyText="Toutes tes opérations sont rapprochées."
         />
       </div>
     </section>

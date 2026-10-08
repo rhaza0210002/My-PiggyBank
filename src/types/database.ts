@@ -37,4 +37,5 @@ export interface TransactionRow {
   type: 'VIREMENT_ENTRANT' | 'VIREMENT_SORTANT' | 'AUTRE';
   dedupe_key: string;
   created_at: string;
+  reconciled_at: string | null;
 }

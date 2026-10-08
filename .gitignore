@@ -10,3 +10,6 @@ out/
 
 # Généré par Next.js
 next-env.d.ts
+
+# Claude Code (réglages locaux)
+.claude/settings.local.json
