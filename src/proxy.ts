@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { AUTH_ROUTES, OPEN_ROUTES, ROUTES } from '@/constants/routes';
+import { AUTH_CALLBACK_ROUTE, AUTH_ROUTES, OPEN_ROUTES, ROUTES } from '@/constants/routes';
 
 export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -34,7 +34,7 @@ export async function proxy(request: NextRequest) {
   const isAuthPage = AUTH_ROUTES.includes(pathname);
 
   // Pages légales : toujours consultables, connecté ou non.
-  if (OPEN_ROUTES.includes(pathname)) return supabaseResponse;
+  if (OPEN_ROUTES.includes(pathname) || pathname === AUTH_CALLBACK_ROUTE) return supabaseResponse;
 
   if (!isAuthenticated && !isAuthPage) {
     return redirectWithCookies(request, supabaseResponse, ROUTES.login);

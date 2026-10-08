@@ -6,11 +6,12 @@
  *  - Opérations  /operations/depenses-reelles · /operations/rapprochement · /operations/import
  *  - Compte      /compte/profil · /compte/parametres · /compte/notifications · /compte/donnees
  *  - Légal       /mentions-legales · /confidentialite · /cookies · /accessibilite · /conditions (publiques)
- *  - Connexion   /connexion · /inscription (pages publiques)
+ *  - Connexion   /connexion · /inscription · /mot-de-passe-oublie (pages publiques) · /nouveau-mot-de-passe (lien e-mail)
  */
 export const ROUTES = {
   login: '/connexion',
   register: '/inscription',
+  forgotPassword: '/mot-de-passe-oublie',
   dashboard: '/tableau-de-bord',
   budgetMonthly: '/budget/mensuel',
   budgetAnnual: '/budget/annuel',
@@ -32,7 +33,16 @@ export const LEGAL_ROUTES = {
   terms: '/conditions',
 } as const;
 
-export const AUTH_ROUTES: readonly string[] = [ROUTES.login, ROUTES.register];
+export const AUTH_ROUTES: readonly string[] = [ROUTES.login, ROUTES.register, ROUTES.forgotPassword];
+
+/**
+ * Nouveau mot de passe : atteint depuis le lien reçu par e-mail, donc avec une session de récupération.
+ * Hors de AUTH_ROUTES (on ne renvoie pas vers le tableau de bord) et hors du menu.
+ */
+export const RESET_PASSWORD_ROUTE = '/nouveau-mot-de-passe';
+
+/** Retour des liens e-mail (confirmation, récupération) et de Google : échange le code contre une session. */
+export const AUTH_CALLBACK_ROUTE = '/auth/callback';
 
 /** Chemins accessibles sans session (et sans redirection quand on est connecté). */
 export const OPEN_ROUTES: readonly string[] = Object.values(LEGAL_ROUTES);
