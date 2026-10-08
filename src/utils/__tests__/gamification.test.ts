@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeGamification, getLevelInfo, type ActivityRow } from '@/utils/gamification';
+import { computeGamification, countActiveDays, getLevelInfo, type ActivityRow } from '@/utils/gamification';
 import { pickTip, TIPS } from '@/utils/tips';
 
 const NOW = new Date(2026, 9, 8); // octobre 2026
@@ -78,5 +78,36 @@ describe('pickTip', () => {
     expect(pickTip(day).id).toBe(pickTip(evening).id);
     expect(pickTip(day, 1).id).not.toBe(pickTip(day).id);
     expect(TIPS.length).toBeGreaterThan(10);
+  });
+});
+
+describe('jours actifs sur 7 jours', () => {
+  const now = new Date(2026, 9, 8, 12, 0, 0);
+  const at = (day: number, hour = 10) => new Date(2026, 9, day, hour, 0, 0).toISOString();
+
+  it('compte les jours distincts avec au moins un pointage, pas les pointages', () => {
+    const rows = [
+      { booked_on: '2026-10-01', reconciled_at: at(8) },
+      { booked_on: '2026-10-01', reconciled_at: at(8, 18) },
+      { booked_on: '2026-10-01', reconciled_at: at(6) },
+    ];
+    expect(countActiveDays(rows, now)).toBe(2);
+  });
+
+  it('ignore les opérations non pointées et les jours hors des 7 derniers', () => {
+    const rows = [
+      { booked_on: '2026-10-01', reconciled_at: null },
+      { booked_on: '2026-10-01', reconciled_at: at(1) },
+    ];
+    expect(countActiveDays(rows, now)).toBe(0);
+  });
+
+  it('ne casse rien après un jour manqué : les jours actifs restent comptés', () => {
+    const rows = [
+      { booked_on: '2026-10-01', reconciled_at: at(8) },
+      { booked_on: '2026-10-01', reconciled_at: at(5) },
+      { booked_on: '2026-10-01', reconciled_at: at(3) },
+    ];
+    expect(countActiveDays(rows, now)).toBe(3);
   });
 });
