@@ -1,6 +1,13 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { AUTH_CALLBACK_ROUTE, AUTH_ROUTES, OPEN_ROUTES, ROUTES } from '@/constants/routes';
+import {
+  AUTH_CALLBACK_ROUTE,
+  AUTH_ROUTES,
+  OPEN_ROUTES,
+  REMINDERS_CRON_ROUTE,
+  ROUTES,
+  SERVICE_WORKER_PATH,
+} from '@/constants/routes';
 
 export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -35,6 +42,9 @@ export async function proxy(request: NextRequest) {
 
   // Pages légales : toujours consultables, connecté ou non.
   if (OPEN_ROUTES.includes(pathname) || pathname === AUTH_CALLBACK_ROUTE) return supabaseResponse;
+
+  // Tâche planifiée (secret) et service worker : pas de session à exiger ni de redirection.
+  if (pathname === REMINDERS_CRON_ROUTE || pathname === SERVICE_WORKER_PATH) return supabaseResponse;
 
   if (!isAuthenticated && !isAuthPage) {
     return redirectWithCookies(request, supabaseResponse, ROUTES.login);
