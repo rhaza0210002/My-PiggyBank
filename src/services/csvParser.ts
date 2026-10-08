@@ -7,6 +7,7 @@ import {
   parseCsvAmount,
 } from "@/utils/csvParsing";
 import type { LibelleTransact } from "@/services/transactionCategoryService";
+import { normalizeMatchText } from "@/utils/labelMatching";
 
 export interface RawRowData {
   id: string;
@@ -84,11 +85,7 @@ export class SocieteGeneraleParser {
   }
 
   private normalizeMatchText(value: string): string {
-    return value
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "");
+    return normalizeMatchText(value);
   }
 
   public parseAllColumns(): ParseResult {
