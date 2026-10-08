@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/constants/routes';
 import { logoutUser } from '@/services/authService';
 
 interface LogoutButtonProps {
-    variant?: 'icon' | 'text';
+    /** `compact` : en-tête (libellé raccourci sur mobile) ; `text` : pleine largeur de libellé. */
+    variant?: 'compact' | 'text';
     className?: string;
 }
 
@@ -20,7 +22,7 @@ export default function LogoutButton({ variant = 'text', className = '' }: Logou
 
         try {
             await logoutUser();
-            router.replace('/login');
+            router.replace(ROUTES.login);
             router.refresh();
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Déconnexion impossible.');
@@ -28,20 +30,7 @@ export default function LogoutButton({ variant = 'text', className = '' }: Logou
         }
     };
 
-    if (variant === 'icon') {
-        return (
-            <button
-                type="button"
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                aria-label="Se déconnecter"
-                title={error ?? 'Se déconnecter'}
-                className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-colors focus:outline-hidden focus:ring-2 focus:ring-[#D97757] bg-[#FFF5EE] text-[#5A4D41] ring-1 ring-[#E5C4B4] hover:bg-[#F8D5CB] disabled:opacity-60 shrink-0 ${className}`}
-            >
-                <span aria-hidden="true">{isLoggingOut ? '…' : '🚪'}</span>
-            </button>
-        );
-    }
+    const isCompact = variant === 'compact';
 
     return (
         <div className={className}>
@@ -49,10 +38,12 @@ export default function LogoutButton({ variant = 'text', className = '' }: Logou
                 type="button"
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className="inline-flex items-center gap-2 rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] px-4 py-2 text-sm font-semibold text-[#C86445] transition-colors hover:bg-[#f2c4b6] focus:outline-hidden focus:ring-2 focus:ring-[#D97757] disabled:opacity-60"
+                className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] font-semibold text-[#7a2f1a] transition-colors hover:bg-[#f2c4b6] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-60 ${isCompact ? 'px-3 text-sm' : 'px-4 text-sm'}`}
             >
                 <span aria-hidden="true">🚪</span>
-                {isLoggingOut ? 'Déconnexion…' : 'Se déconnecter'}
+                <span>
+                    {isLoggingOut ? 'Déconnexion…' : isCompact ? 'Déconnexion' : 'Se déconnecter'}
+                </span>
             </button>
             {error && (
                 <p role="alert" className="mt-2 text-sm font-semibold text-red-700">{error}</p>

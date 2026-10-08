@@ -92,7 +92,7 @@ export default function BudgetGroupTable({
           <tbody>
             {group.rows.length === 0 ? (
               <tr>
-                <td colSpan={2} className="py-6 text-center text-[1rem] sm:text-[1.1rem] italic text-[#8c7366]">
+                <td colSpan={2} className="py-6 text-center text-[1rem] sm:text-[1.1rem] italic text-[#6b574c]">
                   Aucune donnée pour cette période.
                 </td>
               </tr>
@@ -114,7 +114,7 @@ export default function BudgetGroupTable({
                           onChange={(event) => setDraftAmount(event.target.value)}
                           onKeyDown={(event) => handleEditorKeyDown(event, row.category)}
                           aria-label={`Modifier le montant de ${row.category}`}
-                          className="w-28 rounded-md border border-[#d8b7a5] bg-white px-2 py-1 text-right text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#e59a86]"
+                          className="w-28 rounded-md border border-[#d8b7a5] bg-white px-2 py-1 text-right text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
                         />
                         <button
                           type="button"

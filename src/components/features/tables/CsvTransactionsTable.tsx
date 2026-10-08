@@ -215,7 +215,7 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
         <MonthlyBudgetComparison groups={groups} />
       ) : (
         <>
-          <p className="px-2 text-sm font-semibold text-[#766356]" role="status">
+          <p className="px-2 text-sm font-semibold text-[#6b574c]" role="status">
             {categorizedCount} catégorisée{categorizedCount !== 1 ? 's' : ''} sur {transactions.length}
           </p>
           {categorizedCount === 0 && unmatchedExamples.length > 0 && (
@@ -249,7 +249,7 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
               type="button"
               onClick={handleSaveTransactions}
               disabled={isSavingTransactions}
-              className="rounded-[1.5rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-3 font-black text-[#fff8f5] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#5b473d] disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-[1.5rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-3 font-black text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#5b473d] disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingTransactions ? 'Enregistrement...' : `Enregistrer les ${transactions.length} transactions`}
             </button>
@@ -283,7 +283,7 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
             </p>
           )}
           {importedLabels.length === 0 && (
-            <p className="text-sm italic text-[#8c7366]">
+            <p className="text-sm italic text-[#6b574c]">
               Aucun libellé reconnu à enregistrer dans la table de correspondance.
             </p>
           )}

@@ -1,7 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-
-const AUTH_PAGES = ['/login', '/register'];
+import { AUTH_ROUTES, ROUTES } from '@/constants/routes';
 
 export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -32,14 +31,14 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const isAuthenticated = Boolean(data?.claims);
   const { pathname } = request.nextUrl;
-  const isAuthPage = AUTH_PAGES.includes(pathname);
+  const isAuthPage = AUTH_ROUTES.includes(pathname);
 
   if (!isAuthenticated && !isAuthPage) {
-    return redirectWithCookies(request, supabaseResponse, '/login');
+    return redirectWithCookies(request, supabaseResponse, ROUTES.login);
   }
 
-  if (isAuthenticated && isAuthPage) {
-    return redirectWithCookies(request, supabaseResponse, '/dashboard');
+  if (isAuthenticated && (isAuthPage || pathname === '/')) {
+    return redirectWithCookies(request, supabaseResponse, ROUTES.dashboard);
   }
 
   return supabaseResponse;

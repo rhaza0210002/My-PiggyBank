@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import styles from "@/app/dashboard/Dashboard.module.css";
+import styles from "@/app/(app)/tableau-de-bord/Dashboard.module.css";
 
 export interface Transaction {
   id: string;
