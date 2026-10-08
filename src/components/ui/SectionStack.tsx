@@ -14,17 +14,28 @@ interface SectionStackProps {
   sections: StackSection[];
   /** Nom de la barre de raccourcis, lu par les lecteurs d'écran. */
   label: string;
+  /** Fond de la rangée de puces collante (doit être celui du conteneur pour ne pas former de bande). */
+  background?: string;
 }
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Premier ancêtre qui défile réellement (jamais le cadre de l'écran, qui est en overflow: hidden). */
+function findScrollParent(element: HTMLElement): HTMLElement | null {
+  for (let parent = element.parentElement; parent; parent = parent.parentElement) {
+    const { overflowY } = window.getComputedStyle(parent);
+    if ((overflowY === 'auto' || overflowY === 'scroll') && parent.scrollHeight > parent.clientHeight) return parent;
+  }
+  return null;
+}
 
 /**
  * Plusieurs blocs à la suite, dans une seule zone qui défile. Une barre de raccourcis mène à chaque bloc
  * (défilement doux), indique celui qu'on lit, et chaque bloc apparaît quand on y arrive : le contenu n'est
  * monté qu'à ce moment, ce qui relance aussi les animations des graphiques.
  */
-export default function SectionStack({ sections, label }: SectionStackProps) {
+export default function SectionStack({ sections, label, background = '#f2e6d8' }: SectionStackProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
@@ -84,7 +95,13 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
     if (!element) return;
     setRevealed((previous) => new Set([...previous, id]));
     setActiveId(id);
-    element.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    const parent = findScrollParent(element);
+    if (parent) {
+      // La rangée de puces collante masque le haut de la zone sur mobile : on s'arrête juste dessous.
+      const stickyOffset = window.getComputedStyle(navRef.current!).position === 'sticky' ? navRef.current!.offsetHeight : 0;
+      const top = element.getBoundingClientRect().top - parent.getBoundingClientRect().top + parent.scrollTop - stickyOffset;
+      parent.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    }
     element.focus({ preventScroll: true });
   };
 
@@ -93,7 +110,8 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
       <nav
         ref={navRef}
         aria-label={label}
-        className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto bg-[#f2e6d8] pb-1 shadow-[0_6px_6px_-6px_rgba(93,77,68,0.25)] md:static md:flex-wrap md:justify-center md:overflow-visible md:shadow-none"
+        style={{ backgroundColor: background }}
+        className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 shadow-[0_6px_6px_-6px_rgba(93,77,68,0.25)] md:static md:flex-wrap md:justify-center md:overflow-visible md:shadow-none"
       >
         {sections.map((section) => (
           <button
