@@ -9,6 +9,8 @@ import MonthlyBudgetComparison, {
   type ComparisonGroup,
 } from '@/components/features/tables/MonthlyBudgetComparison';
 import BudgetVsActualDonuts from '@/components/features/charts/BudgetVsActualDonuts';
+import ScreenCard from '@/components/ui/ScreenCard';
+import Tabs from '@/components/ui/Tabs';
 import StoredTransactionsBreakdown from '@/components/features/tables/StoredTransactionsBreakdown';
 import {
   getCategories,
@@ -47,9 +49,9 @@ const TONE_CLASSES: Record<NonNullable<SummaryCardProps['tone']>, string> = {
 
 function SummaryCard({ label, value, tone = 'neutral' }: SummaryCardProps) {
   return (
-    <div className="rounded-2xl border border-[#d8b7a5] bg-[#fff8f2] p-4 shadow-sm">
-      <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-[#6b574c]">{label}</dt>
-      <dd className={`mt-1 text-xl font-black ${TONE_CLASSES[tone]}`}>{value}</dd>
+    <div className="rounded-xl border border-[#d8b7a5] bg-[#fff8f2] px-2 py-1.5 shadow-sm sm:rounded-2xl sm:px-3 sm:py-2">
+      <dt className="text-[0.6rem] font-semibold uppercase leading-tight tracking-[0.08em] text-[#6b574c] sm:text-[0.7rem]">{label}</dt>
+      <dd className={`text-sm font-black sm:text-lg ${TONE_CLASSES[tone]}`}>{value}</dd>
     </div>
   );
 }
@@ -117,48 +119,35 @@ export default function DepenseReellePage() {
       ]
     : [];
 
+  const monthNav = (
+    <div className="flex items-center gap-1 rounded-xl border border-[#d8b7a5] bg-white/70 p-1">
+      <button
+        type="button"
+        onClick={() => goToMonth(-1)}
+        aria-label="Mois précédent"
+        className="flex h-11 w-11 items-center justify-center rounded-lg text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+      >
+        <ChevronLeft size={18} aria-hidden="true" />
+      </button>
+      <span className="min-w-[8rem] text-center text-sm font-bold text-[#5d4d44]" aria-live="polite">
+        {MONTHS[monthIndex].label} {year}
+      </span>
+      <button
+        type="button"
+        onClick={() => goToMonth(1)}
+        aria-label="Mois suivant"
+        className="flex h-11 w-11 items-center justify-center rounded-lg text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+      >
+        <ChevronRight size={18} aria-hidden="true" />
+      </button>
+    </div>
+  );
+
   return (
-    <div className="min-h-[60vh] bg-[#ebcfc6] px-4 py-6 font-sans text-[#5b473d] sm:px-6 lg:px-10">
-      <div className="mx-auto max-w-[1200px] space-y-6 rounded-[2.2rem] border-[3px] border-[#d8b6a5] bg-[#f2e6d8] p-4 shadow-[inset_0_0_0_3px_rgba(255,255,255,0.18)] sm:p-6">
-        <div className="flex flex-col gap-4 px-2 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-[clamp(1.5rem,2.5vw,2.4rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
-            Dépenses réelles
-          </h1>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-1 rounded-xl border border-[#d8b7a5] bg-white/70 p-1">
-              <button
-                type="button"
-                onClick={() => goToMonth(-1)}
-                aria-label="Mois précédent"
-                className="rounded-lg p-2 text-[#5d4d44] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5d4d44]"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <span className="min-w-[8.5rem] text-center text-sm font-bold text-[#5d4d44]" aria-live="polite">
-                {MONTHS[monthIndex].label} {year}
-              </span>
-              <button
-                type="button"
-                onClick={() => goToMonth(1)}
-                aria-label="Mois suivant"
-                className="rounded-lg p-2 text-[#5d4d44] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5d4d44]"
-              >
-                <ChevronRight size={18} />
-              </button>
-            </div>
-
-            <Link
-              href={ROUTES.import}
-              className="rounded-xl border border-[#b88f78] bg-white/70 px-4 py-2.5 text-sm font-bold text-[#5d4d44] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5d4d44]"
-            >
-              Importer un relevé
-            </Link>
-          </div>
-        </div>
-
+    <ScreenCard title="Dépenses réelles" actions={monthNav}>
+      <div className="flex h-full min-h-0 flex-col gap-2">
         {isLoading && (
-          <p className="py-10 text-center text-sm font-semibold text-[#6b574c]" role="status">
+          <p className="py-8 text-center text-sm font-semibold text-[#6b574c]" role="status">
             Chargement des dépenses de {MONTHS[monthIndex].label.toLowerCase()}…
           </p>
         )}
@@ -171,23 +160,23 @@ export default function DepenseReellePage() {
 
         {data && !data.error && totals && breakdown && (
           totals.count === 0 ? (
-            <div className="rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-8 text-center">
+            <div className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-6 text-center">
               <p className="text-lg font-bold text-[#5a473d]">
-                Aucune transaction enregistrée en {MONTHS[monthIndex].label.toLowerCase()} {year}.
+                Aucune transaction en {MONTHS[monthIndex].label.toLowerCase()} {year}.
               </p>
-              <p className="mt-2 text-sm text-[#6b574c]">
-                Importe un relevé CSV, puis clique sur « Enregistrer les transactions ».
+              <p className="mt-1 text-sm text-[#6b574c]">
+                Importe un relevé CSV, puis enregistre les transactions.
               </p>
               <Link
                 href={ROUTES.import}
-                className="mt-4 inline-block rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2.5 font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px]"
+                className="mt-3 inline-flex min-h-12 items-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px]"
               >
                 Aller à l&apos;import CSV
               </Link>
             </div>
           ) : (
             <>
-              <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <dl className="grid shrink-0 grid-cols-4 gap-1 sm:gap-2">
                 <SummaryCard label="Revenus" value={euroFormatter.format(totals.income)} tone="positive" />
                 <SummaryCard label="Dépenses" value={euroFormatter.format(totals.expenses)} tone="negative" />
                 <SummaryCard
@@ -202,34 +191,52 @@ export default function DepenseReellePage() {
                 />
               </dl>
 
-              <BudgetVsActualDonuts
-                year={year}
-                monthIndex={monthIndex}
-                monthLabel={MONTHS[monthIndex].label}
-                transactions={data.transactions}
-                categories={data.categories}
-                categoryGroups={data.categoryGroups}
+              <Tabs
+                label="Vues des dépenses du mois"
+                tabs={[
+                  {
+                    id: 'overview',
+                    label: 'Budget et réel',
+                    content: (
+                      <BudgetVsActualDonuts
+                        year={year}
+                        monthIndex={monthIndex}
+                        monthLabel={MONTHS[monthIndex].label}
+                        transactions={data.transactions}
+                        categories={data.categories}
+                        categoryGroups={data.categoryGroups}
+                      />
+                    ),
+                  },
+                  {
+                    id: 'comparison',
+                    label: 'Écarts par catégorie',
+                    content: (
+                      <section className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3">
+                        <MonthlyBudgetComparison
+                          key={year}
+                          groups={comparisonGroups}
+                          monthIndex={monthIndex}
+                          year={year}
+                        />
+                      </section>
+                    ),
+                  },
+                  {
+                    id: 'detail',
+                    label: `Opérations (${totals.count})`,
+                    content: (
+                      <section aria-label="Détail des opérations" className="space-y-3 rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3">
+                        <StoredTransactionsBreakdown breakdown={breakdown} />
+                      </section>
+                    ),
+                  },
+                ]}
               />
-
-              <section className="rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4">
-                <MonthlyBudgetComparison
-                  key={year}
-                  groups={comparisonGroups}
-                  monthIndex={monthIndex}
-                  year={year}
-                />
-              </section>
-
-              <section className="space-y-4 rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4">
-                <h2 className="px-2 text-[1.4rem] font-black text-[#5d4d44]">
-                  Détail des opérations ({totals.count})
-                </h2>
-                <StoredTransactionsBreakdown breakdown={breakdown} />
-              </section>
             </>
           )
         )}
       </div>
-    </div>
+    </ScreenCard>
   );
 }

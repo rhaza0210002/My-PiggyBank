@@ -8,6 +8,8 @@ import BudgetGroupTable from '@/components/features/tables/BudgetGroupTable';
 import { useBudget } from '@/hooks/useBudget';
 import { BUDGET_MODES, BudgetMode } from '@/constants/budgetTypes';
 import { MONTHS } from '@/constants/tableStyles';
+import ScreenCard from '@/components/ui/ScreenCard';
+import Tabs from '@/components/ui/Tabs';
 
 export default function MonthBudgetPage() {
   const { dataGroups, isLoaded, updateRowValue, saveMonthBudget } = useBudget();
@@ -27,14 +29,6 @@ export default function MonthBudgetPage() {
       startTransition(() => setCurrentMonthIndex(nowMonth));
     }
   }, []);
-
-  if (!isLoaded) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#ebcfc6] text-[#5b473d]">
-        <p className="text-sm font-semibold">Chargement...</p>
-      </div>
-    );
-  }
 
   const handlePrevMonth = () => {
     setCurrentMonthIndex((previousMonth) =>
@@ -98,112 +92,125 @@ export default function MonthBudgetPage() {
   const activeMonth = MONTHS[currentMonthIndex];
   const isPastMonth = currentMonthIndex < currentCalendarMonth;
 
+  const monthControls = (
+    <div className="flex items-center gap-1 rounded-xl border border-[#d8b7a5] bg-white/70 p-1">
+      <button
+        type="button"
+        onClick={handlePrevMonth}
+        disabled={currentMonthIndex <= currentCalendarMonth}
+        aria-label="Mois précédent"
+        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-[#5a473d] hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:text-[#8a8a8a]"
+      >
+        <span aria-hidden="true">←</span>
+      </button>
+      <label htmlFor="month-selector" className="sr-only">Mois</label>
+      <select
+        id="month-selector"
+        value={currentMonthIndex}
+        onChange={(e) => setCurrentMonthIndex(Number(e.target.value))}
+        className="min-h-11 rounded-lg border-2 border-[#9c7560] bg-white px-2 text-sm font-bold text-[#54433d]"
+      >
+        {MONTHS.map((m, idx) => (
+          <option key={m.key} value={idx} disabled={idx < currentCalendarMonth}>
+            {m.label}
+          </option>
+        ))}
+      </select>
+      <button
+        type="button"
+        onClick={handleNextMonth}
+        disabled={currentMonthIndex >= MONTHS.length - 1}
+        aria-label="Mois suivant"
+        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-[#5a473d] hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:text-[#8a8a8a]"
+      >
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  );
+
+  const saveButton = (
+    <button
+      type="button"
+      onClick={handleSaveBudget}
+      disabled={isSavingBudget || isPastMonth || dataGroups.length === 0}
+      className="min-h-11 rounded-xl border-2 border-[#6e8f72] bg-[#7fa984] px-4 text-sm font-bold text-[#17301c] shadow-[0_3px_0_rgba(69,105,74,0.8)] transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      {isSavingBudget ? 'Enregistrement...' : 'Valider budget'}
+    </button>
+  );
+
   return (
-    <div className="min-h-[60vh] bg-[#ebcfc6] px-3 py-4 text-[#5b473d] sm:px-6 sm:py-6 lg:px-10">
-
-      <h1 className="mb-4 px-2 text-[clamp(1.5rem,2.5vw,2.4rem)] font-black tracking-[-0.05em] text-[#5d4d44]">Budget mensuel</h1>
-
-      <div className="mx-auto max-w-[1200px] rounded-[1.8rem] sm:rounded-[2.2rem] border-[3px] border-[#d8b6a5] bg-[#f2e6d8] p-3 sm:p-5 shadow-[inset_0_0_0_3px_rgba(255,255,255,0.18)] space-y-6">
-
-        {/* Navigation des mois conditionnée par le mode */}
-        {currentMode === BUDGET_MODES.MENSUEL && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-[1.5rem] sm:rounded-[2rem] border-[3px] border-[#d7b59d] bg-[#f5eadf] p-4 shadow-[0_3px_0_rgba(140,103,86,0.12)]">
-            <button
-              onClick={handlePrevMonth}
-              disabled={currentMonthIndex <= currentCalendarMonth}
-              aria-label="Mois précédent"
-              className="w-full rounded-xl border-2 border-[#d8b7a5] bg-[#f2e6d8] px-4 py-2 font-bold text-[#5a473d] shadow-sm transition-transform active:translate-y-[1px] disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none sm:w-auto"
-            >
-              ← Mois précédent
-            </button>
-
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
-              <label htmlFor="month-selector" className="font-bold text-[#5d4d44]">Mois :</label>
-              <select
-                id="month-selector"
-                value={currentMonthIndex}
-                onChange={(e) => setCurrentMonthIndex(Number(e.target.value))}
-                className="rounded-xl border-2 border-[#d8b7a5] bg-white px-4 py-2 text-[1.1rem] font-bold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
-              >
-                {MONTHS.map((m, idx) => (
-                  <option key={m.key} value={idx} disabled={idx < currentCalendarMonth}>
-                    {m.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              onClick={handleNextMonth}
-              disabled={currentMonthIndex >= MONTHS.length - 1}
-              aria-label="Mois suivant"
-              className="w-full rounded-xl border-2 border-[#d8b7a5] bg-[#f2e6d8] px-4 py-2 font-bold text-[#5a473d] shadow-sm transition-transform active:translate-y-[1px] disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none sm:w-auto"
-            >
-              Mois suivant →
-            </button>
-          </div>
-        )}
-
-        <div>
-          <FormBilan
-            groups={dataGroups}
-            monthIndex={currentMonthIndex}
-            onAddRow={handleAddRow}
-            readOnly={isPastMonth}
-          />
-        </div>
-
-        {/* Affichage des tableaux distincts par groupe */}
-        <div className="space-y-6">
-          {dataGroups.map((group) => (
-            <BudgetGroupTable
-              key={group.key}
-              group={group}
-              monthIndex={currentMonthIndex}
-              monthLabel={activeMonth.label}
-              readOnly={isPastMonth}
-              onUpdateAmount={handleUpdateAmount}
-            />
-          ))}
-        </div>
-
-        {/* Section récapitulative des totaux */}
-        <div>
-          <BudgetTotalsSection
-            dataGroups={dataGroups}
-            currentMode={currentMode}
-            currentMonthIndex={currentMonthIndex}
-            currentMonthLabel={activeMonth.label}
-          />
-        </div>
-
-        <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
-          <button
-            type="button"
-            onClick={handleSaveBudget}
-            disabled={isSavingBudget || isPastMonth || dataGroups.length === 0}
-            className="rounded-xl mx-auto border-2 border-[#6e8f72] bg-[#7fa984] px-5 py-2.5 text-sm font-bold text-[#17301c] shadow-[0_3px_0_rgba(69,105,74,0.8)] transition-transform hover:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isSavingBudget ? 'Enregistrement...' : 'Valider budget'}
-          </button>
+    <ScreenCard
+      title="Budget mensuel"
+      subtitle={isPastMonth ? 'Mois passé : lecture seule.' : `Prévois ${activeMonth.label.toLowerCase()} bloc par bloc.`}
+      actions={
+        <>
+          {monthControls}
+          {saveButton}
+        </>
+      }
+    >
+      {!isLoaded ? (
+        <p role="status" className="py-6 text-center font-semibold">Chargement...</p>
+      ) : (
+        <div className="flex h-full min-h-0 flex-col gap-1">
           {budgetSaveMessage && (
-            <p className="text-sm font-semibold text-green-800" role="status">
-              {budgetSaveMessage}
-            </p>
+            <p className="shrink-0 text-sm font-semibold text-[#1f4d25]" role="status">{budgetSaveMessage}</p>
           )}
           {budgetSaveError && (
-            <p className="text-sm font-semibold text-red-700" role="alert">
-              {budgetSaveError}
-            </p>
+            <p className="shrink-0 text-sm font-semibold text-[#9c3633]" role="alert">{budgetSaveError}</p>
           )}
+          <Tabs
+            label="Blocs du budget du mois"
+            tabs={[
+              ...dataGroups.map((group) => ({
+                id: group.key,
+                label: group.title,
+                content: (
+                  <BudgetGroupTable
+                    group={group}
+                    monthIndex={currentMonthIndex}
+                    monthLabel={activeMonth.label}
+                    readOnly={isPastMonth}
+                    onUpdateAmount={handleUpdateAmount}
+                  />
+                ),
+              })),
+              {
+                id: 'add',
+                label: 'Ajouter une ligne',
+                content: (
+                  <FormBilan
+                    groups={dataGroups}
+                    monthIndex={currentMonthIndex}
+                    onAddRow={handleAddRow}
+                    readOnly={isPastMonth}
+                  />
+                ),
+              },
+              {
+                id: 'totals',
+                label: 'Totaux',
+                content: (
+                  <BudgetTotalsSection
+                    dataGroups={dataGroups}
+                    currentMode={currentMode}
+                    currentMonthIndex={currentMonthIndex}
+                    currentMonthLabel={activeMonth.label}
+                  />
+                ),
+              },
+              {
+                id: 'chart',
+                label: 'Graphique',
+                content: (
+                  <BudgetDonut dataGroups={dataGroups} monthIndex={currentMonthIndex} monthLabel={activeMonth.label} />
+                ),
+              },
+            ]}
+          />
         </div>
-
-        <BudgetDonut
-          dataGroups={dataGroups}
-          monthIndex={currentMonthIndex}
-          monthLabel={activeMonth.label}
-        />
-      </div>
-    </div>
+      )}
+    </ScreenCard>
   );
 }

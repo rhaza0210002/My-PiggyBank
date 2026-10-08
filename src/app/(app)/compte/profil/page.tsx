@@ -2,14 +2,15 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import LogoutButton from '@/components/features/header/LogoutButton';
+import ScreenCard from '@/components/ui/ScreenCard';
 import { supabase } from '@/lib/supabaseClient';
 import { updatePassword } from '@/services/authService';
 import { getUserProfile, updateUserProfile } from '@/services/userService';
 
-const CARD = 'rounded-[2rem] border border-[#e5c4b4] bg-[#fff8f2] p-6 shadow-sm';
-const INPUT = 'mt-1 w-full rounded-xl border border-[#d8b7a5] bg-white px-3 py-2 text-[#5a4d41]';
+const CARD = 'rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-4 shadow-sm';
+const INPUT = 'mt-1 min-h-11 w-full rounded-xl border-2 border-[#9c7560] bg-white px-3 text-[#5a4d41]';
 const BUTTON =
-  'rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] px-4 py-2 text-sm font-semibold text-[#8f3d24] transition-colors hover:bg-[#f2c4b6] focus:outline-hidden focus:ring-2 focus:ring-[#5b473d] disabled:opacity-60';
+  'min-h-11 rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] px-4 py-2 text-sm font-semibold text-[#8f3d24] transition-colors hover:bg-[#f2c4b6] focus:outline-hidden focus:ring-2 focus:ring-[#5b473d] disabled:opacity-60';
 const MIN_PASSWORD_LENGTH = 8;
 
 interface Feedback {
@@ -122,18 +123,15 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="mx-auto flex min-h-[60vh] max-w-5xl flex-col gap-4 px-4 py-10 sm:px-6 lg:px-8">
-      <div className={CARD}>
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a3452a]">Profil</p>
-        <h1 className="mt-2 text-2xl font-bold text-[#5a4d41]">Ton espace personnel</h1>
-      </div>
+    <ScreenCard title="Ton espace personnel">
+      <div className="grid gap-3 md:grid-cols-2">
 
       <section aria-labelledby="identity-title" className={CARD}>
         <h2 id="identity-title" className="text-lg font-bold text-[#5a4d41]">Identité</h2>
         {isLoading ? (
           <p className="mt-2 text-sm text-[#6b574c]" role="status">Chargement…</p>
         ) : (
-          <form onSubmit={handleProfileSubmit} className="mt-3 max-w-md space-y-3">
+          <form onSubmit={handleProfileSubmit} className="mt-2 max-w-md space-y-2">
             <label className="block text-sm font-semibold text-[#5a4d41]">
               Adresse e-mail
               <input type="email" value={email} readOnly className={`${INPUT} bg-[#f5eadf] text-[#6b574c]`} />
@@ -158,7 +156,7 @@ export default function ProfilePage() {
 
       <section aria-labelledby="password-title" className={CARD}>
         <h2 id="password-title" className="text-lg font-bold text-[#5a4d41]">Mot de passe</h2>
-        <form onSubmit={handlePasswordSubmit} className="mt-3 max-w-md space-y-3">
+        <form onSubmit={handlePasswordSubmit} className="mt-2 max-w-md space-y-2">
           <label className="block text-sm font-semibold text-[#5a4d41]">
             Nouveau mot de passe
             <input
@@ -193,6 +191,7 @@ export default function ProfilePage() {
         </p>
         <LogoutButton className="mt-4" />
       </section>
-    </div>
+      </div>
+    </ScreenCard>
   );
 }

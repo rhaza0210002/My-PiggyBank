@@ -47,6 +47,14 @@ update auth.users
  where email = 'votre@email';
 ```
 
+## Progression et récompenses
+
+Pensée pour les personnes neuroatypiques (dont TDAH) : une seule action mise en avant par écran, des
+étapes courtes, un retour immédiat. Les points, niveaux et badges sont **calculés** à partir des
+opérations pointées (`src/utils/gamification.ts`), rien n'est stocké : on ne peut donc rien perdre.
+Un mois manqué passe en « à rattraper » (sans pénalité) et le terminer plus tard rapporte un bonus.
+Les astuces du tableau de bord sont dans `src/utils/tips.ts`.
+
 ## Tests et CI
 
 `yarn test` lance Vitest sur la logique pure (parsing CSV, déduplication, regroupement par catégorie,

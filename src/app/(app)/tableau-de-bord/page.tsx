@@ -1,146 +1,181 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import AsideCards, { Transaction } from "@/components/features/homecards/AsideCards";
-import styles from "@/app/(app)/tableau-de-bord/Dashboard.module.css";
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import BadgeShelf from '@/components/features/gamification/BadgeShelf';
+import MonthsStrip from '@/components/features/gamification/MonthsStrip';
+import ProgressBar from '@/components/ui/ProgressBar';
+import { ROUTES } from '@/constants/routes';
+import { MONTHS } from '@/constants/tableStyles';
+import { useGamification } from '@/hooks/useGamification';
 import { supabase } from '@/lib/supabaseClient';
+import { getMonthTotals, type MonthTotals } from '@/services/transactionService';
 import { getUserProfile } from '@/services/userService';
-import {
-  getMonthTotals,
-  getRecentTransactions,
-  getTransactionsToReconcile,
-  type MonthTotals,
-  type StoredTransaction,
-} from '@/services/transactionService';
 import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
+import { pickTip } from '@/utils/tips';
 
-function toCardItem(transaction: StoredTransaction): Transaction {
-  const amount = Number(transaction.amount);
-  return {
-    id: transaction.id,
-    title: transaction.label,
-    amount: signedEuroFormatter.format(amount),
-    date: new Date(`${transaction.booked_on}T00:00:00`).toLocaleDateString('fr-FR', {
-      day: 'numeric',
-      month: 'long',
-    }),
-    type: amount >= 0 ? 'income' : 'expense',
-  };
-}
-
-function getEncouragingMessage(totals: MonthTotals | null, hasError: boolean): string {
-  if (hasError) return "Impossible de charger tes données.";
-  if (!totals || totals.count === 0) return "Importe un relevé CSV pour commencer.";
-  if (totals.net >= 0) return "Tu tiens la bonne voie !";
-  return "Ce mois-ci, tes dépenses dépassent tes revenus.";
-}
+const PANEL = 'rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-3 shadow-sm sm:p-4';
+const PRIMARY_LINK =
+  'inline-flex min-h-12 items-center justify-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 text-center font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] motion-reduce:transition-none';
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [userName, setUserName] = useState<string>("");
-  const [reconcileItems, setReconcileItems] = useState<Transaction[]>([]);
-  const [historyItems, setHistoryItems] = useState<Transaction[]>([]);
+  const { data: progress, error: progressError } = useGamification();
+  const [pseudo, setPseudo] = useState('');
   const [monthTotals, setMonthTotals] = useState<MonthTotals | null>(null);
-  const [dataError, setDataError] = useState<string | null>(null);
+  const [tipOffset, setTipOffset] = useState(0);
+  const [today] = useState(() => new Date());
 
   useEffect(() => {
-    async function fetchUserData() {
-      const { data: { session } } = await supabase.auth.getSession();
+    let isCurrent = true;
+
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       const user = session?.user;
-
-      if (user) {
-        try {
-          const profile = await getUserProfile(user.id);
-          if (profile?.pseudo) {
-            setUserName(profile.pseudo);
-          } else if (profile?.pseudo === null && user.email) {
-            setUserName(profile.pseudo || user.email.split('@')[0]);
-          } else if (user.email) {
-            setUserName(user.email.split('@')[0]);
-          }
-        } catch (error) {
-          console.error("Erreur lors de la récupération du profil :", error);
-          if (user.email) {
-            setUserName(user.email.split('@')[0]);
-          }
-        }
+      if (!user || !isCurrent) return;
+      const fallback = user.email?.split('@')[0] ?? '';
+      try {
+        const profile = await getUserProfile(user.id);
+        if (isCurrent) setPseudo(profile?.pseudo || fallback);
+      } catch {
+        if (isCurrent) setPseudo(fallback);
       }
-    }
+    });
 
-    fetchUserData();
-  }, []);
-
-  useEffect(() => {
-    let isMounted = true;
-    const now = new Date();
-
-    Promise.all([
-      getTransactionsToReconcile(3),
-      getRecentTransactions(5),
-      getMonthTotals(now.getFullYear(), now.getMonth()),
-    ])
-      .then(([toReconcile, recent, totals]) => {
-        if (!isMounted) return;
-        setReconcileItems(toReconcile.map(toCardItem));
-        setHistoryItems(recent.map(toCardItem));
-        setMonthTotals(totals);
-        setDataError(null);
+    getMonthTotals(today.getFullYear(), today.getMonth())
+      .then((totals) => {
+        if (isCurrent) setMonthTotals(totals);
       })
-      .catch((error: unknown) => {
-        if (!isMounted) return;
-        console.error("Erreur lors du chargement du dashboard :", error);
-        setDataError(error instanceof Error ? error.message : "Chargement impossible.");
-      });
+      .catch(() => {});
 
     return () => {
-      isMounted = false;
+      isCurrent = false;
     };
-  }, []);
+  }, [today]);
 
-  const handleStartReconcile = () => {
-    router.push('/operations/rapprochement');
-  };
-
-  const handleViewAllHistory = () => {
-    console.log("Affichage de l'historique complet");
-  };
-
-  const balance = monthTotals && monthTotals.count > 0 ? euroFormatter.format(monthTotals.net) : '—';
+  const tip = pickTip(today, tipOffset);
+  const month = progress?.currentMonth;
+  const pending = month ? month.total - month.done : 0;
+  const level = progress?.levelInfo;
+  const monthName = MONTHS[today.getMonth()].label;
+  const hasBalance = monthTotals !== null && monthTotals.count > 0;
 
   return (
-    <section className={`mt-5 mx-5 ${styles.dashboardPage}`}>
-      <div className={styles.dashboardInner}>
-        <div className="rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-4 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a3452a]">
-            Bienvenue sur My PiggyBank {userName}
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col gap-2 overflow-y-auto px-3 py-2 sm:px-5">
+      <div className="flex shrink-0 flex-wrap items-baseline justify-between gap-x-4 px-1">
+        <h1 className="text-[clamp(1.25rem,2vw,1.75rem)] font-black tracking-[-0.04em] text-[#5d4d44]">
+          Salut{pseudo ? ` ${pseudo}` : ''} !
+        </h1>
+        <p className="text-sm text-[#6b574c]">Un petit pas à la fois : chaque pointage compte, rien ne se perd.</p>
+      </div>
+
+      {progressError && (
+        <p role="alert" className="shrink-0 rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
+          {progressError}
+        </p>
+      )}
+
+      <div className="grid shrink-0 gap-2 md:grid-cols-12">
+        {/* Action du moment : toujours en premier, une seule chose à faire. */}
+        <section aria-labelledby="month-title" className={`${PANEL} flex flex-col gap-2 md:col-span-5`}>
+          <h2 id="month-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+            {monthName}
+          </h2>
+
+          {!month ? (
+            <p role="status" className="text-sm font-semibold text-[#6b574c]">Chargement…</p>
+          ) : month.total === 0 ? (
+            <>
+              <p className="text-lg font-bold text-[#5a4d41]">Pas encore d’opérations ce mois-ci.</p>
+              <Link href={ROUTES.import} className={PRIMARY_LINK}>Importer mon relevé</Link>
+            </>
+          ) : pending === 0 ? (
+            <>
+              <p className="text-lg font-bold text-[#1f4d25]">
+                <span aria-hidden="true">🎉 </span>Mois bouclé, bravo !
+              </p>
+              <ProgressBar value={month.done} max={month.total} label={`Opérations de ${monthName} pointées`} valueText={`${month.done} sur ${month.total}`} />
+              <Link href={ROUTES.actualExpenses} className={PRIMARY_LINK}>Voir mes dépenses</Link>
+            </>
+          ) : (
+            <>
+              <p className="text-lg font-bold text-[#5a4d41]">
+                {pending} opération{pending > 1 ? 's' : ''} à pointer
+              </p>
+              <ProgressBar
+                value={month.done}
+                max={month.total}
+                label={`Opérations de ${monthName} pointées`}
+                valueText={`${month.done} sur ${month.total} opérations pointées`}
+              />
+              <p className="text-xs text-[#6b574c]">{month.done} sur {month.total} déjà pointées</p>
+              <Link href={ROUTES.reconciliation} className={PRIMARY_LINK}>Commencer à pointer</Link>
+            </>
+          )}
+
+          <p className="mt-auto text-sm text-[#6b574c]">
+            Solde du mois :{' '}
+            <strong className={hasBalance && monthTotals.net < 0 ? 'text-[#9c3633]' : 'text-[#2f5d32]'}>
+              {hasBalance ? signedEuroFormatter.format(monthTotals.net) : '—'}
+            </strong>
+            {hasBalance && (
+              <span className="text-xs"> ({euroFormatter.format(monthTotals.expenses)} dépensés)</span>
+            )}
           </p>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a3452a]">
-            Vue d’ensemble
-          </p>
-          <h1 className="mt-2 text-2xl font-bold text-[#5a4d41]">
-            Ta tirelire est en bonne forme{userName ? `, ${userName}` : ''}.
-          </h1>
-          <p className="mt-2 text-sm text-[#6b574c]">
-            Gère tes rapprochements, suis ton solde et garde un œil sur tes dernières opérations.
-          </p>
-          {dataError && (
-            <p role="alert" className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
-              {dataError}
+        </section>
+
+        <section aria-labelledby="level-title" className={`${PANEL} flex flex-col gap-2 md:col-span-4`}>
+          <h2 id="level-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+            Ma progression
+          </h2>
+          {level && progress ? (
+            <>
+              <p className="text-lg font-bold text-[#5a4d41]">
+                Niveau {level.level} · {level.title}
+              </p>
+              <ProgressBar
+                value={level.xpIntoLevel}
+                max={level.xpForNext}
+                label="Progression vers le niveau suivant"
+                valueText={`${level.xpIntoLevel} points sur ${level.xpForNext}`}
+              />
+              <p className="text-xs text-[#6b574c]">
+                {level.xp} points au total · encore {level.xpForNext - level.xpIntoLevel} pour le niveau {level.level + 1}
+              </p>
+              <BadgeShelf badges={progress.badges} />
+            </>
+          ) : (
+            <p role="status" className="text-sm font-semibold text-[#6b574c]">Chargement…</p>
+          )}
+        </section>
+
+        <section aria-labelledby="tip-title" className={`${PANEL} flex flex-col gap-2 md:col-span-3`}>
+          <h2 id="tip-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+            Astuce du jour
+          </h2>
+          <p className="font-bold text-[#5a4d41]">{tip.title}</p>
+          <p className="text-sm text-[#5a4d41]">{tip.text}</p>
+          <button
+            type="button"
+            onClick={() => setTipOffset((offset) => offset + 1)}
+            className="mt-auto min-h-11 self-start rounded-xl border border-[#b88f78] bg-white/70 px-3 text-sm font-bold text-[#5d4d44] hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+          >
+            Une autre astuce
+          </button>
+        </section>
+      </div>
+
+      <section aria-labelledby="months-title" className={`${PANEL} shrink-0`}>
+        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="months-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+            Mon année {today.getFullYear()}
+          </h2>
+          {progress && (
+            <p className="text-xs text-[#6b574c]">
+              {progress.completedMonths} mois bouclé{progress.completedMonths > 1 ? 's' : ''} · un mois manqué se rattrape à tout moment
             </p>
           )}
         </div>
-
-        <AsideCards
-          reconcileItems={reconcileItems}
-          historyItems={historyItems}
-          onStartReconcile={handleStartReconcile}
-          onViewAllHistory={handleViewAllHistory}
-          balance={balance}
-          balanceLabel="Solde du mois"
-          encouragingMessage={getEncouragingMessage(monthTotals, dataError !== null)}
-          reconcileEmptyText="Toutes tes opérations sont rapprochées."
-        />
-      </div>
-    </section>
+        {progress ? <MonthsStrip months={progress.months} /> : <p role="status" className="text-sm text-[#6b574c]">Chargement…</p>}
+      </section>
+    </div>
   );
 }

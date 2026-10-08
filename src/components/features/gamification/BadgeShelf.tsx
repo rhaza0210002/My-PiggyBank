@@ -1,0 +1,38 @@
+import type { Badge } from '@/utils/gamification';
+
+const BADGE_ICONS: Record<string, string> = {
+  'first-operation': '🌱',
+  'ten-operations': '🔟',
+  'hundred-operations': '💯',
+  'first-month': '🗓️',
+  'catch-up': '🔄',
+  'three-months': '🥉',
+  'six-months': '🥈',
+  'twelve-months': '🥇',
+};
+
+export default function BadgeShelf({ badges }: { badges: Badge[] }) {
+  return (
+    <ul aria-label="Badges" className="grid grid-cols-8 gap-1 md:grid-cols-4 md:gap-1.5">
+      {badges.map((badge) => (
+        <li
+          key={badge.id}
+          title={`${badge.label} : ${badge.description}`}
+          className={`flex min-h-10 flex-col items-center justify-center rounded-xl border-2 px-0.5 py-1 text-center md:min-h-14 md:px-1 ${
+            badge.earned
+              ? 'border-[#d6a85c] bg-[#fff1da] text-[#5a3d10]'
+              : 'border-dashed border-[#d8b7a5] bg-transparent text-[#6b574c]'
+          }`}
+        >
+          <span className={`text-lg ${badge.earned ? '' : 'opacity-40 grayscale'}`} aria-hidden="true">
+            {BADGE_ICONS[badge.id] ?? '⭐'}
+          </span>
+          <span aria-hidden="true" className="hidden text-[0.65rem] font-bold leading-tight md:inline">{badge.label}</span>
+          <span className="sr-only">
+            {badge.label} : {badge.earned ? 'obtenu' : `à débloquer, ${badge.description}`}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}

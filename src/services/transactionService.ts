@@ -208,3 +208,24 @@ export function summarizeAmounts(amounts: number[]): MonthTotals {
     count: amounts.length,
   };
 }
+
+const ACTIVITY_PAGE_SIZE = 1000;
+
+/** Date et état de pointage de toutes les opérations de l'utilisateur (alimente les récompenses). */
+export async function getReconciliationActivity(): Promise<Array<Pick<StoredTransaction, 'booked_on' | 'reconciled_at'>>> {
+  const rows: Array<Pick<StoredTransaction, 'booked_on' | 'reconciled_at'>> = [];
+
+  for (let from = 0; ; from += ACTIVITY_PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('booked_on, reconciled_at')
+      .order('booked_on', { ascending: true })
+      .range(from, from + ACTIVITY_PAGE_SIZE - 1);
+
+    if (error) throw toServiceError(error, 'Lecture de la progression impossible');
+    rows.push(...(data ?? []));
+    if (!data || data.length < ACTIVITY_PAGE_SIZE) break;
+  }
+
+  return rows;
+}
