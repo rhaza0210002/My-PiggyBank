@@ -7,6 +7,7 @@ import {
   LEGAL_ROUTES,
   OPEN_ROUTES,
   NAV_SECTIONS,
+  RESET_PASSWORD_ROUTE,
   ROUTES,
   getActiveSection,
   isCurrentPage,
@@ -42,6 +43,14 @@ describe('plan des chemins', () => {
     const connected = Object.values(ROUTES).filter((route) => !AUTH_ROUTES.includes(route));
 
     connected.forEach((route) => expect(reachable.has(route), `${route} absente du menu`).toBe(true));
+  });
+});
+
+describe('parcours de connexion', () => {
+  it('le nouveau mot de passe a une page et reste atteignable une fois connecté', () => {
+    expect(pageExists(RESET_PASSWORD_ROUTE)).toBe(true);
+    expect(AUTH_ROUTES).not.toContain(RESET_PASSWORD_ROUTE);
+    expect(AUTH_ROUTES).toContain(ROUTES.forgotPassword);
   });
 });
 

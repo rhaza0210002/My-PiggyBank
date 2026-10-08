@@ -15,6 +15,8 @@ interface AuthFormProps {
   mode: 'login' | 'register';
   onSubmit: (data: AuthFormData) => void;
   isLoading?: boolean;
+  /** Connexion / inscription avec Google ; absent = bouton masqué. */
+  onGoogle?: () => void;
   /** Erreur renvoyée par le serveur (identifiants refusés, e-mail déjà utilisé...). */
   serverError?: string | null;
 }
@@ -25,7 +27,7 @@ const INPUT_CLASS =
 const LABEL_CLASS = 'block px-1 text-sm font-bold text-[#5d4d44]';
 const HINT_CLASS = 'px-1 text-xs text-[#6b574c]';
 
-export default function AuthForm({ mode, onSubmit, isLoading = false, serverError = null }: AuthFormProps) {
+export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, serverError = null }: AuthFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -79,6 +81,17 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, serverErro
       password,
       ...(isRegister ? { pseudo: pseudo.trim(), confirmPassword } : {}),
     });
+  };
+
+  // Sur l'inscription, Google crée aussi un compte : on demande donc d'abord d'accepter les conditions.
+  const handleGoogle = () => {
+    if (isRegister && !acceptedTerms) {
+      fail('terms', 'Coche la case pour accepter les conditions d’utilisation et la politique de confidentialité.');
+      return;
+    }
+    setInvalidField(null);
+    setValidationError(null);
+    onGoogle?.();
   };
 
   const fieldProps = (field: string) => ({
@@ -163,7 +176,16 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, serverErro
               className={INPUT_CLASS}
               {...fieldProps('password')}
             />
-            {isRegister && <p className={HINT_CLASS}>Au moins {MIN_PASSWORD_LENGTH} caractères.</p>}
+            {isRegister ? (
+              <p className={HINT_CLASS}>Au moins {MIN_PASSWORD_LENGTH} caractères.</p>
+            ) : (
+              <Link
+                href={ROUTES.forgotPassword}
+                className="inline-flex min-h-11 items-center px-1 text-sm font-bold text-[#8c4a38] underline underline-offset-4"
+              >
+                Mot de passe oublié ?
+              </Link>
+            )}
           </div>
 
           {isRegister && (
@@ -229,6 +251,43 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, serverErro
             {isLoading ? "Chargement…" : isRegister ? "S'inscrire" : "Se connecter"}
           </button>
         </form>
+
+        {onGoogle && (
+          <div className="space-y-3">
+            <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-wide text-[#6b574c]" aria-hidden="true">
+              <span className="h-px flex-1 bg-[#d8b7a5]" />
+              ou
+              <span className="h-px flex-1 bg-[#d8b7a5]" />
+            </p>
+            <button
+              type="button"
+              onClick={handleGoogle}
+              disabled={isLoading}
+              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-[1.25rem] border-[2px] border-[#9c7560] bg-white py-3 font-bold text-[#3d2a21] transition-colors hover:bg-[#fcf9f6] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-70"
+            >
+              <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+                <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z" />
+                <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.2 5.5-4.7 7.2l7.5 5.8c4.4-4.1 7-10.1 7-17.5z" />
+                <path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z" />
+                <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z" />
+              </svg>
+              {isRegister ? 'S’inscrire avec Google' : 'Continuer avec Google'}
+            </button>
+            {!isRegister && (
+              <p className={`${HINT_CLASS} text-center`}>
+                Si tu n’as pas encore de compte, il sera créé : tu acceptes alors les{' '}
+                <Link href={LEGAL_ROUTES.terms} target="_blank" className="font-bold text-[#8c4a38] underline">
+                  conditions<span className="sr-only"> (nouvel onglet)</span>
+                </Link>{' '}
+                et la{' '}
+                <Link href={LEGAL_ROUTES.privacy} target="_blank" className="font-bold text-[#8c4a38] underline">
+                  politique de confidentialité<span className="sr-only"> (nouvel onglet)</span>
+                </Link>
+                .
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="border-t border-[#d8b7a5]/60 pt-4 text-center">
           <p className="text-[0.95rem] text-[#5d4d44]">

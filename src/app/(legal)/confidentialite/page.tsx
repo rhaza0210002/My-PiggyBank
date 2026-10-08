@@ -75,7 +75,9 @@ export default function ConfidentialitePage() {
         <li>Toi, uniquement : chaque compte est isolé des autres par des règles de sécurité au niveau de la base.</li>
         <li>
           Nos sous-traitants techniques : Supabase (base de données et authentification, hébergée dans l’Union
-          européenne, région Francfort) et Vercel Inc. (hébergement de l’application web).
+          européenne, région Francfort), Vercel Inc. (hébergement de l’application web) et, si tu choisis de te
+          connecter avec Google, Google Ireland Limited (vérification de ton identité : nous recevons ton adresse
+          e-mail et ton nom, jamais ton mot de passe Google).
         </li>
         <li>L’administrateur du service, uniquement pour gérer la liste des catégories (jamais tes opérations).</li>
       </ul>

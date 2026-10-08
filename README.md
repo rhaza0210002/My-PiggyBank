@@ -32,7 +32,23 @@ Les scripts SQL sont dans `supabase/` :
 ## Authentification
 
 La session Supabase est stockée dans des cookies (`@supabase/ssr`). `src/proxy.ts` redirige vers
-`/connexion` toute requête sans session valide ; seules `/connexion` et `/inscription` sont publiques.
+`/connexion` toute requête sans session valide ; `/connexion`, `/inscription` et `/mot-de-passe-oublie`
+sont publiques (plus les pages légales).
+
+### Confirmation par e-mail, mot de passe oublié, Google
+
+Les liens reçus par e-mail et le retour de Google passent par `/auth/callback`, qui échange le code
+contre une session puis redirige (`/nouveau-mot-de-passe` pour la récupération). Réglages à faire dans
+le tableau de bord Supabase (rien n'est configurable depuis le code) :
+
+1. **Authentication → Sign In / Providers → Email** : activer « Confirm email ».
+2. **Authentication → URL Configuration** : *Site URL* = l'adresse du site, et dans *Redirect URLs* ajouter
+   `https://<domaine>/auth/callback` et `http://localhost:3000/auth/callback`.
+3. **Authentication → Sign In / Providers → Google** : activer, puis renseigner l'ID et le secret client
+   créés dans Google Cloud Console (*APIs & Services → Credentials → OAuth client ID, type Web*), avec
+   comme URI de redirection autorisée celle affichée par Supabase (`https://<ref>.supabase.co/auth/v1/callback`).
+4. Optionnel : brancher un SMTP personnalisé (le SMTP par défaut est très limité en envois) et
+   personnaliser les modèles d'e-mail en français.
 
 ### Administrateur
 
