@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+
+.DS_Store
+
+# Généré par Next.js
+next-env.d.ts
+
+# Claude Code (réglages locaux)
+.claude/settings.local.json

@@ -1,38 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# My PiggyBank
 
-## Getting Started
+Application de suivi de budget : budget annuel et mensuel, import de relevés CSV (Société Générale),
+catégorisation automatique des transactions et comparaison budget / dépenses réelles.
 
-First, run the development server:
+Stack : Next.js 16 (App Router), React 19, Tailwind 4, Supabase (auth + base Postgres).
+
+## Démarrer
 
 ```bash
-npm run dev
-# or
+yarn install
+cp .env.example .env.local   # puis renseigner les deux variables
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Variables d'environnement (`.env.local`, jamais commité) :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Rôle |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL du projet Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clé publique (anon) du projet |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Scripts : `yarn dev`, `yarn build`, `yarn lint`, `yarn typecheck`, `yarn test`.
 
-## Learn More
+## Base de données (Supabase)
 
-To learn more about Next.js, take a look at the following resources:
+Les scripts SQL sont dans `supabase/` :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `supabase/migrations/` : tables `transactions` et `user_settings` (avec RLS), colonne `reconciled_at`, règles de libellé par utilisateur. À relire puis exécuter dans l'ordre des noms de fichier, dans le SQL Editor.
+- `supabase/seed-libelle-transacts.sql` : règles par défaut libellé → catégorie (`user_id` vide) utilisées par l'import CSV. Chaque utilisateur peut ajouter ses propres règles, qui l'emportent sur celles par défaut.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Authentification
 
-## Deploy on Vercel
+La session Supabase est stockée dans des cookies (`@supabase/ssr`). `src/proxy.ts` redirige vers
+`/login` toute requête sans session valide ; seules `/login` et `/register` sont publiques.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tests et CI
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# My-PiggyBank
-# My-PiggyBank
+`yarn test` lance Vitest sur la logique pure (parsing CSV, déduplication, regroupement par catégorie,
+écarts budget/réel, totaux). Les tests sont dans des dossiers `__tests__` à côté du code testé.
+
+La CI GitHub (`.github/workflows/ci.yml`) exécute sur chaque pull request et sur `main` :
+`yarn lint`, `yarn typecheck`, `yarn test` puis `yarn build` (avec de fausses valeurs Supabase,
+le build n'appelle pas la base).
+
+## Déploiement
+
+L'application est un projet Next.js standard, déployable sur Vercel :
+
+1. Importer le dépôt GitHub dans Vercel (framework détecté : Next.js, commande `yarn build`).
+2. Définir `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY` pour Production et Preview.
+3. Dans Supabase, Authentication > URL Configuration : mettre l'URL de production dans *Site URL* et
+   ajouter les URL de preview dans *Redirect URLs*.
+4. Vérifier que les migrations de `supabase/migrations/` ont été exécutées sur la base de production.
+
+## Structure
+
+```
+src/app/          pages (dashboard, budgetmensual, budgetannual, csvUploader, depense-reelle, ...)
+src/components/   composants (forms, header, tables, charts, homecards)
+src/services/     accès Supabase et parseur CSV
+src/hooks/        useBudget, useStorage
+src/lib/          client Supabase navigateur
+src/proxy.ts      protection des routes
+```
