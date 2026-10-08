@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
+import { requireUserId } from '@/lib/currentUser';
 import {
   planRuleChanges,
   type ExistingRule,
@@ -21,10 +22,7 @@ export interface SaveTransactionLabelsResult {
 export async function saveImportedTransactionLabels(
   importedLabels: ImportedTransactionLabel[],
 ): Promise<SaveTransactionLabelsResult> {
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-  if (authError || !authData.user) {
-    throw new Error('Vous devez être connecté pour enregistrer les libellés.');
-  }
+  const userId = await requireUserId('Vous devez être connecté pour enregistrer les libellés.');
 
   const { data: existingLabels, error: existingError } = await supabase
     .from('libelle_transacts')
@@ -37,11 +35,11 @@ export async function saveImportedTransactionLabels(
   const plan = planRuleChanges(
     importedLabels,
     (existingLabels ?? []) as ExistingRule[],
-    authData.user.id,
+    userId,
   );
 
   if (plan.inserts.length > 0) {
-    const rows = plan.inserts.map((record) => ({ ...record, user_id: authData.user.id }));
+    const rows = plan.inserts.map((record) => ({ ...record, user_id: userId }));
     const { error } = await supabase.from('libelle_transacts').insert(rows);
     if (error) {
       throw new Error(`Insertion des libellés impossible : ${error.message}`);

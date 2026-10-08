@@ -11,14 +11,17 @@ const BADGE_ICONS: Record<string, string> = {
   'twelve-months': '🥇',
 };
 
+import type { CSSProperties } from 'react';
+
 export default function BadgeShelf({ badges }: { badges: Badge[] }) {
   return (
     <ul aria-label="Badges" className="grid grid-cols-8 gap-1 md:grid-cols-4 md:gap-1.5">
-      {badges.map((badge) => (
+      {badges.map((badge, index) => (
         <li
           key={badge.id}
+          style={{ '--i': index * 0.6 } as CSSProperties}
           title={`${badge.label} : ${badge.description}`}
-          className={`flex min-h-10 flex-col items-center justify-center rounded-xl border-2 px-0.5 py-1 text-center md:min-h-14 md:px-1 ${
+          className={`rise flex min-h-10 flex-col items-center justify-center rounded-xl border-2 px-0.5 py-1 text-center md:min-h-14 md:px-1 ${
             badge.earned
               ? 'border-[#d6a85c] bg-[#fff1da] text-[#5a3d10]'
               : 'border-dashed border-[#d8b7a5] bg-transparent text-[#6b574c]'

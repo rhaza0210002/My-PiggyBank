@@ -1,5 +1,6 @@
 // src/services/budgetService.ts
 import { supabase } from '@/lib/supabaseClient';
+import { requireUserId } from '@/lib/currentUser';
 
 export interface BudgetEntry {
   category_id: string;
@@ -8,16 +9,12 @@ export interface BudgetEntry {
 }
 
 export async function getBudgetEntries(year: number): Promise<BudgetEntry[]> {
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-
-  if (authError || !authData.user) {
-    throw new Error("Vous devez être connecté pour consulter le budget.");
-  }
+  const userId = await requireUserId("Vous devez être connecté pour consulter le budget.");
 
   const { data, error } = await supabase
     .from('budget_entries')
     .select('category_id, month_index, amount')
-    .eq('user_id', authData.user.id)
+    .eq('user_id', userId)
     .eq('year', year);
 
   if (error) {
@@ -34,17 +31,13 @@ export async function saveBudgetEntry(
   amount: number,
   year: number
 ): Promise<void> {
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-
-  if (authError || !authData.user) {
-    throw new Error("Vous devez être connecté pour enregistrer le budget.");
-  }
+  const userId = await requireUserId("Vous devez être connecté pour enregistrer le budget.");
 
   // 1. Vérifier si l'entrée existe déjà et si elle est verrouillée
   const { data: existing, error: fetchError } = await supabase
     .from('budget_entries')
     .select('is_locked')
-    .eq('user_id', authData.user.id)
+    .eq('user_id', userId)
     .eq('category_id', categoryId)
     .eq('month_index', monthIndex)
     .eq('year', year)
@@ -63,7 +56,7 @@ export async function saveBudgetEntry(
     .from('budget_entries')
     .upsert(
       {
-        user_id: authData.user.id,
+        user_id: userId,
         category_id: categoryId,
         month_index: monthIndex,
         year: year,

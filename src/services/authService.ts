@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
+import { invalidateCache } from '@/utils/memoryCache';
 import { clearLocalPersonalData } from '@/services/personalDataService';
 import { TERMS_VERSION } from '@/constants/legal';
 import { AUTH_CALLBACK_ROUTE, RESET_PASSWORD_ROUTE } from '@/constants/routes';
@@ -75,6 +76,8 @@ export async function loginUser({ email, password }: Omit<AuthCredentials, 'pseu
     throw new Error(translateAuthError(error.message));
   }
 
+  // Compte différent possible dans le même onglet : on repart d'une mémoire vide.
+  invalidateCache();
   return data;
 }
 

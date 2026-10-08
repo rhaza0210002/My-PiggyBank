@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
+import { requireUserId } from '@/lib/currentUser';
 
 export interface UserSettings {
   notify_reconcile: boolean;
@@ -22,12 +23,11 @@ export async function getUserSettings(): Promise<UserSettings> {
 }
 
 export async function saveUserSettings(settings: UserSettings): Promise<void> {
-  const { data, error: authError } = await supabase.auth.getUser();
-  if (authError || !data.user) throw new Error('Vous devez être connecté pour enregistrer vos préférences.');
+  const userId = await requireUserId('Vous devez être connecté pour enregistrer vos préférences.');
 
   const { error } = await supabase
     .from('user_settings')
-    .upsert({ user_id: data.user.id, ...settings, updated_at: new Date().toISOString() });
+    .upsert({ user_id: userId, ...settings, updated_at: new Date().toISOString() });
 
   if (error) throw new Error(`Enregistrement des préférences impossible : ${error.message}`);
 }
