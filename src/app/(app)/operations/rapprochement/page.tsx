@@ -19,6 +19,7 @@ import {
 import {
   getTransactionsToReconcile,
   markTransactionsReconciled,
+  unreconcileTransactions,
   updateTransactionCategory,
   type StoredTransaction,
 } from '@/services/transactionService';
@@ -44,6 +45,7 @@ export default function RapprochementPage() {
   const wasMonthComplete = useRef<boolean | null>(null);
   const previousLevel = useRef<number | null>(null);
   const [noticeCount, setNoticeCount] = useState(0);
+  const [lastPointed, setLastPointed] = useState<StoredTransaction[] | null>(null);
   const [celebration, setCelebration] = useState<string | null>(null);
 
   useEffect(() => {
@@ -122,6 +124,7 @@ export default function RapprochementPage() {
   };
 
   const reconcile = (ids: string[]) => {
+    const pointed = data?.transactions.filter((item) => ids.includes(item.id)) ?? [];
     void runAction(
       ids,
       () => markTransactionsReconciled(ids),
@@ -134,6 +137,32 @@ export default function RapprochementPage() {
         );
         setNotice(`+${ids.length * XP_PER_OPERATION} points : ${ids.length} opération${ids.length > 1 ? 's' : ''} pointée${ids.length > 1 ? 's' : ''}. Bien joué !`);
         setCelebration(null);
+        setLastPointed(pointed);
+        setNoticeCount((count) => count + 1);
+        refreshProgress();
+      },
+    );
+  };
+
+  /** Annule le dernier pointage (une erreur de clic ne doit jamais coûter cher). */
+  const undoLastPointing = () => {
+    if (!lastPointed || lastPointed.length === 0) return;
+    const ids = lastPointed.map((item) => item.id);
+    const restored = lastPointed;
+
+    void runAction(
+      ids,
+      () => unreconcileTransactions(ids),
+      () => {
+        setData((current) =>
+          current && {
+            ...current,
+            transactions: [...restored, ...current.transactions].sort((a, b) => b.booked_on.localeCompare(a.booked_on)),
+          },
+        );
+        setLastPointed(null);
+        setCelebration(null);
+        setNotice(`Pointage annulé : ${ids.length} opération${ids.length > 1 ? 's' : ''} de retour dans la liste.`);
         setNoticeCount((count) => count + 1);
         refreshProgress();
       },
@@ -207,6 +236,18 @@ export default function RapprochementPage() {
             <span aria-hidden="true">✨ </span>
             {notice}
           </p>
+        )}
+
+        {lastPointed && lastPointed.length > 0 && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={undoLastPointing}
+              className="min-h-11 rounded-xl border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-bold text-[#5a473d] transition hover:bg-[#F8D5CB] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+            >
+              <span aria-hidden="true">↩️ </span>Annuler le dernier pointage
+            </button>
+          </div>
         )}
 
         {!data && !loadError && (

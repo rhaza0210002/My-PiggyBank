@@ -24,8 +24,8 @@ interface FooterProps {
 export default function Footer({ variant = 'full' }: FooterProps) {
   if (variant === 'compact') {
     return (
-      // Sur mobile, le bas du pied de page se prolonge sous la barre de navigation fixe (pb) : il reste lisible au-dessus.
-      <footer className="shrink-0 border-t border-[#E5C4B4] bg-[#FFF5EE] px-3 pb-[calc(4.25rem+env(safe-area-inset-bottom))] pt-1 text-[0.7rem] text-[#5a4d41] md:px-4 md:pb-1 md:text-xs">
+      // Sur mobile, la barre d'onglets est juste en dessous dans la colonne : le pied de page la touche, sans marge à deviner.
+      <footer className="shrink-0 border-t border-[#E5C4B4] bg-[#FFF5EE] px-3 py-1 text-[0.7rem] text-[#5a4d41] md:px-4 md:text-xs">
         {/* Mobile : une seule ligne, les liens se déplient à la demande (moins de bruit pendant une tâche). */}
         <details className="group mx-auto max-w-6xl text-center md:hidden">
           <summary className="flex min-h-8 cursor-pointer list-none items-center justify-center gap-1 rounded focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] [&::-webkit-details-marker]:hidden">
