@@ -14,10 +14,14 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     <div className="relative flex h-dvh flex-col overflow-hidden">
       <SkipLink />
       <AppHeader />
-      <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto pb-2 outline-none">
-        {children}
+      {/*
+        Le pied de page suit le contenu dans la zone qui défile : il n'apparaît qu'en bas de page (collé à la barre
+        d'onglets sur mobile). La page garde exactement la hauteur de l'écran, le pied de page est juste en dessous.
+      */}
+      <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto outline-none">
+        <div className="min-h-full pb-2 md:h-full">{children}</div>
+        <Footer variant="compact" />
       </main>
-      <Footer variant="compact" />
       <BottomNav />
     </div>
   );
