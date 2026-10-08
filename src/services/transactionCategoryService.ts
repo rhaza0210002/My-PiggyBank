@@ -77,6 +77,12 @@ export async function createCategory(
 
   if (error) {
     console.error("Erreur Supabase détaillée :", error);
+    if (error.code === '42501') {
+      throw new Error("Seul l'administrateur peut créer une catégorie.");
+    }
+    if (error.code === '23505') {
+      throw new Error('Cette catégorie existe déjà dans ce groupe.');
+    }
     throw new Error(error.message);
   }
 

@@ -12,7 +12,7 @@ interface StoredTransactionsBreakdownProps {
 }
 
 function amountClass(amount: number): string {
-  return amount < 0 ? 'text-[#b94a48]' : 'text-[#3c763d]';
+  return amount < 0 ? 'text-[#9c3633]' : 'text-[#3c763d]';
 }
 
 // booked_on est une date ISO (aaaa-mm-jj) : on la découpe sans passer par Date pour éviter tout décalage de fuseau.
