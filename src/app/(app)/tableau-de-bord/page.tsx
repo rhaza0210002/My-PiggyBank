@@ -4,6 +4,7 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import BadgeShelf from '@/components/features/gamification/BadgeShelf';
 import StartChecklist from '@/components/features/gamification/StartChecklist';
+import MonthRecapCard from '@/components/features/gamification/MonthRecapCard';
 import MonthsStrip from '@/components/features/gamification/MonthsStrip';
 import BalanceToggle, { revealAmount, useBalanceVisibility } from '@/components/ui/BalanceToggle';
 import ProgressBar from '@/components/ui/ProgressBar';
@@ -96,6 +97,10 @@ export default function DashboardPage() {
       )}
 
       {startSteps && <StartChecklist steps={startSteps} />}
+
+      {month && month.total > 0 && pending === 0 && (
+        <MonthRecapCard year={today.getFullYear()} monthIndex={today.getMonth()} isAmountShown={balance.isShown} />
+      )}
 
       <div className="grid shrink-0 gap-2 md:grid-cols-12">
         {/* Action du moment : toujours en premier, une seule chose à faire. */}
