@@ -32,7 +32,7 @@ export async function saveBudgetEntry(
   categoryId: string,
   monthIndex: number,
   amount: number,
-  year: number = 2026
+  year: number
 ): Promise<void> {
   const { data: authData, error: authError } = await supabase.auth.getUser();
 

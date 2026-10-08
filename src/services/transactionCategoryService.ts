@@ -107,43 +107,11 @@ export async function getLibelleTransacts(): Promise<LibelleTransact[]> {
   );
 }
 
-/**
- * Trouve la catégorie associée à un libellé donné (recherche insensible à la casse).
- */
-export async function findCategoryByLibelle(libelle: string): Promise<Category | null> {
-  const sanitizedLibelle = libelle.toLowerCase().trim();
-
-  const { data: transacts, error: transError } = await supabase
-    .from('libelle_transacts')
-    .select('id_cat, label')
-    .ilike('label', `%${sanitizedLibelle}%`)
-    .limit(1);
-
-  if (transError || !transacts || transacts.length === 0 || !transacts[0].id_cat) {
-    return null;
-  }
-
-  const categoryId = transacts[0].id_cat;
-
-  const { data: category, error: catError } = await supabase
-    .from('transac_cat')
-    .select('*')
-    .eq('id', categoryId)
-    .single();
-
-  if (catError || !category) {
-    return null;
-  }
-
-  return category;
-}
-
 const transactionCategoryService = {
   getCategoriesGroupKey,
   getCategories,
   createCategory,
   getLibelleTransacts,
-  findCategoryByLibelle,
 };
 
 export default transactionCategoryService;

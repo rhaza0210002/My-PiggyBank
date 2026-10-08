@@ -29,23 +29,7 @@ export async function registerUser({ email, password, pseudo }: AuthCredentials)
     throw new Error(authError.message);
   }
 
-  const user = authData.user;
-
-  if (user) {
-    const { error: profileError } = await supabase
-      .from('users')
-      .upsert({
-        id: user.id,
-        email: email,
-        pseudo: pseudo || null,
-      }, { onConflict: 'id' });
-
-    if (profileError) {
-      console.error("Erreur lors de la création du profil public :", profileError.message);
-      throw new Error(profileError.message);
-    }
-  }
-
+  // Le profil public est créé par le trigger `on_auth_user_created` côté base.
   return authData;
 }
 
