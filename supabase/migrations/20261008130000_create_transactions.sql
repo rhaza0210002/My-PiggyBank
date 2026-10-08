@@ -6,9 +6,8 @@
 -- n-ième occurrence dans le fichier). Elle permet de réimporter un même relevé,
 -- ou un relevé qui chevauche le précédent, sans créer de doublons.
 --
--- category_id est en text sans clé étrangère : le type de transac_cat.id n'est pas
--- versionné dans le dépôt. À remplacer par une FK vers transac_cat(id) une fois le
--- type confirmé.
+-- category_id référence transac_cat(id) (uuid) ; la catégorie est mise à NULL si elle
+-- est supprimée, la transaction est conservée.
 -- =========================================================
 
 create table if not exists public.transactions (
@@ -17,7 +16,7 @@ create table if not exists public.transactions (
   booked_on    date not null,
   label        text not null,
   amount       numeric(12, 2) not null,
-  category_id  text,
+  category_id  uuid references public.transac_cat (id) on delete set null,
   category_key text,
   type         text not null default 'AUTRE'
                check (type in ('VIREMENT_ENTRANT', 'VIREMENT_SORTANT', 'AUTRE')),
@@ -28,6 +27,9 @@ create table if not exists public.transactions (
 
 create index if not exists transactions_user_booked_on_idx
   on public.transactions (user_id, booked_on desc);
+
+create index if not exists transactions_category_id_idx
+  on public.transactions (category_id);
 
 alter table public.transactions enable row level security;
 
