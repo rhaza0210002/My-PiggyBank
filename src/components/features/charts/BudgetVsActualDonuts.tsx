@@ -84,7 +84,6 @@ export default function BudgetVsActualDonuts({
   const sectionRef = useRef<HTMLElement>(null);
   const [budgetEntries, setBudgetEntries] = useState<BudgetEntry[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [replayCount, setReplayCount] = useState(0);
 
   useEffect(() => {
     let isCurrent = true;
@@ -185,7 +184,7 @@ export default function BudgetVsActualDonuts({
       revert?.();
       showTotals(finalTotals);
     };
-  }, [slices, budgetTotal, actualTotal, replayCount]);
+  }, [slices, budgetTotal, actualTotal]);
 
   return (
     <section
@@ -193,19 +192,10 @@ export default function BudgetVsActualDonuts({
       aria-labelledby={titleId}
       className="overflow-hidden rounded-[1.5rem] border-[3px] border-[#d8b6a5] bg-gradient-to-br from-[#fbf2e9] to-[#f2e3d7] p-3 shadow-[0_3px_0_rgba(140,103,86,0.1)] sm:p-4"
     >
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+      <div className="mb-2 text-center">
         <h2 id={titleId} className="text-base font-black text-[#5d4d44] sm:text-lg">
           Budget estimé et dépenses réelles — {monthLabel} {year}
         </h2>
-        {slices.length > 0 && (
-          <button
-            type="button"
-            onClick={() => setReplayCount((count) => count + 1)}
-            className="min-h-11 rounded-xl border border-[#b88f78] bg-white/70 px-4 text-sm font-bold text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
-          >
-            Rejouer l&apos;animation
-          </button>
-        )}
       </div>
 
       {loadError && (

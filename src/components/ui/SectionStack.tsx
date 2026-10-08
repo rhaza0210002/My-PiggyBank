@@ -14,17 +14,28 @@ interface SectionStackProps {
   sections: StackSection[];
   /** Nom de la barre de raccourcis, lu par les lecteurs d'écran. */
   label: string;
+  /** Fond de la rangée de puces collante (doit être celui du conteneur pour ne pas former de bande). */
+  background?: string;
 }
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Premier ancêtre qui défile réellement (jamais le cadre de l'écran, qui est en overflow: hidden). */
+function findScrollParent(element: HTMLElement): HTMLElement | null {
+  for (let parent = element.parentElement; parent; parent = parent.parentElement) {
+    const { overflowY } = window.getComputedStyle(parent);
+    if ((overflowY === 'auto' || overflowY === 'scroll') && parent.scrollHeight > parent.clientHeight) return parent;
+  }
+  return null;
+}
 
 /**
  * Plusieurs blocs à la suite, dans une seule zone qui défile. Une barre de raccourcis mène à chaque bloc
  * (défilement doux), indique celui qu'on lit, et chaque bloc apparaît quand on y arrive : le contenu n'est
  * monté qu'à ce moment, ce qui relance aussi les animations des graphiques.
  */
-export default function SectionStack({ sections, label }: SectionStackProps) {
+export default function SectionStack({ sections, label, background = '#f2e6d8' }: SectionStackProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
@@ -71,6 +82,34 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
     };
   }, [sections]);
 
+  // La rangée de puces défile à l'horizontale, sans barre : la molette (verticale) et le doigt la font avancer.
+  const [fadeRight, setFadeRight] = useState(false);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const updateFade = () => setFadeRight(nav.scrollWidth - nav.clientWidth - nav.scrollLeft > 4);
+    const onWheel = (event: WheelEvent) => {
+      if (nav.scrollWidth <= nav.clientWidth || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+      const next = Math.max(0, Math.min(nav.scrollWidth - nav.clientWidth, nav.scrollLeft + event.deltaY));
+      // Au bout de la rangée, la molette reprend son rôle normal (faire défiler la page).
+      if (next === nav.scrollLeft) return;
+      event.preventDefault();
+      nav.scrollLeft = next;
+    };
+
+    updateFade();
+    nav.addEventListener('scroll', updateFade, { passive: true });
+    nav.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('resize', updateFade);
+    return () => {
+      nav.removeEventListener('scroll', updateFade);
+      nav.removeEventListener('wheel', onWheel);
+      window.removeEventListener('resize', updateFade);
+    };
+  }, [sections.length]);
+
   // Sur mobile la rangée de puces défile : la puce de la partie lue reste visible.
   useEffect(() => {
     const nav = navRef.current;
@@ -84,34 +123,45 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
     if (!element) return;
     setRevealed((previous) => new Set([...previous, id]));
     setActiveId(id);
-    element.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    const parent = findScrollParent(element);
+    if (parent) {
+      // La rangée de puces collante masque le haut de la zone : on s'arrête juste dessous.
+      const stickyOffset = navRef.current?.offsetHeight ?? 0;
+      const top = element.getBoundingClientRect().top - parent.getBoundingClientRect().top + parent.scrollTop - stickyOffset;
+      parent.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    }
     element.focus({ preventScroll: true });
   };
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <nav
-        ref={navRef}
-        aria-label={label}
-        className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto bg-[#f2e6d8] pb-1 shadow-[0_6px_6px_-6px_rgba(93,77,68,0.25)] md:static md:flex-wrap md:justify-center md:overflow-visible md:shadow-none"
-      >
-        {sections.map((section) => (
-          <button
-            key={section.id}
-            ref={(element) => {
-              chipRefs.current[section.id] = element;
-            }}
-            type="button"
-            onClick={() => goTo(section.id)}
-            aria-current={activeId === section.id ? 'true' : undefined}
-            className="min-h-11 shrink-0 rounded-full border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-semibold text-[#5a4d41] transition hover:-translate-y-0.5 hover:bg-[#F8D5CB] motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[current=true]:border-[#a3452a] aria-[current=true]:bg-[#F8D5CB] aria-[current=true]:font-bold aria-[current=true]:text-[#7a2f1a]"
-          >
-            {section.label}
-          </button>
-        ))}
-      </nav>
 
-      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 scroll-smooth pt-1 motion-reduce:scroll-auto md:overflow-y-auto">
+      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 scroll-smooth motion-reduce:scroll-auto md:overflow-y-auto">
+        <nav
+          ref={navRef}
+          aria-label={label}
+          style={{
+            backgroundColor: background,
+            ...(fadeRight ? { maskImage: 'linear-gradient(to right, black calc(100% - 32px), transparent)' } : {}),
+          }}
+          className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible"
+        >
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              ref={(element) => {
+                chipRefs.current[section.id] = element;
+              }}
+              type="button"
+              onClick={() => goTo(section.id)}
+              aria-current={activeId === section.id ? 'true' : undefined}
+              className="min-h-11 shrink-0 rounded-full border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-semibold text-[#5a4d41] transition hover:-translate-y-0.5 hover:bg-[#F8D5CB] motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[current=true]:border-[#a3452a] aria-[current=true]:bg-[#F8D5CB] aria-[current=true]:font-bold aria-[current=true]:text-[#7a2f1a]"
+            >
+              {section.label}
+            </button>
+          ))}
+        </nav>
+
         {sections.map((section) => {
           const isRevealed = revealed.has(section.id);
           return (

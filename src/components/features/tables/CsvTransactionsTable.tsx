@@ -197,10 +197,12 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
     <section className="space-y-4 rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4">
       <SectionStack
         label="Parties de l'import"
+        background="#f5eadf"
         sections={[
           {
             id: 'transactions',
             label: `Transactions lues (${transactions.length})`,
+            hideTitle: true,
             content: (
               <div className="space-y-4">
           <p className="px-2 text-sm font-semibold text-[#6b574c]" role="status">
@@ -281,6 +283,7 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
           {
             id: 'comparison',
             label: 'Comparaison avec le budget',
+            hideTitle: true,
             content: <MonthlyBudgetComparison groups={groups} />,
           },
         ]}
