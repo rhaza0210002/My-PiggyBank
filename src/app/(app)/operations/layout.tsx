@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: 'Opérations' };
 
 export default function OperationsLayout({ children }: { children: ReactNode }) {
   return (
-    <>
+    <div className="flex h-full min-h-0 flex-col">
       <SectionTabs sectionId="operations" />
-      {children}
-    </>
+      <div className="min-h-0 flex-1">{children}</div>
+    </div>
   );
 }

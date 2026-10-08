@@ -32,3 +32,10 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Petite célébration jouée une seule fois (désactivée par prefers-reduced-motion). */
+@keyframes pop {
+  0% { transform: scale(0.92); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}

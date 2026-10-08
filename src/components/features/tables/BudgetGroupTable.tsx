@@ -71,14 +71,13 @@ export default function BudgetGroupTable({
 
   return (
     <section className={`rounded-[1.5rem] sm:rounded-[2rem] border-[3px] border-dashed ${palette.border} ${palette.section} p-3 sm:p-4 shadow-[0_3px_0_rgba(140,103,86,0.12)]`}>
-      <h2 className="mb-4 px-2 text-[clamp(1.2rem,2vw,2.2rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+      <h2 className="mb-2 px-2 text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
         {group.title} — {monthLabel}
       </h2>
 
       <div role="region" aria-label={`Tableau ${group.title}`} tabIndex={0} className={`w-full overflow-x-auto rounded-xl border ${palette.border} ${palette.table} shadow-inner`}>
         <table
           className="w-full min-w-[320px] border-collapse text-left"
-          role="region"
           aria-label={`Tableau de ${group.title}`}
         >
           <thead>

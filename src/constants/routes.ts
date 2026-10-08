@@ -57,9 +57,9 @@ export const NAV_SECTIONS: readonly NavSection[] = [
     icon: '🪙',
     href: ROUTES.actualExpenses,
     pages: [
-      { label: 'Dépenses réelles', href: ROUTES.actualExpenses },
+      { label: 'Dépenses', href: ROUTES.actualExpenses },
       { label: 'Rapprochement', href: ROUTES.reconciliation },
-      { label: 'Importer un relevé', href: ROUTES.import },
+      { label: 'Import', href: ROUTES.import },
     ],
   },
   {

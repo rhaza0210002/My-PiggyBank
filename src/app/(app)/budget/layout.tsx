@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: 'Budget' };
 
 export default function BudgetLayout({ children }: { children: ReactNode }) {
   return (
-    <>
+    <div className="flex h-full min-h-0 flex-col">
       <SectionTabs sectionId="budget" />
-      {children}
-    </>
+      <div className="min-h-0 flex-1">{children}</div>
+    </div>
   );
 }

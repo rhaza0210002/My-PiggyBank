@@ -16,7 +16,7 @@ export default function SectionTabs({ sectionId }: SectionTabsProps) {
   if (!section || section.pages.length === 0) return null;
 
   return (
-    <nav aria-label={`Pages de la section ${section.label}`} className="mx-auto w-full max-w-6xl px-4 pt-4 sm:px-6">
+    <nav aria-label={`Pages de la section ${section.label}`} className="mx-auto w-full max-w-6xl shrink-0 px-4 pt-2 sm:px-6">
       <ul className="flex flex-wrap gap-2">
         {section.pages.map((page) => {
           const isCurrent = isCurrentPage(pathname, page.href);

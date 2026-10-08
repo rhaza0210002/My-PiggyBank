@@ -71,12 +71,12 @@ export default function BudgetTotalsSection({
 
     return (
       <div className="rounded-[1.5rem] sm:rounded-[2rem] border-[3px] border-[#d7b59d] border-dashed bg-[#f5eadf] p-3 sm:p-4 shadow-[0_3px_0_rgba(140,103,86,0.12)]">
-        <h2 className="mb-4 px-2 text-[clamp(1.2rem,2vw,2.2rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+        <h2 className="mb-2 px-2 text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
           Total dépenses — {currentMonthLabel}
         </h2>
 
         <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border border-[#d8b7a5]/50 bg-white/40 shadow-inner">
-          <table className="w-full min-w-[320px] border-collapse text-left" role="region" aria-label="Tableau des totaux mensuels">
+          <table className="w-full min-w-[320px] border-collapse text-left" aria-label="Tableau des totaux mensuels">
             <thead>
               <tr className="bg-[#f0d8c8] text-[#5a473d]">
                 <th scope="col" className={TABLE_STYLES.thCategory}>Catégorie</th>
@@ -114,12 +114,12 @@ export default function BudgetTotalsSection({
   // Mode Annuel : Affichage de tous les mois en colonnes
   return (
     <div className="rounded-[1.5rem] sm:rounded-[2rem] border-[3px] border-[#d7b59d] border-dashed bg-[#f5eadf] p-3 sm:p-4 shadow-[0_3px_0_rgba(140,103,86,0.12)]">
-      <h2 className="mb-4 px-2 text-[clamp(1.2rem,2vw,2.2rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+      <h2 className="mb-2 px-2 text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
         Totaux Annuels par mois
       </h2>
 
       <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border border-[#d8b7a5]/50 bg-white/40 shadow-inner">
-        <table className="w-full min-w-[840px] border-collapse text-left" role="region" aria-label="Tableau des totaux annuels">
+        <table className="w-full min-w-[840px] border-collapse text-left" aria-label="Tableau des totaux annuels">
           <thead>
             <tr className="bg-[#f0d8c8] text-[#5a473d]">
               <th scope="col" className={TABLE_STYLES.thCategory}>Catégorie</th>

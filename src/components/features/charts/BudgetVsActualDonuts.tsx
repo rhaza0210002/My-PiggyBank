@@ -182,17 +182,17 @@ export default function BudgetVsActualDonuts({
     <section
       ref={sectionRef}
       aria-labelledby={titleId}
-      className="overflow-hidden rounded-[2rem] border-[3px] border-[#d8b6a5] bg-gradient-to-br from-[#fbf2e9] to-[#f2e3d7] p-4 shadow-[0_5px_0_rgba(140,103,86,0.1)] sm:p-6"
+      className="overflow-hidden rounded-[1.5rem] border-[3px] border-[#d8b6a5] bg-gradient-to-br from-[#fbf2e9] to-[#f2e3d7] p-3 shadow-[0_3px_0_rgba(140,103,86,0.1)] sm:p-4"
     >
-      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 id={titleId} className="text-xl font-black text-[#5d4d44]">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <h2 id={titleId} className="text-base font-black text-[#5d4d44] sm:text-lg">
           Budget estimé et dépenses réelles — {monthLabel} {year}
         </h2>
         {slices.length > 0 && (
           <button
             type="button"
             onClick={() => setReplayCount((count) => count + 1)}
-            className="min-h-11 self-start rounded-xl border border-[#b88f78] bg-white/70 px-4 text-sm font-bold text-[#5d4d44] transition hover:bg-white sm:self-auto"
+            className="min-h-11 rounded-xl border border-[#b88f78] bg-white/70 px-4 text-sm font-bold text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
           >
             Rejouer l&apos;animation
           </button>
@@ -218,13 +218,13 @@ export default function BudgetVsActualDonuts({
       )}
 
       {slices.length > 0 && (
-        <div className="space-y-6">
-          <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid items-start gap-3 lg:grid-cols-[auto_minmax(0,1fr)]">
+          <div className="grid grid-cols-2 gap-3">
             {donuts.map((donut) => (
-              <figure key={donut.kind} className="flex flex-col items-center gap-2">
-                <figcaption className="text-base font-black text-[#5d4d44]">{donut.title}</figcaption>
+              <figure key={donut.kind} className="flex flex-col items-center gap-1">
+                <figcaption className="text-sm font-black text-[#5d4d44]">{donut.title}</figcaption>
                 <div
-                  className="relative aspect-square w-48 max-w-full sm:w-56"
+                  className="relative aspect-square w-32 max-w-full sm:w-40"
                   role="img"
                   aria-label={`${donut.title} : ${euroFormatter.format(donut.total)} répartis sur ${donut.arcs.length} catégorie${donut.arcs.length > 1 ? 's' : ''}. Le détail est dans le tableau ci-dessous.`}
                 >
@@ -246,7 +246,7 @@ export default function BudgetVsActualDonuts({
                   </svg>
                   <div className="absolute inset-[18%] flex flex-col items-center justify-center rounded-full border border-[#d8b6a5]/60 bg-[#fbf2e9] px-2 text-center shadow-inner">
                     <span className="text-[0.65rem] font-bold uppercase text-[#6b574c]">Total</span>
-                    <span data-total={donut.kind} className="text-base font-black text-[#5d4d44] sm:text-lg">
+                    <span data-total={donut.kind} className="text-xs font-black text-[#5d4d44] sm:text-sm">
                       {euroFormatter.format(donut.total)}
                     </span>
                   </div>
@@ -255,7 +255,7 @@ export default function BudgetVsActualDonuts({
             ))}
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-[#d8b6a5]/60 bg-white/55" role="region" aria-label="Détail par catégorie" tabIndex={0}>
+          <div className="max-h-64 overflow-auto rounded-xl border border-[#d8b6a5]/60 bg-white/55 lg:max-h-72" role="region" aria-label="Détail par catégorie" tabIndex={0}>
             <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
               <caption className="sr-only">
                 Budget estimé et dépenses réelles par catégorie pour {monthLabel} {year}
