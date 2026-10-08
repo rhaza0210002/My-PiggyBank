@@ -14,6 +14,8 @@ import type { BankTransaction } from '@/services/csvParser';
 
 interface CsvTransactionsTableProps {
   transactions: BankTransaction[];
+  /** Relevé d'exemple : on peut tout regarder, mais rien ne peut être enregistré. */
+  isDemo?: boolean;
 }
 
 const categoryBackgrounds = [
@@ -61,7 +63,7 @@ function CategoryRows({
                 {group.categoryLabel}
               </span>
             ) : (
-              <span className="italic text-gray-400">Non catégorisé</span>
+              <span className="italic text-[#6b574c]">Non catégorisé</span>
             )}
             <span className="text-[11px] font-black text-[#6a534c]">
               {isExpanded ? '▾' : '▸'}
@@ -107,7 +109,7 @@ function CategoryRows({
   );
 }
 
-export default function CsvTransactionsTable({ transactions }: CsvTransactionsTableProps) {
+export default function CsvTransactionsTable({ transactions, isDemo = false }: CsvTransactionsTableProps) {
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const [isSavingLabels, setIsSavingLabels] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -237,11 +239,16 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
               </tbody>
             </table>
           </div>
+          {isDemo && (
+            <p className="rounded-lg border border-[#d8b6a5] bg-white/60 p-3 text-sm font-semibold text-[#76513f]" role="status">
+              🧪 Exemple : rien n’est enregistré. Importe ton vrai relevé pour retrouver tes opérations.
+            </p>
+          )}
           <div className="flex flex-wrap justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={handleSaveTransactions}
-              disabled={isSavingTransactions}
+              disabled={isSavingTransactions || isDemo}
               className="rounded-[1.5rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-3 font-black text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#5b473d] disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingTransactions ? 'Enregistrement...' : `Enregistrer les ${transactions.length} transactions`}
@@ -249,7 +256,7 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
             <button
               type="button"
               onClick={handleSaveLabels}
-              disabled={isSavingLabels || importedLabels.length === 0}
+              disabled={isSavingLabels || isDemo || importedLabels.length === 0}
               className="rounded-[1.5rem] border-[3px] border-[#82b89f] bg-[#8cd3b3] px-6 py-3 font-black text-[#2e4d3d] shadow-[0_4px_0_rgba(92,143,115,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#2e4d3d] disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingLabels ? 'Enregistrement...' : 'Enregistrer les libellés reconnus'}
