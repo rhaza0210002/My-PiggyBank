@@ -11,6 +11,7 @@ import {
   type CategoryGroup,
 } from '@/services/transactionCategoryService';
 import { formatCurrency } from '@/utils/budgetCalculations';
+import { getDifference, isIncomeGroup } from '@/utils/budgetComparison';
 
 /** Montant réel cumulé d'une catégorie, quelle que soit l'origine des transactions. */
 export interface ComparisonGroup {
@@ -39,16 +40,6 @@ interface BudgetComparisonGroup {
   title: string;
   isIncome: boolean;
   rows: BudgetComparisonRow[];
-}
-
-/** Les budgets sont saisis en positif ; seul le groupe « Revenus » correspond à des entrées d'argent. */
-function isIncomeGroup(group: CategoryGroup): boolean {
-  return `${group.label} ${group.libelle}`.toLowerCase().includes('revenu');
-}
-
-/** Écart favorable = positif : plus de revenus que prévu, ou moins de dépenses que prévu. */
-function getDifference(isIncome: boolean, budget: number, actual: number): number {
-  return isIncome ? actual - budget : budget - Math.abs(actual);
 }
 
 interface LoadedBudgetEntry {

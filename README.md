@@ -20,19 +20,38 @@ Variables d'environnement (`.env.local`, jamais commité) :
 | `NEXT_PUBLIC_SUPABASE_URL` | URL du projet Supabase |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clé publique (anon) du projet |
 
-Scripts : `yarn dev`, `yarn build`, `yarn lint`.
+Scripts : `yarn dev`, `yarn build`, `yarn lint`, `yarn typecheck`, `yarn test`.
 
 ## Base de données (Supabase)
 
 Les scripts SQL sont dans `supabase/` :
 
-- `supabase/migrations/` : RLS et politiques d'accès, à relire puis exécuter dans le SQL Editor.
+- `supabase/migrations/` : tables `transactions` et `user_settings` (avec RLS), colonne `reconciled_at`. À relire puis exécuter dans l'ordre des noms de fichier, dans le SQL Editor.
 - `supabase/seed-libelle-transacts.sql` : règles libellé → catégorie utilisées par l'import CSV.
 
 ## Authentification
 
 La session Supabase est stockée dans des cookies (`@supabase/ssr`). `src/proxy.ts` redirige vers
 `/login` toute requête sans session valide ; seules `/login` et `/register` sont publiques.
+
+## Tests et CI
+
+`yarn test` lance Vitest sur la logique pure (parsing CSV, déduplication, regroupement par catégorie,
+écarts budget/réel, totaux). Les tests sont dans des dossiers `__tests__` à côté du code testé.
+
+La CI GitHub (`.github/workflows/ci.yml`) exécute sur chaque pull request et sur `main` :
+`yarn lint`, `yarn typecheck`, `yarn test` puis `yarn build` (avec de fausses valeurs Supabase,
+le build n'appelle pas la base).
+
+## Déploiement
+
+L'application est un projet Next.js standard, déployable sur Vercel :
+
+1. Importer le dépôt GitHub dans Vercel (framework détecté : Next.js, commande `yarn build`).
+2. Définir `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY` pour Production et Preview.
+3. Dans Supabase, Authentication > URL Configuration : mettre l'URL de production dans *Site URL* et
+   ajouter les URL de preview dans *Redirect URLs*.
+4. Vérifier que les migrations de `supabase/migrations/` ont été exécutées sur la base de production.
 
 ## Structure
 
