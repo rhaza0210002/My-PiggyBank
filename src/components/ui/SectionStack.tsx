@@ -82,6 +82,34 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
     };
   }, [sections]);
 
+  // La rangée de puces défile à l'horizontale, sans barre : la molette (verticale) et le doigt la font avancer.
+  const [fadeRight, setFadeRight] = useState(false);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const updateFade = () => setFadeRight(nav.scrollWidth - nav.clientWidth - nav.scrollLeft > 4);
+    const onWheel = (event: WheelEvent) => {
+      if (nav.scrollWidth <= nav.clientWidth || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+      const next = Math.max(0, Math.min(nav.scrollWidth - nav.clientWidth, nav.scrollLeft + event.deltaY));
+      // Au bout de la rangée, la molette reprend son rôle normal (faire défiler la page).
+      if (next === nav.scrollLeft) return;
+      event.preventDefault();
+      nav.scrollLeft = next;
+    };
+
+    updateFade();
+    nav.addEventListener('scroll', updateFade, { passive: true });
+    nav.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('resize', updateFade);
+    return () => {
+      nav.removeEventListener('scroll', updateFade);
+      nav.removeEventListener('wheel', onWheel);
+      window.removeEventListener('resize', updateFade);
+    };
+  }, [sections.length]);
+
   // Sur mobile la rangée de puces défile : la puce de la partie lue reste visible.
   useEffect(() => {
     const nav = navRef.current;
@@ -112,8 +140,11 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
         <nav
           ref={navRef}
           aria-label={label}
-          style={{ backgroundColor: background }}
-          className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 shadow-[0_6px_6px_-6px_rgba(93,77,68,0.25)] md:flex-wrap md:justify-center md:overflow-visible"
+          style={{
+            backgroundColor: background,
+            ...(fadeRight ? { maskImage: 'linear-gradient(to right, black calc(100% - 32px), transparent)' } : {}),
+          }}
+          className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible"
         >
           {sections.map((section) => (
             <button
