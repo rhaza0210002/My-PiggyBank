@@ -167,6 +167,12 @@ export default function DashboardPage() {
               <p className="text-xs text-[#6b574c]">
                 {level.xp} points au total · encore {level.xpForNext - level.xpIntoLevel} pour le niveau {level.level + 1}
               </p>
+              <p className="text-xs font-semibold text-[#6b574c]">
+                <span aria-hidden="true">📅 </span>
+                {progress.activeDaysLast7 > 0
+                  ? `${progress.activeDaysLast7} jour${progress.activeDaysLast7 > 1 ? 's' : ''} actif${progress.activeDaysLast7 > 1 ? 's' : ''} ces 7 derniers jours`
+                  : 'Aucune pression : reprends quand tu veux, rien ne se perd.'}
+              </p>
               <BadgeShelf badges={progress.badges} />
             </>
           ) : (

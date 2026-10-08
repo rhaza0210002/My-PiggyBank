@@ -47,6 +47,8 @@ export interface Gamification {
   reconciledOperations: number;
   xp: number;
   levelInfo: LevelInfo;
+  /** Jours où au moins une opération a été pointée, sur les 7 derniers jours (aujourd'hui compris). */
+  activeDaysLast7: number;
   badges: Badge[];
 }
 
@@ -89,6 +91,29 @@ function monthStatus(
   if (total === 0) return 'empty';
   if (done === total) return 'complete';
   return monthIndex < currentMonthIndex ? 'catch-up' : 'in-progress';
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function localDayKey(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+}
+
+/**
+ * Régularité douce : combien de jours distincts, sur les 7 derniers, ont vu au moins un pointage.
+ * Volontairement pas une « série » qui se brise : un jour manqué ne fait rien perdre.
+ */
+export function countActiveDays(rows: readonly ActivityRow[], now: Date): number {
+  const wanted = new Set(Array.from({ length: 7 }, (_, offset) => localDayKey(new Date(now.getTime() - offset * DAY_MS))));
+  const active = new Set<string>();
+
+  rows.forEach((row) => {
+    if (!row.reconciled_at) return;
+    const key = localDayKey(new Date(row.reconciled_at));
+    if (wanted.has(key)) active.add(key);
+  });
+
+  return active.size;
 }
 
 export function computeGamification(rows: readonly ActivityRow[], now: Date): Gamification {
@@ -156,6 +181,7 @@ export function computeGamification(rows: readonly ActivityRow[], now: Date): Ga
     reconciledOperations,
     xp,
     levelInfo: getLevelInfo(xp),
+    activeDaysLast7: countActiveDays(rows, now),
     badges: [
       badge('first-operation', 'Premier pas', 'Pointer une première opération', reconciledOperations >= 1),
       badge('ten-operations', 'Dix pointages', 'Pointer 10 opérations', reconciledOperations >= 10),
