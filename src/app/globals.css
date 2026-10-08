@@ -14,3 +14,21 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+/* Focus clavier toujours visible (contraste 3:1 minimum sur tous les fonds de l'application). */
+:focus-visible {
+  outline: 3px solid #5b473d;
+  outline-offset: 2px;
+}
+
+/* Respecte le réglage « réduire les animations » du système. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

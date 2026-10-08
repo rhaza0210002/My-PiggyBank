@@ -82,7 +82,7 @@ export default function FormBilan({
           onChange={(e) => setGroupKey(e.target.value)}
           disabled={readOnly || groups.length === 0}
           aria-label="Sélectionner un groupe"
-          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#e59a86]"
+          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
         >
           {groups.map((g) => (
             <option key={g.key} value={g.key}>
@@ -107,7 +107,7 @@ export default function FormBilan({
           disabled={readOnly}
           aria-required="true"
           aria-invalid={submitError !== null}
-          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#e59a86]"
+          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
         />
         <datalist id="category-suggestions">
           {categorySuggestions.map((suggestion) => (
@@ -129,7 +129,7 @@ export default function FormBilan({
           placeholder="0.00"
           disabled={readOnly}
           aria-label="Montant en euros"
-          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#e59a86]"
+          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
         />
       </div>
 

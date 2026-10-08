@@ -1,3 +1,4 @@
+import { ROUTES } from '@/constants/routes';
 import { getBudgetEntries } from '@/services/budgetService';
 import { getCategories } from '@/services/transactionCategoryService';
 import { countTransactionsToReconcile, getTransactionsForMonth } from '@/services/transactionService';
@@ -33,7 +34,7 @@ export async function getNotifications(settings: UserSettings, now = new Date())
       level: 'warning',
       title: `${toReconcile} opération${toReconcile > 1 ? 's' : ''} à rapprocher`,
       detail: 'Vérifie leur catégorie puis pointe-les.',
-      href: '/rapprochement',
+      href: ROUTES.reconciliation,
     });
   }
 
@@ -61,7 +62,7 @@ export async function getNotifications(settings: UserSettings, now = new Date())
           level: 'warning',
           title: `Budget dépassé : ${category.label}`,
           detail: `${formatCurrency(spent)} dépensés pour ${formatCurrency(budget)} prévus en ${monthLabel}.`,
-          href: '/depense-reelle',
+          href: ROUTES.actualExpenses,
         });
       }
     });
@@ -73,7 +74,7 @@ export async function getNotifications(settings: UserSettings, now = new Date())
       level: 'info',
       title: `Aucune opération en ${monthLabel}`,
       detail: 'Importe ton relevé CSV pour suivre tes dépenses réelles.',
-      href: '/csvUploader',
+      href: ROUTES.import,
     });
   }
 

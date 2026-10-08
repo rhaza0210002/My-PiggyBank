@@ -153,7 +153,7 @@ function ExpandableCategoryRows({
             {label}
           </button>
         </td>
-        <td className={`${TABLE_STYLES.cellCategory} whitespace-nowrap text-sm text-[#766356]`}>
+        <td className={`${TABLE_STYLES.cellCategory} whitespace-nowrap text-sm text-[#6b574c]`}>
           {count} op.
         </td>
         <td className={`${TABLE_STYLES.cellAmount} ${amountClass(total)}`}>

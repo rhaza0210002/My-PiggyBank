@@ -109,7 +109,7 @@ export default function MonthlyBudgetComparison({
         <h3 id="monthly-comparison-title" className="text-lg font-black text-[#5d4d44]">
           Comparaison budget / réel
         </h3>
-        <p className="py-6 text-center text-sm font-semibold text-[#766356]">Chargement...</p>
+        <p className="py-6 text-center text-sm font-semibold text-[#6b574c]">Chargement...</p>
       </section>
     );
   }
@@ -190,7 +190,7 @@ export default function MonthlyBudgetComparison({
           <h3 id="monthly-comparison-title" className="text-lg font-black text-[#5d4d44]">
             Comparaison budget / réel
           </h3>
-          <p className="text-sm text-[#766356]">
+          <p className="text-sm text-[#6b574c]">
             {isMonthControlled
               ? 'Le réel reprend les transactions enregistrées pour ce mois.'
               : 'Le réel reprend le cumul par catégorie affiché dans la liste des transactions importées.'}
@@ -213,12 +213,12 @@ export default function MonthlyBudgetComparison({
           )}
         </div>
       </div>
-      <p className="text-xs text-[#766356]">
+      <p className="text-xs text-[#6b574c]">
         Budget {MONTHS[monthIndex].label} {currentYear} comparé au réel {isMonthControlled ? 'enregistré' : 'du fichier CSV importé'}.
       </p>
 
       {isLoading ? (
-        <p className="py-6 text-center text-sm font-semibold text-[#766356]">Chargement du budget…</p>
+        <p className="py-6 text-center text-sm font-semibold text-[#6b574c]">Chargement du budget…</p>
       ) : error ? (
         <p className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800" role="alert">
           {error}
@@ -245,7 +245,7 @@ export default function MonthlyBudgetComparison({
                 </h4>
                 <div className="space-y-2 p-2 md:hidden">
                   {group.rows.length === 0 ? (
-                    <p className="rounded-lg bg-white/55 p-3 text-center text-sm italic text-[#766356]">
+                    <p className="rounded-lg bg-white/55 p-3 text-center text-sm italic text-[#6b574c]">
                       Aucune donnée pour {MONTHS[monthIndex].label}.
                     </p>
                   ) : group.rows.map((row) => {
@@ -257,15 +257,15 @@ export default function MonthlyBudgetComparison({
                         </h5>
                         <dl className="grid grid-cols-3 gap-2">
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Budget</dt>
+                            <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Budget</dt>
                             <dd className="break-words text-sm font-bold text-[#5a473d]">{formatCurrency(row.budget)}</dd>
                           </div>
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Réel</dt>
+                            <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Réel</dt>
                             <dd className="break-words text-sm font-bold text-[#5a473d]">{formatCurrency(row.actual)}</dd>
                           </div>
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Écart</dt>
+                            <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Écart</dt>
                             <dd className={`break-words text-sm font-black ${difference < 0 ? 'text-red-700' : 'text-green-800'}`}>
                               {formatCurrency(difference)}
                             </dd>
@@ -280,15 +280,15 @@ export default function MonthlyBudgetComparison({
                     </h5>
                     <dl className="grid grid-cols-3 gap-2">
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Budget</dt>
+                        <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Budget</dt>
                         <dd className="break-words text-sm font-black">{formatCurrency(groupBudget)}</dd>
                       </div>
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Réel</dt>
+                        <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Réel</dt>
                         <dd className="break-words text-sm font-black">{formatCurrency(groupActual)}</dd>
                       </div>
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Écart</dt>
+                        <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Écart</dt>
                         <dd className={`break-words text-sm font-black ${groupDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
                           {formatCurrency(groupDifference)}
                         </dd>
@@ -310,7 +310,7 @@ export default function MonthlyBudgetComparison({
                     <tbody>
                       {group.rows.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="py-5 text-center text-sm italic text-[#766356]">
+                          <td colSpan={4} className="py-5 text-center text-sm italic text-[#6b574c]">
                             Aucune donnée pour ce groupe en {MONTHS[monthIndex].label}.
                           </td>
                         </tr>
@@ -346,15 +346,15 @@ export default function MonthlyBudgetComparison({
             <h4 className="mb-2 text-sm font-black text-[#5d4d44]">Solde général (revenus − dépenses)</h4>
             <dl className="grid grid-cols-3 gap-2">
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Budget</dt>
+                <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Budget</dt>
                 <dd className="break-words text-sm font-black">{formatCurrency(totalBudget)}</dd>
               </div>
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Réel</dt>
+                <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Réel</dt>
                 <dd className="break-words text-sm font-black">{formatCurrency(totalActual)}</dd>
               </div>
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Écart</dt>
+                <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Écart</dt>
                 <dd className={`break-words text-sm font-black ${totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
                   {formatCurrency(totalDifference)}
                 </dd>
@@ -380,7 +380,7 @@ export default function MonthlyBudgetComparison({
       )}
 
       {uncategorizedGroup && uncategorizedGroup.records.length > 0 && (
-        <p className="text-xs font-semibold text-[#a85a2a]">
+        <p className="text-xs font-semibold text-[#8a4a1c]">
           {uncategorizedGroup.records.length} opération{uncategorizedGroup.records.length > 1 ? 's' : ''} sans catégorie
           ({formatCurrency(uncategorizedGroup.totalAmount)}) ne figure{uncategorizedGroup.records.length > 1 ? 'nt' : ''} pas
           dans ce tableau : catégorise-les dans le rapprochement.
@@ -388,7 +388,7 @@ export default function MonthlyBudgetComparison({
       )}
 
       {categorizedTransactionCount === 0 && transactionCount > 0 && (
-        <p className="text-xs text-[#766356]">
+        <p className="text-xs text-[#6b574c]">
           Aucune transaction catégorisée dans le fichier importé.
         </p>
       )}

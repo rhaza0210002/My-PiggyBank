@@ -253,7 +253,7 @@ export default function BudgetDonut({
             ))}
           </svg>
           <div className="absolute inset-[18%] flex flex-col items-center justify-center rounded-full border border-[#d8b6a5]/60 bg-[#fbf2e9] px-2 text-center shadow-inner">
-            <span className="mb-1 text-[0.65rem] font-bold uppercase text-[#8c7366]">
+            <span className="mb-1 text-[0.65rem] font-bold uppercase text-[#6b574c]">
               {isMonthly ? monthLabel : 'Année'}
             </span>
             <span className="text-base font-black text-[#5d4d44] sm:text-lg">
@@ -263,7 +263,7 @@ export default function BudgetDonut({
         </div>
 
         {slices.length === 0 ? (
-          <p className="chart-legend-item rounded-xl border border-dashed border-[#d8b6a5] bg-white/40 p-5 text-center text-sm italic text-[#8c7366]">
+          <p className="chart-legend-item rounded-xl border border-dashed border-[#d8b6a5] bg-white/40 p-5 text-center text-sm italic text-[#6b574c]">
             {emptyMessage}
           </p>
         ) : (
@@ -282,7 +282,7 @@ export default function BudgetDonut({
                   <span className="min-w-0 flex-1 truncate text-sm font-bold text-[#5a473d]" title={slice.label}>
                     {slice.label}
                   </span>
-                  <span className="shrink-0 text-xs font-bold text-[#766356]">
+                  <span className="shrink-0 text-xs font-bold text-[#6b574c]">
                     {slice.share.toFixed(1)}%
                   </span>
                 </div>
