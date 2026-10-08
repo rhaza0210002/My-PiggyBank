@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import LabelRuleForm from '@/components/features/forms/LabelRuleForm';
 import NewCategoryForm from '@/components/features/forms/NewCategoryForm';
 import { isCurrentUserAdmin } from '@/services/adminService';
 import { ROUTES } from '@/constants/routes';
@@ -42,6 +43,8 @@ export default function RapprochementPage() {
   const [actionError, setActionError] = useState<string | null>(null);
   const [busyIds, setBusyIds] = useState<ReadonlySet<string>>(new Set());
   const [isAdmin, setIsAdmin] = useState(false);
+  const [ruleTransactionId, setRuleTransactionId] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     let isCurrent = true;
@@ -164,6 +167,12 @@ export default function RapprochementPage() {
           </p>
         )}
 
+        {notice && (
+          <p role="status" className="rounded-lg border border-[#9fc3a1] bg-[#eaf4e6] p-3 text-sm font-semibold text-[#1f4d25]">
+            {notice}
+          </p>
+        )}
+
         {data && isAdmin && (
           <NewCategoryForm
             groups={data.categoryGroups}
@@ -211,6 +220,7 @@ export default function RapprochementPage() {
               {transactions.map((transaction) => {
                 const amount = Number(transaction.amount);
                 const isBusy = busyIds.has(transaction.id);
+                const category = data.categories.find((item) => item.id === transaction.category_id);
                 const monthLabel = MONTHS[Number(transaction.booked_on.slice(5, 7)) - 1]?.label;
 
                 return (
@@ -262,6 +272,33 @@ export default function RapprochementPage() {
                     >
                       Pointer
                     </button>
+
+                    {category && (
+                      <div className="md:col-span-full">
+                        {ruleTransactionId === transaction.id ? (
+                          <LabelRuleForm
+                            transactionLabel={transaction.label}
+                            category={category}
+                            onCancel={() => setRuleTransactionId(null)}
+                            onSaved={(message) => {
+                              setRuleTransactionId(null);
+                              setNotice(message);
+                            }}
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setNotice(null);
+                              setRuleTransactionId(transaction.id);
+                            }}
+                            className="min-h-11 rounded-lg px-2 text-sm font-bold text-[#8c4a38] underline underline-offset-2"
+                          >
+                            Retenir ce libellé pour les prochains imports
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </li>
                 );
               })}
