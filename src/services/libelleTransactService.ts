@@ -1,28 +1,23 @@
 import { supabase } from '@/lib/supabaseClient';
+import {
+  planRuleChanges,
+  type ExistingRule,
+  type ImportedRule,
+} from '@/utils/labelRulePlanning';
 
-export interface ImportedTransactionLabel {
-  label: string;
-  key: string;
-  categoryId: string;
-}
+export type ImportedTransactionLabel = ImportedRule;
 
 export interface SaveTransactionLabelsResult {
   inserted: number;
   updated: number;
+  /** Règles déjà présentes à l'identique (par défaut ou personnelles). */
   skipped: number;
 }
 
-interface ExistingTransactionLabel {
-  id: string;
-  label: string;
-  key: string;
-  id_cat: string;
-}
-
-function normalize(value: string): string {
-  return value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-}
-
+/**
+ * Enregistre les règles libellé → catégorie reconnues à l'import, en tant que règles personnelles
+ * de l'utilisateur connecté. Les règles par défaut ne sont jamais modifiées.
+ */
 export async function saveImportedTransactionLabels(
   importedLabels: ImportedTransactionLabel[],
 ): Promise<SaveTransactionLabelsResult> {
@@ -33,58 +28,28 @@ export async function saveImportedTransactionLabels(
 
   const { data: existingLabels, error: existingError } = await supabase
     .from('libelle_transacts')
-    .select('id, label, key, id_cat');
+    .select('id, label, key, id_cat, user_id');
 
   if (existingError) {
     throw new Error(`Lecture des libellés impossible : ${existingError.message}`);
   }
 
-  const existingByLabel = new Map<string, ExistingTransactionLabel>(
-    ((existingLabels ?? []) as ExistingTransactionLabel[]).map((entry) => [
-      normalize(entry.label),
-      entry,
-    ]),
+  const plan = planRuleChanges(
+    importedLabels,
+    (existingLabels ?? []) as ExistingRule[],
+    authData.user.id,
   );
-  const uniqueLabels = new Map<string, ImportedTransactionLabel>();
 
-  importedLabels.forEach((entry) => {
-    const label = entry.label.trim();
-    if (!label || !entry.key || !entry.categoryId) return;
-    uniqueLabels.set(normalize(label), { ...entry, label });
-  });
-
-  const inserts: Array<{ label: string; key: string; id_cat: string }> = [];
-  const updates: Array<{ id: string; label: string; key: string; id_cat: string }> = [];
-  let skipped = 0;
-
-  uniqueLabels.forEach((entry, normalizedLabel) => {
-    if (!entry.categoryId) {
-      skipped += 1;
-      return;
-    }
-
-    const existing = existingByLabel.get(normalizedLabel);
-    const record = { label: entry.label, key: entry.key, id_cat: entry.categoryId };
-
-    if (existing) {
-      if (existing.key !== record.key || existing.id_cat !== record.id_cat) {
-        updates.push({ id: existing.id, ...record });
-      }
-      return;
-    }
-
-    inserts.push(record);
-  });
-
-  if (inserts.length > 0) {
-    const { error } = await supabase.from('libelle_transacts').insert(inserts);
+  if (plan.inserts.length > 0) {
+    const rows = plan.inserts.map((record) => ({ ...record, user_id: authData.user.id }));
+    const { error } = await supabase.from('libelle_transacts').insert(rows);
     if (error) {
       throw new Error(`Insertion des libellés impossible : ${error.message}`);
     }
   }
 
   const updateResults = await Promise.all(
-    updates.map(({ id, ...record }) =>
+    plan.updates.map(({ id, ...record }) =>
       supabase.from('libelle_transacts').update(record).eq('id', id),
     ),
   );
@@ -94,8 +59,8 @@ export async function saveImportedTransactionLabels(
   }
 
   return {
-    inserted: inserts.length,
-    updated: updates.length,
-    skipped,
+    inserted: plan.inserts.length,
+    updated: plan.updates.length,
+    skipped: plan.unchanged,
   };
 }

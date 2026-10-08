@@ -20,6 +20,8 @@ export interface LibelleTransact {
   label: string;
   key: string;
   id_cat: string;
+  /** NULL : règle par défaut partagée ; sinon règle personnelle de l'utilisateur. */
+  user_id?: string | null;
 }
 
 /**
@@ -81,7 +83,8 @@ export async function createCategory(
   return data;
 }
 /**
- * Récupère l'ensemble des libellés de transactions.
+ * Récupère les règles de libellé visibles : celles par défaut et les personnelles. Les personnelles
+ * viennent en premier : le parseur retient la première règle qui correspond, elles l'emportent donc.
  */
 export async function getLibelleTransacts(): Promise<LibelleTransact[]> {
   const { data, error } = await supabase
@@ -93,7 +96,9 @@ export async function getLibelleTransacts(): Promise<LibelleTransact[]> {
     throw new Error(error.message);
   }
 
-  return data || [];
+  return [...(data || [])].sort(
+    (first, second) => Number(second.user_id != null) - Number(first.user_id != null),
+  );
 }
 
 /**

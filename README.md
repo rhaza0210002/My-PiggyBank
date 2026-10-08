@@ -26,8 +26,8 @@ Scripts : `yarn dev`, `yarn build`, `yarn lint`, `yarn typecheck`, `yarn test`.
 
 Les scripts SQL sont dans `supabase/` :
 
-- `supabase/migrations/` : tables `transactions` et `user_settings` (avec RLS), colonne `reconciled_at`. À relire puis exécuter dans l'ordre des noms de fichier, dans le SQL Editor.
-- `supabase/seed-libelle-transacts.sql` : règles libellé → catégorie utilisées par l'import CSV.
+- `supabase/migrations/` : tables `transactions` et `user_settings` (avec RLS), colonne `reconciled_at`, règles de libellé par utilisateur. À relire puis exécuter dans l'ordre des noms de fichier, dans le SQL Editor.
+- `supabase/seed-libelle-transacts.sql` : règles par défaut libellé → catégorie (`user_id` vide) utilisées par l'import CSV. Chaque utilisateur peut ajouter ses propres règles, qui l'emportent sur celles par défaut.
 
 ## Authentification
 

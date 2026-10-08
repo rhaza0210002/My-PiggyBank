@@ -154,7 +154,7 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
     try {
       const result = await saveImportedTransactionLabels(importedLabels);
       setSaveMessage(
-        `${result.inserted} libellé${result.inserted > 1 ? 's' : ''} ajouté${result.inserted > 1 ? 's' : ''}, ${result.updated} mis à jour, ${result.skipped} ignoré${result.skipped > 1 ? 's' : ''}.`,
+        `${result.inserted} libellé${result.inserted > 1 ? 's' : ''} ajouté${result.inserted > 1 ? 's' : ''}, ${result.updated} mis à jour, ${result.skipped} déjà connu${result.skipped > 1 ? 's' : ''}.`,
       );
     } catch (error) {
       setSaveError(

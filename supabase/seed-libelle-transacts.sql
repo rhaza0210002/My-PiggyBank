@@ -1,3 +1,5 @@
+-- Règles par défaut (user_id NULL) : lisibles par tous les utilisateurs, modifiables seulement ici.
+-- Chaque utilisateur peut ensuite ajouter ses propres règles depuis /csvUploader ; elles priment.
 WITH mappings(label, key, category_label) AS (
   VALUES
     ('acheel', 'assurance', 'Assurance'),
