@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ROUTES } from '@/constants/routes';
+import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
 
 interface AuthFormData {
   email: string;
@@ -31,6 +31,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, serverErro
   const [confirmPassword, setConfirmPassword] = useState('');
   const [pseudo, setPseudo] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [invalidField, setInvalidField] = useState<string | null>(null);
   const errorRef = useRef<HTMLDivElement>(null);
@@ -59,6 +60,10 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, serverErro
     }
     if (isRegister && password !== confirmPassword) {
       return fail('confirmPassword', 'Les deux mots de passe ne sont pas identiques.');
+    }
+
+    if (isRegister && !acceptedTerms) {
+      return fail('terms', 'Coche la case pour accepter les conditions d’utilisation et la politique de confidentialité.');
     }
 
     setInvalidField(null);
@@ -186,6 +191,35 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, serverErro
             />
             Afficher le mot de passe
           </label>
+
+          {isRegister && (
+            <div className="rounded-xl border border-[#d8b7a5] bg-[#fff8f2] p-3">
+              <label className="flex min-h-11 cursor-pointer items-start gap-3 text-sm font-semibold text-[#5d4d44]">
+                <input
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(event) => setAcceptedTerms(event.target.checked)}
+                  required
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-[#a3452a]"
+                  {...fieldProps('terms')}
+                />
+                <span>
+                  J’accepte les{' '}
+                  <Link href={LEGAL_ROUTES.terms} target="_blank" className="font-black text-[#8c4a38] underline">
+                    conditions d’utilisation<span className="sr-only"> (nouvel onglet)</span>
+                  </Link>{' '}
+                  et la{' '}
+                  <Link href={LEGAL_ROUTES.privacy} target="_blank" className="font-black text-[#8c4a38] underline">
+                    politique de confidentialité<span className="sr-only"> (nouvel onglet)</span>
+                  </Link>
+                  .
+                </span>
+              </label>
+              <p className={`${HINT_CLASS} mt-1`}>
+                Tes données restent à toi : tu peux les exporter ou supprimer ton compte à tout moment.
+              </p>
+            </div>
+          )}
 
           <button
             type="submit"

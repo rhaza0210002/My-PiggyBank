@@ -1,4 +1,6 @@
 import { supabase } from '@/lib/supabaseClient';
+import { clearLocalPersonalData } from '@/services/personalDataService';
+import { TERMS_VERSION } from '@/constants/legal';
 
 export interface AuthCredentials {
   email: string;
@@ -16,6 +18,9 @@ export async function registerUser({ email, password, pseudo }: AuthCredentials)
     options: {
       data: {
         pseudo: pseudo,
+        // Preuve d'acceptation des conditions et de la politique de confidentialité.
+        terms_accepted_at: new Date().toISOString(),
+        terms_version: TERMS_VERSION,
       },
     },
   });
@@ -65,6 +70,7 @@ export async function loginUser({ email, password }: Omit<AuthCredentials, 'pseu
  */
 export async function logoutUser() {
   const { error } = await supabase.auth.signOut();
+  clearLocalPersonalData();
   if (error) {
     throw new Error(error.message);
   }

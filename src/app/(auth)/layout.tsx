@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import Footer from '@/components/layout/Footer';
 import SkipLink from '@/components/layout/SkipLink';
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -9,6 +10,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <main id="contenu" tabIndex={-1} className="flex flex-1 items-center justify-center outline-none">
         {children}
       </main>
+      <Footer />
     </>
   );
 }

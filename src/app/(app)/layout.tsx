@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import AppHeader from '@/components/layout/AppHeader';
 import BottomNav from '@/components/layout/BottomNav';
+import Footer from '@/components/layout/Footer';
 import SkipLink from '@/components/layout/SkipLink';
 
 /**
@@ -16,6 +17,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto pb-[4.75rem] outline-none md:pb-2">
         {children}
       </main>
+      <Footer variant="compact" />
       <BottomNav />
     </div>
   );

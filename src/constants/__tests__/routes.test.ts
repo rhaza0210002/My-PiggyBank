@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest';
 import {
   AUTH_ROUTES,
   LEGACY_REDIRECTS,
+  LEGAL_ROUTES,
+  OPEN_ROUTES,
   NAV_SECTIONS,
   ROUTES,
   getActiveSection,
@@ -12,20 +14,20 @@ import {
 
 /** Chemin du fichier page.tsx d'une route, dans les groupes (app) ou (auth). */
 function pageExists(route: string): boolean {
-  return ['(app)', '(auth)'].some((group) =>
+  return ['(app)', '(auth)', '(legal)'].some((group) =>
     existsSync(join(process.cwd(), 'src/app', group, route, 'page.tsx')),
   );
 }
 
 describe('plan des chemins', () => {
   it('chaque route déclarée a une page', () => {
-    Object.values(ROUTES).forEach((route) => {
+    [...Object.values(ROUTES), ...Object.values(LEGAL_ROUTES)].forEach((route) => {
       expect(pageExists(route), `page manquante pour ${route}`).toBe(true);
     });
   });
 
   it('les chemins sont en minuscules, en français, sans camelCase', () => {
-    Object.values(ROUTES).forEach((route) => {
+    [...Object.values(ROUTES), ...Object.values(LEGAL_ROUTES)].forEach((route) => {
       expect(route).toMatch(/^\/[a-z-]+(\/[a-z-]+)*$/);
     });
   });
@@ -40,6 +42,16 @@ describe('plan des chemins', () => {
     const connected = Object.values(ROUTES).filter((route) => !AUTH_ROUTES.includes(route));
 
     connected.forEach((route) => expect(reachable.has(route), `${route} absente du menu`).toBe(true));
+  });
+});
+
+describe('pages légales', () => {
+  it('sont publiques et ne figurent pas dans le menu connecté', () => {
+    const menu = new Set(NAV_SECTIONS.flatMap((section) => [section.href, ...section.pages.map((page) => page.href)]));
+    Object.values(LEGAL_ROUTES).forEach((route) => {
+      expect(OPEN_ROUTES).toContain(route);
+      expect(menu.has(route)).toBe(false);
+    });
   });
 });
 
