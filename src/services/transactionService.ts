@@ -144,6 +144,20 @@ export async function unreconcileTransactions(ids: string[]): Promise<void> {
   if (error) throw toServiceError(error, 'Annulation du pointage impossible');
 }
 
+/** Libellés déjà pointés avec leur catégorie : sert uniquement à suggérer une catégorie (calcul dans le navigateur). */
+export async function getPointedLabelHistory(limit = 1000): Promise<Array<{ label: string; category_id: string }>> {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('label, category_id')
+    .not('reconciled_at', 'is', null)
+    .not('category_id', 'is', null)
+    .order('booked_on', { ascending: false })
+    .limit(limit);
+
+  if (error) throw toServiceError(error, 'Lecture de l’historique de pointage impossible');
+  return (data ?? []).flatMap((row) => (row.category_id ? [{ label: row.label, category_id: row.category_id }] : []));
+}
+
 /** Opérations sans catégorie : celles qu'il reste à traiter. */
 export async function getUncategorizedTransactions(limit: number): Promise<StoredTransaction[]> {
   const { data, error } = await supabase

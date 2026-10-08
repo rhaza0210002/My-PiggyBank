@@ -7,6 +7,7 @@ import NewCategoryForm from '@/components/features/forms/NewCategoryForm';
 import ProgressBar from '@/components/ui/ProgressBar';
 import ScreenCard from '@/components/ui/ScreenCard';
 import { useGamification } from '@/hooks/useGamification';
+import { suggestCategory, type LabeledCategory } from '@/utils/categorySuggestion';
 import { XP_PER_OPERATION } from '@/utils/gamification';
 import { isCurrentUserAdmin } from '@/services/adminService';
 import { ROUTES } from '@/constants/routes';
@@ -17,6 +18,7 @@ import {
   type CategoryGroup,
 } from '@/services/transactionCategoryService';
 import {
+  getPointedLabelHistory,
   getTransactionsToReconcile,
   markTransactionsReconciled,
   unreconcileTransactions,
@@ -34,6 +36,7 @@ interface LoadedData {
 
 export default function RapprochementPage() {
   const [data, setData] = useState<LoadedData | null>(null);
+  const [history, setHistory] = useState<LabeledCategory[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [busyIds, setBusyIds] = useState<ReadonlySet<string>>(new Set());
@@ -59,6 +62,13 @@ export default function RapprochementPage() {
         if (!isCurrent) return;
         setLoadError(error instanceof Error ? error.message : 'Impossible de charger les opérations.');
       });
+
+    // L'historique ne sert qu'aux suggestions : s'il manque, on pointe simplement sans suggestion.
+    getPointedLabelHistory()
+      .then((rows) => {
+        if (isCurrent) setHistory(rows);
+      })
+      .catch(() => {});
 
     isCurrentUserAdmin().then((admin) => {
       if (isCurrent) setIsAdmin(admin);
@@ -191,6 +201,11 @@ export default function RapprochementPage() {
       .flatMap(([id]) => data.categories.filter((category) => category.id === id));
   })();
 
+  // Suggestion seulement tant que la carte n'a pas de catégorie : dès qu'on choisit, elle s'efface.
+  const suggestionRaw = current && !current.category_id ? suggestCategory(current.label, history) : undefined;
+  const suggestedCategory = suggestionRaw ? data?.categories.find((item) => item.id === suggestionRaw.categoryId) : undefined;
+  const suggestion = suggestionRaw && suggestedCategory ? { category: suggestedCategory, kind: suggestionRaw.kind, count: suggestionRaw.count } : undefined;
+
   const skipCurrent = () => {
     if (!current) return;
     setHasActed(true);
@@ -276,6 +291,7 @@ export default function RapprochementPage() {
               categories={data.categories}
               categoryGroups={data.categoryGroups}
               quickCategories={quickCategories}
+              suggestion={suggestion}
               remaining={queue.length}
               isBusy={busyIds.has(current.id)}
               canSkip={queue.length > 1}

@@ -13,6 +13,8 @@ interface ReconcileCardProps {
   categoryGroups: CategoryGroup[];
   /** Catégories les plus utilisées parmi les opérations à pointer : un seul geste pour les choisir. */
   quickCategories: Category[];
+  /** Catégorie probable d'après les libellés déjà pointés ; absente quand rien ne permet de deviner. */
+  suggestion?: { category: Category; kind: 'exact' | 'similar'; count: number };
   remaining: number;
   isBusy: boolean;
   canSkip: boolean;
@@ -34,6 +36,7 @@ export default function ReconcileCard({
   categories,
   categoryGroups,
   quickCategories,
+  suggestion,
   remaining,
   isBusy,
   canSkip,
@@ -77,6 +80,25 @@ export default function ReconcileCard({
           {signedEuroFormatter.format(amount)}
         </p>
       </div>
+
+      {suggestion && (
+        <div className="text-center">
+          <button
+            type="button"
+            disabled={isBusy}
+            onClick={() => onChangeCategory(suggestion.category.id)}
+            className="min-h-12 rounded-2xl border-[3px] border-[#a3452a] bg-[#fff1ea] px-4 text-base font-black text-[#7a2f1a] shadow-[0_3px_0_rgba(171,98,77,0.5)] transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
+          >
+            <span aria-hidden="true">✨ </span>
+            {suggestion.category.label}
+          </button>
+          <p className="mt-1 text-xs font-semibold text-[#6b574c]">
+            {suggestion.kind === 'exact'
+              ? `Suggestion : déjà rangé là ${suggestion.count} fois`
+              : 'Suggestion : ressemble à tes pointages passés'}
+          </p>
+        </div>
+      )}
 
       {quickCategories.length > 0 && (
         <div role="group" aria-label="Catégories fréquentes" className="flex flex-wrap justify-center gap-1.5">
