@@ -13,7 +13,7 @@ export default function BottomNav() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-[#E5C4B4] bg-[#FFF5EE] pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="shrink-0 border-t-2 border-[#E5C4B4] bg-[#FFF5EE] pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <ul className="mx-auto grid max-w-xl grid-cols-4">
         {NAV_SECTIONS.map((section) => (

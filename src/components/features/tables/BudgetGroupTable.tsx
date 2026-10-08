@@ -5,6 +5,7 @@ import { Check, Pencil, X } from 'lucide-react';
 import { DataGroup } from '@/types/budget';
 import { formatCurrency } from '@/utils/budgetCalculations';
 import { TABLE_STYLES } from '@/constants/tableStyles';
+import { getGroupHint } from '@/constants/budgetGroupHints';
 import { getBudgetGroupPalette } from '@/constants/budgetGroupPalette';
 
 interface BudgetGroupTableProps {
@@ -74,6 +75,9 @@ export default function BudgetGroupTable({
       <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
         {group.title} — {monthLabel}
       </h2>
+      {getGroupHint(group.key) && (
+        <p className="mb-2 px-2 text-center text-xs text-[#6b574c]">{getGroupHint(group.key)}</p>
+      )}
 
       <div role="region" aria-label={`Tableau ${group.title}`} tabIndex={0} className={`w-full overflow-x-auto rounded-xl border ${palette.border} ${palette.table} shadow-inner`}>
         <table

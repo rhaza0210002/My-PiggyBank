@@ -9,8 +9,9 @@ import SkipLink from '@/components/layout/SkipLink';
  * tient dans l'espace restant et ne défile en interne que si l'écran est vraiment trop petit.
  */
 export default function AppLayout({ children }: { children: ReactNode }) {
+  // relative : les éléments absolus (textes réservés aux lecteurs d'écran) sont rognés par la coque et ne font pas défiler la page.
   return (
-    <div className="flex h-dvh flex-col overflow-hidden">
+    <div className="relative flex h-dvh flex-col overflow-hidden">
       <SkipLink />
       <AppHeader />
       <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto pb-2 outline-none">

@@ -132,6 +132,18 @@ export async function markTransactionsReconciled(ids: string[]): Promise<void> {
   if (error) throw toServiceError(error, 'Pointage des opérations impossible');
 }
 
+/** Annule un pointage fait par erreur : les opérations reviennent dans celles à rapprocher. */
+export async function unreconcileTransactions(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+
+  const { error } = await supabase
+    .from('transactions')
+    .update({ reconciled_at: null })
+    .in('id', ids);
+
+  if (error) throw toServiceError(error, 'Annulation du pointage impossible');
+}
+
 /** Opérations sans catégorie : celles qu'il reste à traiter. */
 export async function getUncategorizedTransactions(limit: number): Promise<StoredTransaction[]> {
   const { data, error } = await supabase
