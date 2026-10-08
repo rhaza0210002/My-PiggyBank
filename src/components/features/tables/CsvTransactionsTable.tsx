@@ -223,7 +223,7 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
               Aucun détail ne correspond aux labels de <code>libelle_transacts</code>. Exemples lus : {unmatchedExamples.join(' | ')}
             </p>
           )}
-          <div className="max-w-full overflow-x-auto rounded-xl border border-[#d8b7a5]/50 shadow-inner">
+          <div role="region" aria-label="Transactions importées" tabIndex={0} className="max-w-full overflow-x-auto rounded-xl border border-[#d8b7a5]/50 shadow-inner">
             <table className="w-full min-w-0 border-collapse text-left" aria-label="Synthèse par catégorie des transactions importées du CSV">
               <thead>
                 <tr className="bg-[#f0d8c8] text-[#5a473d]">

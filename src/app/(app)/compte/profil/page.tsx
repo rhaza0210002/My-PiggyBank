@@ -9,7 +9,7 @@ import { getUserProfile, updateUserProfile } from '@/services/userService';
 const CARD = 'rounded-[2rem] border border-[#e5c4b4] bg-[#fff8f2] p-6 shadow-sm';
 const INPUT = 'mt-1 w-full rounded-xl border border-[#d8b7a5] bg-white px-3 py-2 text-[#5a4d41]';
 const BUTTON =
-  'rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] px-4 py-2 text-sm font-semibold text-[#a3452a] transition-colors hover:bg-[#f2c4b6] focus:outline-hidden focus:ring-2 focus:ring-[#5b473d] disabled:opacity-60';
+  'rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] px-4 py-2 text-sm font-semibold text-[#8f3d24] transition-colors hover:bg-[#f2c4b6] focus:outline-hidden focus:ring-2 focus:ring-[#5b473d] disabled:opacity-60';
 const MIN_PASSWORD_LENGTH = 8;
 
 interface Feedback {

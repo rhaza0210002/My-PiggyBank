@@ -162,7 +162,7 @@
 }
 
 .amountExpense {
-  color: #d97757;
+  color: #a3452a;
   font-weight: 700;
 }
 
@@ -206,7 +206,7 @@
 
 .cardButtonPrimary {
   background: #e57d60;
-  color: #fff;
+  color: #3d2a21;
   box-shadow: 0 0.4rem 0 rgba(191, 93, 69, 0.45);
 }
 
@@ -247,7 +247,7 @@
   margin-top: 0.5rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #d97757;
+  color: #a3452a;
 }
 
 .balanceIllustration {
