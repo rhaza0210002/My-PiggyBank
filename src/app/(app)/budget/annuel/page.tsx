@@ -54,11 +54,11 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
 
   return (
     <div className={`rounded-[2rem] border-[3px] border-dashed ${palette.border} ${palette.section} p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)]`}>
-      <h3 className="mb-4 px-2 text-[clamp(1.4rem,2vw,2.2rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+      <h2 className="mb-4 px-2 text-[clamp(1.4rem,2vw,2.2rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
         {group.title}
-      </h3>
+      </h2>
 
-      <div className={`overflow-x-auto rounded-xl border ${palette.border} ${palette.table} shadow-inner`}>
+      <div role="region" aria-label={`Tableau annuel ${group.title}`} tabIndex={0} className={`overflow-x-auto rounded-xl border ${palette.border} ${palette.table} shadow-inner`}>
         <table
           className="w-full min-w-[840px] border-collapse text-left"
           role="region"

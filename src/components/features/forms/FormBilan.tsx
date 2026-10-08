@@ -136,7 +136,7 @@ export default function FormBilan({
       <button
         type="submit"
         disabled={readOnly || groups.length === 0 || isSubmitting}
-        className="rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-5 py-2.5 text-sm font-bold text-white shadow-[0_3px_0_rgba(171,98,77,0.85)] transition-transform active:translate-y-[2px] active:shadow-none"
+        className="rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-5 py-2.5 text-sm font-bold text-[#3d2a21] shadow-[0_3px_0_rgba(171,98,77,0.85)] transition-transform active:translate-y-[2px] active:shadow-none"
       >
         {isSubmitting ? 'Ajout en cours...' : 'Ajouter la ligne'}
       </button>
