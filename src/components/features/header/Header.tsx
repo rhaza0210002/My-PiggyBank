@@ -1,7 +1,10 @@
 
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabaseClient';
+import { getUserProfile } from '@/services/userService';
+import LogoutButton from '@/components/features/header/LogoutButton';
 
 interface HeaderProps {
     userName?: string;
@@ -9,6 +12,37 @@ interface HeaderProps {
 
 export default function Header({ userName = 'Mallaury' }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [userId, setUserId] = useState<string | null>(null);
+    const [pseudo, setPseudo] = useState<string | null>(null);
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUserId(session?.user.id ?? null);
+        });
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUserId(session?.user.id ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        if (!userId) return;
+
+        let isMounted = true;
+        getUserProfile(userId)
+            .then((profile) => {
+                if (isMounted) setPseudo(profile?.pseudo ?? null);
+            })
+            .catch(() => {});
+
+        return () => {
+            isMounted = false;
+        };
+    }, [userId]);
+
+    const isLoggedIn = userId !== null;
     const navLinks = [
         {
             name: "Paramètres",
@@ -75,7 +109,7 @@ export default function Header({ userName = 'Mallaury' }: HeaderProps) {
                 {/* Message d'accueil / Navigation rapide */}
                 <div className="flex items-center gap-2 sm:gap-4">
                     <span className="text-sm font-medium text-[#8C7A6B] hidden lg:inline">
-                        Coucou, <strong className="text-[#5A4D41]">{userName}</strong> ! 👋
+                        Coucou, <strong className="text-[#5A4D41]">{pseudo ?? userName}</strong> ! 👋
                     </span>
 
                     <nav aria-label="Navigation secondaire" className="hidden lg:flex items-center gap-2">
@@ -92,6 +126,8 @@ export default function Header({ userName = 'Mallaury' }: HeaderProps) {
                                 </Link>
                             ))}
                     </nav>
+
+                    {isLoggedIn && <LogoutButton variant="icon" className="hidden lg:flex" />}
 
                     <div className="lg:hidden relative flex items-center">
                         <button
@@ -120,6 +156,7 @@ export default function Header({ userName = 'Mallaury' }: HeaderProps) {
                                     <span role="img" aria-hidden="true">{item.icon}</span>
                                 </Link>
                             ))}
+                            {isLoggedIn && <LogoutButton variant="icon" />}
                         </div>
                     </div>
                 </div>
