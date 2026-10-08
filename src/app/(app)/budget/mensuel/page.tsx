@@ -10,9 +10,13 @@ import { BUDGET_MODES, BudgetMode } from '@/constants/budgetTypes';
 import { MONTHS } from '@/constants/tableStyles';
 import ScreenCard from '@/components/ui/ScreenCard';
 import SectionStack from '@/components/ui/SectionStack';
+import { getTransactionsForMonth } from '@/services/transactionService';
+import { suggestBudgetAmounts } from '@/utils/budgetSuggestion';
 
 export default function MonthBudgetPage() {
   const { dataGroups, isLoaded, updateRowValue, saveMonthBudget } = useBudget();
+  const [suggestionMessage, setSuggestionMessage] = useState<string | null>(null);
+  const [isSuggesting, setIsSuggesting] = useState(false);
   const currentCalendarMonth = new Date().getMonth();
 
   const [currentMode] = useState<BudgetMode>(BUDGET_MODES.MENSUEL);
@@ -89,6 +93,38 @@ export default function MonthBudgetPage() {
     }
   };
 
+  /** Remplit les lignes vides avec le réel du mois (ou du dernier mois qui en a) : à relire, puis « Valider budget ». */
+  const handleSuggest = async () => {
+    setIsSuggesting(true);
+    setSuggestionMessage(null);
+    setBudgetSaveError(null);
+
+    try {
+      const year = new Date().getFullYear();
+      let sourceMonth = currentMonthIndex;
+      let transactions = await getTransactionsForMonth(year, sourceMonth);
+      while (transactions.length === 0 && sourceMonth > 0) {
+        sourceMonth -= 1;
+        transactions = await getTransactionsForMonth(year, sourceMonth);
+      }
+
+      const suggestions = suggestBudgetAmounts(transactions, dataGroups, currentMonthIndex);
+      for (const suggestion of suggestions) {
+        await updateRowValue(suggestion.groupKey, suggestion.category, currentMonthIndex, String(suggestion.amount));
+      }
+
+      setSuggestionMessage(
+        suggestions.length > 0
+          ? `${suggestions.length} montant${suggestions.length > 1 ? 's' : ''} proposé${suggestions.length > 1 ? 's' : ''} d’après ${MONTHS[sourceMonth].label.toLowerCase()}. Relis-les, change ce que tu veux, puis « Valider budget ».`
+          : 'Rien à proposer : aucune dépense catégorisée sur les lignes encore vides. Importe ton relevé et pointe-le d’abord.',
+      );
+    } catch (error) {
+      setBudgetSaveError(error instanceof Error ? error.message : 'Impossible de proposer un budget.');
+    } finally {
+      setIsSuggesting(false);
+    }
+  };
+
   const activeMonth = MONTHS[currentMonthIndex];
   const isPastMonth = currentMonthIndex < currentCalendarMonth;
 
@@ -155,6 +191,22 @@ export default function MonthBudgetPage() {
         <p role="status" className="py-6 text-center font-semibold">Chargement...</p>
       ) : (
         <div className="flex flex-col gap-1 md:h-full md:min-h-0">
+          {!isPastMonth && (
+            <div className="flex shrink-0 flex-wrap items-center justify-center gap-2 py-1">
+              <button
+                type="button"
+                onClick={handleSuggest}
+                disabled={isSuggesting || dataGroups.length === 0}
+                className="min-h-11 rounded-xl border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-bold text-[#5a473d] transition hover:bg-[#F8D5CB] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <span aria-hidden="true">✨ </span>
+                {isSuggesting ? 'Je regarde ton relevé…' : 'Proposer d’après mes dépenses réelles'}
+              </button>
+              {suggestionMessage && (
+                <p className="basis-full text-center text-sm font-semibold text-[#5a473d]" role="status">{suggestionMessage}</p>
+              )}
+            </div>
+          )}
           {budgetSaveMessage && (
             <p className="shrink-0 text-sm font-semibold text-[#1f4d25]" role="status">{budgetSaveMessage}</p>
           )}
