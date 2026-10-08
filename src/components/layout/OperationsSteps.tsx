@@ -1,0 +1,46 @@
+"use client";
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ROUTES, isCurrentPage } from '@/constants/routes';
+
+const STEPS = [
+  { href: ROUTES.import, label: 'Importer', hint: 'ton relevé' },
+  { href: ROUTES.reconciliation, label: 'Pointer', hint: 'les opérations' },
+  { href: ROUTES.actualExpenses, label: 'Bilan', hint: 'du mois' },
+] as const;
+
+/** Le parcours des opérations en trois étapes : on voit où on est et ce qui suit. */
+export default function OperationsSteps() {
+  const pathname = usePathname();
+
+  return (
+    <nav aria-label="Étapes des opérations" className="mx-auto w-full max-w-[1200px] shrink-0 px-3 pt-2 sm:px-5">
+      <ol className="grid grid-cols-3 gap-1.5">
+        {STEPS.map((step, index) => {
+          const isCurrent = isCurrentPage(pathname, step.href);
+          return (
+            <li key={step.href}>
+              <Link
+                href={step.href}
+                aria-current={isCurrent ? 'step' : undefined}
+                className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border-2 border-[#d8b7a5] bg-[#fff8f2] px-2 text-sm font-semibold text-[#5a4d41] transition-colors hover:bg-[#F8D5CB] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[current=step]:border-[#a3452a] aria-[current=step]:bg-[#F8D5CB] aria-[current=step]:font-black aria-[current=step]:text-[#7a2f1a]"
+              >
+                <span
+                  aria-hidden="true"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#a3452a] text-xs font-black text-white"
+                >
+                  {index + 1}
+                </span>
+                <span className="leading-tight">
+                  {step.label}
+                  <span className="hidden font-medium sm:inline"> {step.hint}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}

@@ -79,11 +79,11 @@ export const NAV_SECTIONS: readonly NavSection[] = [
     id: 'operations',
     label: 'Opérations',
     icon: '🪙',
-    href: ROUTES.actualExpenses,
+    href: ROUTES.reconciliation,
     pages: [
-      { label: 'Dépenses', href: ROUTES.actualExpenses },
-      { label: 'Rapprochement', href: ROUTES.reconciliation },
       { label: 'Import', href: ROUTES.import },
+      { label: 'Rapprochement', href: ROUTES.reconciliation },
+      { label: 'Dépenses', href: ROUTES.actualExpenses },
     ],
   },
   {

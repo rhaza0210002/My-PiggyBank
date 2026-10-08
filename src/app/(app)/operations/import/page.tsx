@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, type ChangeEvent } from 'react';
+import Link from 'next/link';
 import CsvTransactionsTable from '@/components/features/tables/CsvTransactionsTable';
+import ScreenCard from '@/components/ui/ScreenCard';
+import { ROUTES } from '@/constants/routes';
 import { SocieteGeneraleParser, type BankTransaction } from '@/services/csvParser';
 import { getLibelleTransacts } from '@/services/transactionCategoryService';
 
@@ -60,44 +63,49 @@ export default function CsvUploaderPage() {
   };
 
   return (
-    <div className="min-h-[60vh] bg-[#ebcfc6] px-4 py-6 text-[#5b473d] sm:px-6 lg:px-10">
-
-      <div className="mx-auto max-w-[1200px] rounded-[2.2rem] border-[3px] border-[#d8b6a5] bg-[#f2e6d8] p-4 shadow-[inset_0_0_0_3px_rgba(255,255,255,0.18)] sm:p-6 space-y-6">
-
-        <h1 className="text-[clamp(1.5rem,2.5vw,2.4rem)] font-black tracking-[-0.05em] text-[#5d4d44] px-2">
-          Rapprochement Bancaire — Import CSV & Catégorisation
-        </h1>
-
-        {/* Zone d'importation de fichier */}
-        <div className="rounded-[2rem] border-[3px] border-[#d7b59d] border-dashed bg-[#f5eadf] p-6 text-center shadow-[0_3px_0_rgba(140,103,86,0.12)]">
-          <label className="cursor-pointer flex flex-col items-center justify-center space-y-3 focus-within:ring-2 focus-within:ring-[#5b473d] rounded-xl p-2">
-            <div className="rounded-full bg-[#e59a86] p-4 text-white shadow-md" aria-hidden="true">
+    <ScreenCard
+      flow
+      title="Importer ton relevé"
+      subtitle="Dépose le fichier CSV de ta banque : les opérations reconnues sont rangées pour toi."
+    >
+      <div className="mx-auto max-w-3xl space-y-4">
+        <div className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-4 text-center sm:p-6">
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl p-2 focus-within:ring-2 focus-within:ring-[#5b473d]">
+            <span className="rounded-full bg-[#e59a86] p-3 text-2xl text-white shadow-md" aria-hidden="true">
               📂
-            </div>
-            <span className="text-[1.2rem] font-bold text-[#5a473d]">
-              {isLoadingMappings
-                ? 'Chargement des catégories et libellés...'
-                : fileName
-                  ? `Fichier sélectionné : ${fileName}`
-                  : "Glisse ton fichier CSV ici ou clique pour parcourir"}
             </span>
-            <span className="text-[0.95rem] italic text-[#6b574c]">
-              Traitement local sécurisé (aucun fichier brut stocké en base de données)
+            <span className="text-lg font-bold text-[#5a473d]">
+              {isLoadingMappings
+                ? 'Chargement des catégories…'
+                : fileName
+                  ? `Fichier : ${fileName}`
+                  : 'Choisir mon fichier CSV'}
+            </span>
+            <span className="text-sm italic text-[#6b574c]">
+              Lu sur ton appareil : le fichier brut n’est jamais envoyé ni stocké.
             </span>
             <input
               type="file"
               accept=".csv"
               onChange={handleFileUpload}
               aria-label="Sélectionner un fichier CSV de banque"
-              className="hidden"
+              className="sr-only"
             />
           </label>
-          {error && <p role="alert" className="mt-3 text-red-600 font-semibold">{error}</p>}
+          {error && <p role="alert" className="mt-3 font-semibold text-red-700">{error}</p>}
         </div>
 
         <CsvTransactionsTable transactions={transactions} />
 
+        {transactions.length > 0 && (
+          <p className="text-center text-sm text-[#6b574c]">
+            Une fois les transactions enregistrées, passe à l’étape suivante.{' '}
+            <Link href={ROUTES.reconciliation} className="font-black text-[#8c4a38] underline underline-offset-4">
+              Pointer les opérations →
+            </Link>
+          </p>
+        )}
       </div>
-    </div>
+    </ScreenCard>
   );
 }

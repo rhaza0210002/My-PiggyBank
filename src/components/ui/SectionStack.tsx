@@ -35,13 +35,16 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
       return;
     }
 
+    // Bureau : la zone de blocs défile elle-même ; mobile : c'est la page qui défile.
+    const root = window.matchMedia('(min-width: 768px)').matches ? scroller : null;
+
     const revealObserver = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((entry) => entry.isIntersecting).map((entry) => (entry.target as HTMLElement).dataset.sectionId!);
         if (visible.length === 0) return;
         setRevealed((previous) => new Set([...previous, ...visible]));
       },
-      { root: scroller, rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+      { root, rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
     );
 
     const activeObserver = new IntersectionObserver(
@@ -49,7 +52,7 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
         const current = entries.find((entry) => entry.isIntersecting);
         if (current) setActiveId((current.target as HTMLElement).dataset.sectionId);
       },
-      { root: scroller, rootMargin: '-10% 0px -70% 0px' },
+      { root, rootMargin: '-10% 0px -70% 0px' },
     );
 
     Object.values(sectionRefs.current).forEach((element) => {
@@ -75,7 +78,7 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <nav aria-label={label} className="flex shrink-0 gap-1.5 overflow-x-auto pb-1">
+      <nav aria-label={label} className="sticky top-0 z-10 flex shrink-0 gap-1.5 overflow-x-auto bg-[#f2e6d8] pb-1 md:static">
         {sections.map((section) => (
           <button
             key={section.id}
@@ -89,7 +92,7 @@ export default function SectionStack({ sections, label }: SectionStackProps) {
         ))}
       </nav>
 
-      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto scroll-smooth pt-1 motion-reduce:scroll-auto">
+      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 scroll-smooth pt-1 motion-reduce:scroll-auto md:overflow-y-auto">
         {sections.map((section) => {
           const isRevealed = revealed.has(section.id);
           return (

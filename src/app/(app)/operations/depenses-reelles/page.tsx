@@ -129,7 +129,7 @@ export default function DepenseReellePage() {
       >
         <ChevronLeft size={18} aria-hidden="true" />
       </button>
-      <span className="min-w-[8rem] text-center text-sm font-bold text-[#5d4d44]" aria-live="polite">
+      <span className="min-w-[7.5rem] text-center text-sm font-bold text-[#5d4d44]" aria-live="polite">
         {MONTHS[monthIndex].label} {year}
       </span>
       <button
@@ -144,8 +144,8 @@ export default function DepenseReellePage() {
   );
 
   return (
-    <ScreenCard title="Dépenses réelles" actions={monthNav}>
-      <div className="flex h-full min-h-0 flex-col gap-2">
+    <ScreenCard flow title="Bilan du mois" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
+      <div className="flex flex-col gap-2 md:h-full md:min-h-0">
         {isLoading && (
           <p className="py-8 text-center text-sm font-semibold text-[#6b574c]" role="status">
             Chargement des dépenses de {MONTHS[monthIndex].label.toLowerCase()}…
@@ -165,7 +165,7 @@ export default function DepenseReellePage() {
                 Aucune transaction en {MONTHS[monthIndex].label.toLowerCase()} {year}.
               </p>
               <p className="mt-1 text-sm text-[#6b574c]">
-                Importe un relevé CSV, puis enregistre les transactions.
+                Commence par importer ton relevé CSV : c’est la première étape.
               </p>
               <Link
                 href={ROUTES.import}
@@ -176,7 +176,7 @@ export default function DepenseReellePage() {
             </div>
           ) : (
             <>
-              <dl className="grid shrink-0 grid-cols-4 gap-1 sm:gap-2">
+              <dl className="grid shrink-0 grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">
                 <SummaryCard label="Revenus" value={euroFormatter.format(totals.income)} tone="positive" />
                 <SummaryCard label="Dépenses" value={euroFormatter.format(totals.expenses)} tone="negative" />
                 <SummaryCard
@@ -190,6 +190,17 @@ export default function DepenseReellePage() {
                   tone={breakdown.uncategorized.length > 0 ? 'warning' : 'neutral'}
                 />
               </dl>
+
+              {breakdown.uncategorized.length > 0 && (
+                <Link
+                  href={ROUTES.reconciliation}
+                  className="flex min-h-11 shrink-0 items-center justify-between gap-2 rounded-2xl border-2 border-[#d6a85c] bg-[#fff1da] px-4 text-sm font-bold text-[#5a3d10] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+                >
+                  <span>{breakdown.uncategorized.length} opération{breakdown.uncategorized.length > 1 ? 's' : ''} sans catégorie</span>
+                  <span aria-hidden="true">Pointer →</span>
+                  <span className="sr-only">Aller pointer les opérations</span>
+                </Link>
+              )}
 
               <SectionStack
                 label="Parties des dépenses du mois"
