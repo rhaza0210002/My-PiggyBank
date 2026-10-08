@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildReminderPayload, isAuthorizedCron, isGoneSubscription } from '@/utils/reminder';
+import { buildOverrunPayload, buildReminderPayload, isAuthorizedCron, isGoneSubscription } from '@/utils/reminder';
 
 describe('texte du rappel', () => {
   it('ne contient que le nombre d’opérations, jamais de donnée bancaire', () => {
@@ -35,5 +35,19 @@ describe('souscription expirée', () => {
     expect(isGoneSubscription(404)).toBe(true);
     expect(isGoneSubscription(500)).toBe(false);
     expect(isGoneSubscription(undefined)).toBe(false);
+  });
+});
+
+describe('alerte de dépassement', () => {
+  it('ne cite que le nombre de catégories, jamais un nom ni un montant', () => {
+    const payload = buildOverrunPayload(3);
+    expect(payload.body).toContain('3 catégories');
+    expect(`${payload.title} ${payload.body}`).not.toMatch(/€|\d+[,.]\d+|Alimentation|Loyer/i);
+  });
+
+  it('accorde le singulier et mène au bilan du mois', () => {
+    const payload = buildOverrunPayload(1);
+    expect(payload.body).toMatch(/^Une catégorie dépasse/);
+    expect(payload.url).toBe('/operations/depenses-reelles');
   });
 });

@@ -22,6 +22,21 @@ export function buildReminderPayload(pendingCount: number): ReminderPayload {
   };
 }
 
+/**
+ * Alerte de dépassement : seulement le NOMBRE de catégories, jamais leur nom ni un montant, car une notification
+ * s'affiche sur un écran verrouillé. Ton factuel, sans culpabiliser.
+ */
+export function buildOverrunPayload(overrunCount: number): ReminderPayload {
+  return {
+    title: 'My PiggyBank',
+    body:
+      overrunCount > 1
+        ? `${overrunCount} catégories dépassent leur budget ce mois-ci. Un coup d’œil quand tu veux, rien d’urgent.`
+        : 'Une catégorie dépasse son budget ce mois-ci. Un coup d’œil quand tu veux, rien d’urgent.',
+    url: ROUTES.actualExpenses,
+  };
+}
+
 /** Vérifie l'en-tête `Authorization: Bearer <secret>` envoyé par la tâche planifiée, en temps constant. */
 export function isAuthorizedCron(authorizationHeader: string | null, secret: string | undefined): boolean {
   if (!secret || !authorizationHeader) return false;
