@@ -71,7 +71,7 @@ export default function BudgetTotalsSection({
 
     return (
       <div className="rounded-[1.5rem] sm:rounded-[2rem] border-[3px] border-[#d7b59d] border-dashed bg-[#f5eadf] p-3 sm:p-4 shadow-[0_3px_0_rgba(140,103,86,0.12)]">
-        <h2 className="mb-2 px-2 text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+        <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
           Total dépenses — {currentMonthLabel}
         </h2>
 
@@ -114,7 +114,7 @@ export default function BudgetTotalsSection({
   // Mode Annuel : Affichage de tous les mois en colonnes
   return (
     <div className="rounded-[1.5rem] sm:rounded-[2rem] border-[3px] border-[#d7b59d] border-dashed bg-[#f5eadf] p-3 sm:p-4 shadow-[0_3px_0_rgba(140,103,86,0.12)]">
-      <h2 className="mb-2 px-2 text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+      <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
         Totaux Annuels par mois
       </h2>
 

@@ -44,7 +44,7 @@ export default function Tabs({ tabs, label, panelClassName = 'min-h-0 flex-1 ove
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div role="tablist" aria-label={label} className="flex shrink-0 gap-1.5 overflow-x-auto pb-1">
+      <div role="tablist" aria-label={label} className="flex shrink-0 flex-wrap justify-center gap-1.5 pb-1">
         {tabs.map((tab, index) => {
           const isActive = tab.id === activeTab.id;
           return (
@@ -61,7 +61,7 @@ export default function Tabs({ tabs, label, panelClassName = 'min-h-0 flex-1 ove
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActiveId(tab.id)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              className="min-h-11 shrink-0 rounded-full border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-semibold text-[#5a4d41] transition-colors hover:bg-[#F8D5CB] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-selected:border-[#a3452a] aria-selected:bg-[#F8D5CB] aria-selected:font-bold aria-selected:text-[#7a2f1a]"
+              className="min-h-11 shrink-0 rounded-full border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-semibold text-[#5a4d41] transition hover:-translate-y-0.5 hover:bg-[#F8D5CB] motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-selected:border-[#a3452a] aria-selected:bg-[#F8D5CB] aria-selected:font-bold aria-selected:text-[#7a2f1a]"
             >
               {tab.label}
             </button>

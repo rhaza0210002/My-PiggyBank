@@ -15,7 +15,7 @@ export default function BilanBank() {
   const { dataGroups, isLoaded } = useBudget();
 
   return (
-    <ScreenCard title="Budget annuel" subtitle="Vue des 12 mois, un bloc à la fois.">
+    <ScreenCard title="Budget annuel" icon="📅" subtitle="Vue des 12 mois, un bloc à la fois.">
       {!isLoaded ? (
         <p role="status" className="py-6 text-center font-semibold">Chargement...</p>
       ) : dataGroups.length === 0 ? (
@@ -54,7 +54,7 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
 
   return (
     <div className={`rounded-[2rem] border-[3px] border-dashed ${palette.border} ${palette.section} p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)]`}>
-      <h2 className="mb-2 px-2 text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+      <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
         {group.title}
       </h2>
 

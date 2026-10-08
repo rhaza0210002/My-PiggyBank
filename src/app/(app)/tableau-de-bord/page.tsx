@@ -14,7 +14,7 @@ import { getUserProfile } from '@/services/userService';
 import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { pickTip } from '@/utils/tips';
 
-const PANEL = 'rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-3 shadow-sm sm:p-4';
+const PANEL = 'items-center text-center rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-3 shadow-sm sm:p-4';
 const PRIMARY_LINK =
   'inline-flex min-h-12 items-center justify-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 text-center font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] motion-reduce:transition-none';
 
@@ -60,8 +60,9 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col gap-2 overflow-y-auto px-3 py-2 sm:px-5">
-      <div className="flex shrink-0 flex-wrap items-baseline justify-between gap-x-4 px-1">
-        <h1 className="text-[clamp(1.25rem,2vw,1.75rem)] font-black tracking-[-0.04em] text-[#5d4d44]">
+      <div className="flex shrink-0 flex-col items-center gap-0.5 px-1 text-center">
+        <h1 className="flex items-center gap-2 text-[clamp(1.35rem,2.2vw,1.9rem)] font-black tracking-[-0.04em] text-[#5d4d44]">
+          <span aria-hidden="true" className="inline-block motion-safe:animate-[wiggle_2.4s_ease-in-out_infinite]">🐷</span>
           Salut{pseudo ? ` ${pseudo}` : ''} !
         </h1>
         <p className="text-sm text-[#6b574c]">Un petit pas à la fois : chaque pointage compte, rien ne se perd.</p>
@@ -156,7 +157,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => setTipOffset((offset) => offset + 1)}
-            className="mt-auto min-h-11 self-start rounded-xl border border-[#b88f78] bg-white/70 px-3 text-sm font-bold text-[#5d4d44] hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+            className="mt-auto min-h-11 self-center rounded-xl border border-[#b88f78] bg-white/70 px-3 text-sm font-bold text-[#5d4d44] hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
           >
             Une autre astuce
           </button>
@@ -164,7 +165,7 @@ export default function DashboardPage() {
       </div>
 
       <section aria-labelledby="months-title" className={`${PANEL} shrink-0`}>
-        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+        <div className="mb-2 flex flex-col items-center gap-0.5 text-center">
           <h2 id="months-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
             Mon année {today.getFullYear()}
           </h2>
