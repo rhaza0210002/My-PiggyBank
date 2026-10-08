@@ -4,7 +4,8 @@
  *  - Accueil     /tableau-de-bord
  *  - Budget      /budget/mensuel · /budget/annuel
  *  - Opérations  /operations/depenses-reelles · /operations/rapprochement · /operations/import
- *  - Compte      /compte/profil · /compte/parametres · /compte/notifications
+ *  - Compte      /compte/profil · /compte/parametres · /compte/notifications · /compte/donnees
+ *  - Légal       /mentions-legales · /confidentialite · /cookies · /accessibilite · /conditions (publiques)
  *  - Connexion   /connexion · /inscription (pages publiques)
  */
 export const ROUTES = {
@@ -19,9 +20,22 @@ export const ROUTES = {
   profile: '/compte/profil',
   settings: '/compte/parametres',
   notifications: '/compte/notifications',
+  myData: '/compte/donnees',
+} as const;
+
+/** Pages légales : publiques, accessibles connecté ou non. */
+export const LEGAL_ROUTES = {
+  legalNotice: '/mentions-legales',
+  privacy: '/confidentialite',
+  cookies: '/cookies',
+  accessibility: '/accessibilite',
+  terms: '/conditions',
 } as const;
 
 export const AUTH_ROUTES: readonly string[] = [ROUTES.login, ROUTES.register];
+
+/** Chemins accessibles sans session (et sans redirection quand on est connecté). */
+export const OPEN_ROUTES: readonly string[] = Object.values(LEGAL_ROUTES);
 
 export interface NavPage {
   label: string;
@@ -71,6 +85,7 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       { label: 'Profil', href: ROUTES.profile },
       { label: 'Paramètres', href: ROUTES.settings },
       { label: 'Notifications', href: ROUTES.notifications },
+      { label: 'Mes données', href: ROUTES.myData },
     ],
   },
 ];

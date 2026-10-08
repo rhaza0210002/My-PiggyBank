@@ -47,6 +47,14 @@ update auth.users
  where email = 'votre@email';
 ```
 
+## RGPD
+
+- **Pages publiques** : `/mentions-legales`, `/confidentialite`, `/cookies`, `/accessibilite`, `/conditions` (groupe `src/app/(legal)`), liées dans le pied de page. Leurs textes sont un point de départ à relire et à valider ; ce ne sont pas des conseils juridiques.
+- **Identité de l'éditeur** : à renseigner via `NEXT_PUBLIC_LEGAL_NAME`, `NEXT_PUBLIC_LEGAL_ADDRESS`, `NEXT_PUBLIC_LEGAL_DIRECTOR`, `NEXT_PUBLIC_CONTACT_EMAIL` (voir `.env.example`). Tant qu'elles sont vides, un repère « à renseigner » s'affiche.
+- **Droits des personnes** : page `Compte > Mes données` — export JSON (accès, portabilité) et suppression du compte (effacement, `public.delete_my_account()`, migration `20261008180000_delete_my_account.sql` à exécuter dans le SQL Editor).
+- **Consentement** : case d'acceptation des conditions à l'inscription (date et version enregistrées dans les métadonnées du compte). Aucun cookie non essentiel : pas de bandeau.
+- **Appareil** : le cache d'affichage du budget (`localStorage`) est effacé à la déconnexion et à la suppression du compte.
+
 ## Progression et récompenses
 
 Pensée pour les personnes neuroatypiques (dont TDAH) : une seule action mise en avant par écran, des

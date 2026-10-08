@@ -2,7 +2,9 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import LogoutButton from '@/components/features/header/LogoutButton';
+import Link from 'next/link';
 import ScreenCard from '@/components/ui/ScreenCard';
+import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
 import { supabase } from '@/lib/supabaseClient';
 import { updatePassword } from '@/services/authService';
 import { getUserProfile, updateUserProfile } from '@/services/userService';
@@ -190,6 +192,26 @@ export default function ProfilePage() {
           Termine ta session sur cet appareil. Tu devras te reconnecter pour accéder à tes budgets.
         </p>
         <LogoutButton className="mt-4" />
+      </section>
+
+      <section aria-labelledby="legal-title" className={`${CARD} md:col-span-2`}>
+        <h2 id="legal-title" className="text-lg font-bold text-[#5a4d41]">Données et informations légales</h2>
+        <ul className="mt-2 grid gap-x-4 sm:grid-cols-3">
+          {[
+            [ROUTES.myData, 'Mes données (exporter, supprimer)'],
+            [LEGAL_ROUTES.privacy, 'Politique de confidentialité'],
+            [LEGAL_ROUTES.cookies, 'Cookies'],
+            [LEGAL_ROUTES.terms, 'Conditions d’utilisation'],
+            [LEGAL_ROUTES.legalNotice, 'Mentions légales'],
+            [LEGAL_ROUTES.accessibility, 'Accessibilité'],
+          ].map(([href, label]) => (
+            <li key={href}>
+              <Link href={href} className="inline-flex min-h-11 items-center text-sm font-semibold text-[#8c4a38] underline">
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
       </div>
     </ScreenCard>
