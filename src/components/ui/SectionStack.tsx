@@ -97,8 +97,8 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
     setActiveId(id);
     const parent = findScrollParent(element);
     if (parent) {
-      // La rangée de puces collante masque le haut de la zone sur mobile : on s'arrête juste dessous.
-      const stickyOffset = window.getComputedStyle(navRef.current!).position === 'sticky' ? navRef.current!.offsetHeight : 0;
+      // La rangée de puces collante masque le haut de la zone : on s'arrête juste dessous.
+      const stickyOffset = navRef.current?.offsetHeight ?? 0;
       const top = element.getBoundingClientRect().top - parent.getBoundingClientRect().top + parent.scrollTop - stickyOffset;
       parent.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
     }
@@ -107,29 +107,30 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <nav
-        ref={navRef}
-        aria-label={label}
-        style={{ backgroundColor: background }}
-        className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 shadow-[0_6px_6px_-6px_rgba(93,77,68,0.25)] md:static md:flex-wrap md:justify-center md:overflow-visible md:shadow-none"
-      >
-        {sections.map((section) => (
-          <button
-            key={section.id}
-            ref={(element) => {
-              chipRefs.current[section.id] = element;
-            }}
-            type="button"
-            onClick={() => goTo(section.id)}
-            aria-current={activeId === section.id ? 'true' : undefined}
-            className="min-h-11 shrink-0 rounded-full border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-semibold text-[#5a4d41] transition hover:-translate-y-0.5 hover:bg-[#F8D5CB] motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[current=true]:border-[#a3452a] aria-[current=true]:bg-[#F8D5CB] aria-[current=true]:font-bold aria-[current=true]:text-[#7a2f1a]"
-          >
-            {section.label}
-          </button>
-        ))}
-      </nav>
 
-      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 scroll-smooth pt-1 motion-reduce:scroll-auto md:overflow-y-auto">
+      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 scroll-smooth motion-reduce:scroll-auto md:overflow-y-auto">
+        <nav
+          ref={navRef}
+          aria-label={label}
+          style={{ backgroundColor: background }}
+          className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 shadow-[0_6px_6px_-6px_rgba(93,77,68,0.25)] md:flex-wrap md:justify-center md:overflow-visible"
+        >
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              ref={(element) => {
+                chipRefs.current[section.id] = element;
+              }}
+              type="button"
+              onClick={() => goTo(section.id)}
+              aria-current={activeId === section.id ? 'true' : undefined}
+              className="min-h-11 shrink-0 rounded-full border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-semibold text-[#5a4d41] transition hover:-translate-y-0.5 hover:bg-[#F8D5CB] motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[current=true]:border-[#a3452a] aria-[current=true]:bg-[#F8D5CB] aria-[current=true]:font-bold aria-[current=true]:text-[#7a2f1a]"
+            >
+              {section.label}
+            </button>
+          ))}
+        </nav>
+
         {sections.map((section) => {
           const isRevealed = revealed.has(section.id);
           return (
