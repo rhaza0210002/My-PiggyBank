@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { ArrowLeftRight, List } from 'lucide-react';
 import { TABLE_STYLES } from '@/constants/tableStyles';
 import { saveImportedTransactionLabels } from '@/services/libelleTransactService';
+import { saveImportedTransactions } from '@/services/transactionService';
 import MonthlyBudgetComparison from '@/components/features/tables/MonthlyBudgetComparison';
 import {
   groupTransactionsByCategory,
@@ -112,6 +113,9 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
   const [isSavingLabels, setIsSavingLabels] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [isSavingTransactions, setIsSavingTransactions] = useState(false);
+  const [transactionsMessage, setTransactionsMessage] = useState<string | null>(null);
+  const [transactionsError, setTransactionsError] = useState<string | null>(null);
   const groups = groupTransactionsByCategory(transactions);
   const categorizedCount = transactions.filter((transaction) => transaction.categoryKey).length;
   const unmatchedExamples = Array.from(
@@ -160,6 +164,31 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
       );
     } finally {
       setIsSavingLabels(false);
+    }
+  };
+
+  const handleSaveTransactions = async () => {
+    setIsSavingTransactions(true);
+    setTransactionsMessage(null);
+    setTransactionsError(null);
+
+    try {
+      const result = await saveImportedTransactions(transactions);
+      const plural = (count: number) => (count > 1 ? 's' : '');
+      const parts = [`${result.inserted} transaction${plural(result.inserted)} enregistrée${plural(result.inserted)}`];
+      if (result.duplicates > 0) {
+        parts.push(`${result.duplicates} déjà présente${plural(result.duplicates)}`);
+      }
+      if (result.invalid > 0) {
+        parts.push(`${result.invalid} ignorée${plural(result.invalid)} (date illisible)`);
+      }
+      setTransactionsMessage(`${parts.join(', ')}.`);
+    } catch (error) {
+      setTransactionsError(
+        error instanceof Error ? error.message : "Impossible d'enregistrer les transactions.",
+      );
+    } finally {
+      setIsSavingTransactions(false);
     }
   };
 
@@ -215,7 +244,15 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
               </tbody>
             </table>
           </div>
-          <div className="flex justify-end pt-2">
+          <div className="flex flex-wrap justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleSaveTransactions}
+              disabled={isSavingTransactions}
+              className="rounded-[1.5rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-3 font-black text-[#fff8f5] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#5b473d] disabled:cursor-not-allowed disabled:opacity-55"
+            >
+              {isSavingTransactions ? 'Enregistrement...' : `Enregistrer les ${transactions.length} transactions`}
+            </button>
             <button
               type="button"
               onClick={handleSaveLabels}
@@ -225,6 +262,16 @@ export default function CsvTransactionsTable({ transactions }: CsvTransactionsTa
               {isSavingLabels ? 'Enregistrement...' : 'Enregistrer les libellés reconnus'}
             </button>
           </div>
+          {transactionsMessage && (
+            <p className="text-sm font-semibold text-green-800" role="status">
+              {transactionsMessage}
+            </p>
+          )}
+          {transactionsError && (
+            <p className="text-sm font-semibold text-red-700" role="alert">
+              {transactionsError}
+            </p>
+          )}
           {saveMessage && (
             <p className="text-sm font-semibold text-green-800" role="status">
               {saveMessage}

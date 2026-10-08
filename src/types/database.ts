@@ -25,3 +25,16 @@ export interface TransactionLabelRow {
   key: string;
   id_cat: string;
 }
+
+export interface TransactionRow {
+  id: string;
+  user_id: string;
+  booked_on: string;
+  label: string;
+  amount: number;
+  category_id: string | null;
+  category_key: string | null;
+  type: 'VIREMENT_ENTRANT' | 'VIREMENT_SORTANT' | 'AUTRE';
+  dedupe_key: string;
+  created_at: string;
+}

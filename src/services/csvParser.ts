@@ -23,6 +23,7 @@ export interface BankTransaction {
   date: string;
   label: string;
   detail: string;
+  rawDetail: string;
   amount: number;
   categoryId: string | null;
   categoryLabel: string | null;
@@ -268,6 +269,7 @@ export class SocieteGeneraleParser {
           date,
           label: matchedLabel?.label ?? '',
           detail: normalizedDetail,
+          rawDetail: detail,
           amount,
           categoryId: matchedLabel?.id_cat ?? null,
           categoryLabel: matchedLabel?.key ?? null,
