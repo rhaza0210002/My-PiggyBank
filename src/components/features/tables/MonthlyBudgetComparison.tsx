@@ -37,7 +37,18 @@ interface BudgetComparisonGroup {
   id: number;
   key: string;
   title: string;
+  isIncome: boolean;
   rows: BudgetComparisonRow[];
+}
+
+/** Les budgets sont saisis en positif ; seul le groupe « Revenus » correspond à des entrées d'argent. */
+function isIncomeGroup(group: CategoryGroup): boolean {
+  return `${group.label} ${group.libelle}`.toLowerCase().includes('revenu');
+}
+
+/** Écart favorable = positif : plus de revenus que prévu, ou moins de dépenses que prévu. */
+function getDifference(isIncome: boolean, budget: number, actual: number): number {
+  return isIncome ? actual - budget : budget - Math.abs(actual);
 }
 
 interface LoadedBudgetEntry {
@@ -160,12 +171,15 @@ export default function MonthlyBudgetComparison({
         id: group.id,
         key: group.label || String(group.id),
         title: group.libelle,
+        isIncome: isIncomeGroup(group),
         rows,
       };
     });
 
+  // Solde prévu / réel : revenus moins dépenses (le réel des dépenses est déjà négatif).
   const totalBudget = comparisonGroups.reduce(
-    (groupTotal, group) => groupTotal + group.rows.reduce((sum, row) => sum + row.budget, 0),
+    (groupTotal, group) =>
+      groupTotal + group.rows.reduce((sum, row) => sum + (group.isIncome ? row.budget : -row.budget), 0),
     0,
   );
   const totalActual = comparisonGroups.reduce(
@@ -173,12 +187,11 @@ export default function MonthlyBudgetComparison({
     0,
   );
   const totalDifference = comparisonGroups.reduce(
-    (groupTotal, group) => groupTotal + group.rows.reduce(
-      (rowTotal, row) => rowTotal + row.budget - Math.abs(row.actual),
-      0,
-    ),
+    (groupTotal, group) =>
+      groupTotal + group.rows.reduce((sum, row) => sum + getDifference(group.isIncome, row.budget, row.actual), 0),
     0,
   );
+  const uncategorizedGroup = groups.find((group) => group.categoryId === null);
   return (
     <section className="space-y-4" aria-labelledby="monthly-comparison-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -226,7 +239,7 @@ export default function MonthlyBudgetComparison({
             const groupBudget = group.rows.reduce((sum, row) => sum + row.budget, 0);
             const groupActual = group.rows.reduce((sum, row) => sum + row.actual, 0);
             const groupDifference = group.rows.reduce(
-              (sum, row) => sum + row.budget - Math.abs(row.actual),
+              (sum, row) => sum + getDifference(group.isIncome, row.budget, row.actual),
               0,
             );
 
@@ -245,7 +258,7 @@ export default function MonthlyBudgetComparison({
                       Aucune donnée pour {MONTHS[monthIndex].label}.
                     </p>
                   ) : group.rows.map((row) => {
-                    const difference = row.budget - Math.abs(row.actual);
+                    const difference = getDifference(group.isIncome, row.budget, row.actual);
                     return (
                       <article key={row.categoryId} className={`min-w-0 rounded-lg border ${palette.border} ${palette.table} p-3`}>
                         <h5 className="mb-2 break-words text-sm font-bold text-[#5d4d44]">
@@ -311,7 +324,7 @@ export default function MonthlyBudgetComparison({
                           </td>
                         </tr>
                       ) : group.rows.map((row, index) => {
-                        const difference = row.budget - Math.abs(row.actual);
+                        const difference = getDifference(group.isIncome, row.budget, row.actual);
                         return (
                           <tr key={row.categoryId} className={index % 2 === 0 ? palette.rowEven : palette.rowOdd}>
                             <td className={TABLE_STYLES.cellCategory}>{row.label}</td>
@@ -339,7 +352,7 @@ export default function MonthlyBudgetComparison({
           })}
 
           <div className={`rounded-xl border p-3 md:hidden ${totalDifference > 0 ? 'border-[#83b5a6] bg-[#d2e9df]' : totalDifference < 0 ? 'border-[#d8846d] bg-[#f8e5da]' : 'border-[#b88f78] bg-[#efe0d6]'}`}>
-            <h4 className="mb-2 text-sm font-black text-[#5d4d44]">Total général</h4>
+            <h4 className="mb-2 text-sm font-black text-[#5d4d44]">Solde général (revenus − dépenses)</h4>
             <dl className="grid grid-cols-3 gap-2">
               <div className="min-w-0">
                 <dt className="text-[0.65rem] font-semibold uppercase text-[#766356]">Budget</dt>
@@ -359,10 +372,10 @@ export default function MonthlyBudgetComparison({
           </div>
 
           <div className={`hidden overflow-x-auto rounded-xl border md:block ${totalDifference > 0 ? 'border-[#83b5a6] bg-[#d2e9df]' : totalDifference < 0 ? 'border-[#d8846d] bg-[#f8e5da]' : 'border-[#b88f78] bg-[#efe0d6]'}`}>
-            <table className="w-full min-w-[620px] border-collapse text-left" aria-label="Total général de la comparaison">
+            <table className="w-full min-w-[620px] border-collapse text-left" aria-label="Solde général de la comparaison">
               <tbody>
                 <tr className={`font-black ${totalDifference > 0 ? 'bg-[#d2e9df]' : totalDifference < 0 ? 'bg-[#f8e5da]' : 'bg-[#efe0d6]'}`}>
-                  <td className={TABLE_STYLES.cellCategory}>Total général</td>
+                  <td className={TABLE_STYLES.cellCategory}>Solde général (revenus − dépenses)</td>
                   <td className={TABLE_STYLES.cellAmount}>{formatCurrency(totalBudget)}</td>
                   <td className={TABLE_STYLES.cellAmount}>{formatCurrency(totalActual)}</td>
                   <td className={`${TABLE_STYLES.cellAmount} ${totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
@@ -373,6 +386,14 @@ export default function MonthlyBudgetComparison({
             </table>
           </div>
         </div>
+      )}
+
+      {uncategorizedGroup && uncategorizedGroup.records.length > 0 && (
+        <p className="text-xs font-semibold text-[#a85a2a]">
+          {uncategorizedGroup.records.length} opération{uncategorizedGroup.records.length > 1 ? 's' : ''} sans catégorie
+          ({formatCurrency(uncategorizedGroup.totalAmount)}) ne figure{uncategorizedGroup.records.length > 1 ? 'nt' : ''} pas
+          dans ce tableau : catégorise-les dans le rapprochement.
+        </p>
       )}
 
       {categorizedTransactionCount === 0 && transactionCount > 0 && (
