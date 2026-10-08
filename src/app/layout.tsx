@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
@@ -12,7 +12,11 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: { default: "My PiggyBank", template: "%s | My PiggyBank" },
   description: "Suivi budgétaire et rapprochement bancaire",
+  icons: { icon: "/icons/icon-192.png", apple: "/icons/icon-192.png" },
+  appleWebApp: { capable: true, title: "PiggyBank", statusBarStyle: "default" },
 };
+
+export const viewport: Viewport = { themeColor: "#e59a86" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
