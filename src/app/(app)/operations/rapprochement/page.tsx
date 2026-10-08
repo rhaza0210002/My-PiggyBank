@@ -189,7 +189,7 @@ export default function RapprochementPage() {
         )}
 
         {notice && !celebration && (
-          <p role="status" className="rounded-lg border border-[#9fc3a1] bg-[#eaf4e6] p-2 text-sm font-semibold text-[#1f4d25]">
+          <p role="status" className="rounded-lg border border-[#9fc3a1] bg-[#eaf4e6] p-2 text-center text-sm font-semibold text-[#1f4d25]">
             {notice}
           </p>
         )}

@@ -10,6 +10,8 @@ const SECURITY_HEADERS = [
 ];
 
 const nextConfig: NextConfig = {
+  // La pastille « N » du mode dev masquait le premier onglet de la barre mobile ; les erreurs restent affichées.
+  devIndicators: false,
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
