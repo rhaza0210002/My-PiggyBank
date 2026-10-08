@@ -189,7 +189,7 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
             backgroundColor: background,
             ...(fadeRight ? { maskImage: 'linear-gradient(to right, black calc(100% - 32px), transparent)' } : {}),
           }}
-          className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible"
+          className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible md:py-2"
         >
           {sections.map((section) => (
             <button
