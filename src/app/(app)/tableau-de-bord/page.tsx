@@ -3,6 +3,7 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import BadgeShelf from '@/components/features/gamification/BadgeShelf';
+import StartChecklist from '@/components/features/gamification/StartChecklist';
 import MonthsStrip from '@/components/features/gamification/MonthsStrip';
 import BalanceToggle, { revealAmount, useBalanceVisibility } from '@/components/ui/BalanceToggle';
 import ProgressBar from '@/components/ui/ProgressBar';
@@ -10,9 +11,11 @@ import { ROUTES } from '@/constants/routes';
 import { MONTHS } from '@/constants/tableStyles';
 import { useGamification } from '@/hooks/useGamification';
 import { supabase } from '@/lib/supabaseClient';
+import { getBudgetEntries } from '@/services/budgetService';
 import { getMonthTotals, type MonthTotals } from '@/services/transactionService';
 import { getUserProfile } from '@/services/userService';
 import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
+import { getStartSteps } from '@/utils/startSteps';
 import { pickTip } from '@/utils/tips';
 
 const PANEL = 'items-center text-center rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-3 shadow-sm sm:p-4';
@@ -24,6 +27,7 @@ export default function DashboardPage() {
   const { data: progress, error: progressError } = useGamification();
   const [pseudo, setPseudo] = useState('');
   const [monthTotals, setMonthTotals] = useState<MonthTotals | null>(null);
+  const [hasBudget, setHasBudget] = useState<boolean | null>(null);
   const [tipOffset, setTipOffset] = useState(0);
   const [today] = useState(() => new Date());
 
@@ -42,6 +46,12 @@ export default function DashboardPage() {
       }
     });
 
+    getBudgetEntries(today.getFullYear())
+      .then((entries) => {
+        if (isCurrent) setHasBudget(entries.length > 0);
+      })
+      .catch(() => {});
+
     getMonthTotals(today.getFullYear(), today.getMonth())
       .then((totals) => {
         if (isCurrent) setMonthTotals(totals);
@@ -58,6 +68,15 @@ export default function DashboardPage() {
   const pending = month ? month.total - month.done : 0;
   const level = progress?.levelInfo;
   const monthName = MONTHS[today.getMonth()].label;
+  // Les pas ne s'affichent qu'une fois tout chargé, pour ne pas clignoter chez un utilisateur déjà installé.
+  const startSteps =
+    progress && hasBudget !== null
+      ? getStartSteps({
+          hasOperations: progress.months.some((m) => m.total > 0),
+          hasBudget,
+          reconciledOperations: progress.reconciledOperations,
+        })
+      : null;
   const hasBalance = monthTotals !== null && monthTotals.count > 0;
 
   return (
@@ -75,6 +94,8 @@ export default function DashboardPage() {
           {progressError}
         </p>
       )}
+
+      {startSteps && <StartChecklist steps={startSteps} />}
 
       <div className="grid shrink-0 gap-2 md:grid-cols-12">
         {/* Action du moment : toujours en premier, une seule chose à faire. */}
