@@ -38,3 +38,18 @@ jobs:
           # Valeurs factices : le build n'appelle pas Supabase, il exige seulement que les variables existent.
           NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-key
+
+  audit:
+    # Signale les failles connues des dépendances livrées en production, sans bloquer la fusion.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - run: yarn audit --groups dependencies
