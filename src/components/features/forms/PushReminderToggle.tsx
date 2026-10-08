@@ -7,8 +7,8 @@ const MESSAGES: Record<PushStatus, string> = {
   unsupported:
     'Ton navigateur ne gère pas les rappels. Sur iPhone, ajoute d’abord l’app à l’écran d’accueil (Partager, puis « Sur l’écran d’accueil »), puis reviens ici.',
   denied: 'Les notifications sont bloquées pour ce site dans ton navigateur. Autorise-les dans ses réglages pour activer les rappels.',
-  off: 'Un seul rappel par jour au maximum, seulement s’il te reste des opérations à pointer. Jamais de montant ni de libellé dedans.',
-  on: 'Rappels activés sur cet appareil : un seul par jour au maximum, seulement s’il te reste des opérations à pointer.',
+  off: 'Un rappel par jour au maximum s’il te reste des opérations à pointer, et une alerte quand un budget est dépassé. Jamais de montant ni de libellé dedans.',
+  on: 'Rappels activés sur cet appareil : un rappel par jour au maximum s’il te reste des opérations à pointer, et une alerte quand un budget est dépassé. Les deux se règlent plus haut.',
 };
 
 /** Active ou coupe les rappels sur l'appareil en cours (chaque appareil s'abonne séparément). */

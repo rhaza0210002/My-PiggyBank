@@ -1,7 +1,7 @@
 import webpush from 'web-push';
 import { NextResponse, type NextRequest } from 'next/server';
 import { createAdminClient } from '@/lib/supabaseAdmin';
-import { buildReminderPayload, isAuthorizedCron, isGoneSubscription } from '@/utils/reminder';
+import { buildOverrunPayload, buildReminderPayload, isAuthorizedCron, isGoneSubscription } from '@/utils/reminder';
 
 /** Heures minimum entre deux rappels pour un même appareil : au plus un par jour, jamais d'insistance. */
 const MIN_HOURS_BETWEEN_REMINDERS = 20;
@@ -12,6 +12,15 @@ interface DueReminder {
   p256dh: string;
   auth: string;
   pending_count: number | string;
+}
+
+interface DueOverrun {
+  subscription_id: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  overrun_count: number | string;
+  month_key: string;
 }
 
 /**
@@ -39,29 +48,54 @@ export async function GET(request: NextRequest) {
   const sentIds: string[] = [];
   const goneIds: string[] = [];
 
+  const push = async (
+    target: { subscription_id: string; endpoint: string; p256dh: string; auth: string },
+    payload: unknown,
+  ): Promise<boolean> => {
+    try {
+      await webpush.sendNotification(
+        { endpoint: target.endpoint, keys: { p256dh: target.p256dh, auth: target.auth } },
+        JSON.stringify(payload),
+        { TTL: 60 * 60 * 12 },
+      );
+      return true;
+    } catch (sendError) {
+      if (isGoneSubscription((sendError as { statusCode?: number }).statusCode)) goneIds.push(target.subscription_id);
+      return false;
+    }
+  };
+
   await Promise.all(
     due.map(async (reminder) => {
-      const payload = JSON.stringify(buildReminderPayload(Number(reminder.pending_count)));
-      try {
-        await webpush.sendNotification(
-          { endpoint: reminder.endpoint, keys: { p256dh: reminder.p256dh, auth: reminder.auth } },
-          payload,
-          { TTL: 60 * 60 * 12 },
-        );
-        sentIds.push(reminder.subscription_id);
-      } catch (sendError) {
-        const status = (sendError as { statusCode?: number }).statusCode;
-        if (isGoneSubscription(status)) goneIds.push(reminder.subscription_id);
-      }
+      if (await push(reminder, buildReminderPayload(Number(reminder.pending_count)))) sentIds.push(reminder.subscription_id);
     }),
   );
 
   if (sentIds.length > 0) {
     await admin.from('push_subscriptions').update({ last_reminded_at: new Date().toISOString() }).in('id', sentIds);
   }
+
+  // Alertes de dépassement : jamais le même jour qu'un rappel de pointage sur le même appareil (pas d'accumulation),
+  // et seulement quand il y a plus de catégories en dépassement que lors de la dernière alerte.
+  const { data: overrunData } = await admin.rpc('budget_overruns_due');
+  const overruns = ((overrunData ?? []) as DueOverrun[]).filter((overrun) => !sentIds.includes(overrun.subscription_id));
+  let overrunAlerts = 0;
+
+  await Promise.all(
+    overruns.map(async (overrun) => {
+      const count = Number(overrun.overrun_count);
+      if (!(await push(overrun, buildOverrunPayload(count)))) return;
+      overrunAlerts += 1;
+      await admin
+        .from('push_subscriptions')
+        .update({ overrun_alerted_month: overrun.month_key, overrun_alerted_count: count })
+        .eq('id', overrun.subscription_id);
+    }),
+  );
+
   if (goneIds.length > 0) {
     await admin.from('push_subscriptions').delete().in('id', goneIds);
   }
 
-  return NextResponse.json({ due: due.length, sent: sentIds.length, removed: goneIds.length });
+  return NextResponse.json({ due: due.length, sent: sentIds.length, overrunAlerts, removed: goneIds.length });
 }

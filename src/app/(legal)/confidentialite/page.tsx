@@ -69,7 +69,7 @@ export default function ConfidentialitePage() {
       </p>
       <p>
         Si tu actives les rappels, l’adresse technique de notification de ton navigateur est enregistrée pour pouvoir t’envoyer
-        un rappel par jour au maximum. Il ne contient jamais de montant ni de libellé, seulement un nombre d’opérations. Tu peux
+        un rappel par jour au maximum, ou t’alerter quand un budget est dépassé. Ces notifications ne contiennent jamais de montant ni de libellé, seulement un nombre d’opérations ou de catégories. Tu peux
         le couper à tout moment dans Paramètres ; il est supprimé avec ton compte.
       </p>
       <p>
