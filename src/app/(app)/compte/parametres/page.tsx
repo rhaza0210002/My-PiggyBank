@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import PushReminderToggle from '@/components/features/forms/PushReminderToggle';
 import {
   DEFAULT_USER_SETTINGS,
   getUserSettings,
@@ -105,6 +106,8 @@ export default function SettingsPage() {
             ))}
           </ul>
         )}
+
+        <PushReminderToggle />
       </section>
     </div>
   );

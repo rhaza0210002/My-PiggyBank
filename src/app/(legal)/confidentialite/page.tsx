@@ -68,6 +68,11 @@ export default function ConfidentialitePage() {
         des opérations est alors effacé et seuls les totaux par catégorie sont conservés.
       </p>
       <p>
+        Si tu actives les rappels, l’adresse technique de notification de ton navigateur est enregistrée pour pouvoir t’envoyer
+        un rappel par jour au maximum. Il ne contient jamais de montant ni de libellé, seulement un nombre d’opérations. Tu peux
+        le couper à tout moment dans Paramètres ; il est supprimé avec ton compte.
+      </p>
+      <p>
         Nous ne collectons aucune donnée de santé ni aucune information sur ton état de santé. Aucune donnée n’est
         utilisée à des fins publicitaires, vendue ou cédée, et aucune décision automatisée produisant des effets
         juridiques n’est prise : les points et niveaux sont un simple calcul d’affichage.

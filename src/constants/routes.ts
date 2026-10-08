@@ -44,6 +44,12 @@ export const RESET_PASSWORD_ROUTE = '/nouveau-mot-de-passe';
 /** Retour des liens e-mail (confirmation, récupération) et de Google : échange le code contre une session. */
 export const AUTH_CALLBACK_ROUTE = '/auth/callback';
 
+/** Tâche planifiée des rappels (Vercel Cron) : protégée par CRON_SECRET, pas par la session. */
+export const REMINDERS_CRON_ROUTE = '/api/rappels';
+
+/** Service worker des notifications : doit rester lisible sans session. */
+export const SERVICE_WORKER_PATH = '/sw.js';
+
 /** Chemins accessibles sans session (et sans redirection quand on est connecté). */
 export const OPEN_ROUTES: readonly string[] = Object.values(LEGAL_ROUTES);
 
