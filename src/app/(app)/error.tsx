@@ -23,7 +23,7 @@ export default function AppError({ reset }: { error: Error & { digest?: string }
           </button>
           <Link
             href={ROUTES.dashboard}
-            className="inline-flex min-h-12 items-center rounded-carte border border-bordure-forte bg-surface/70 px-5 font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            className="inline-flex min-h-12 items-center rounded-carte border-2 border-bordure-forte bg-surface/70 px-5 font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Retour à l’accueil
           </Link>

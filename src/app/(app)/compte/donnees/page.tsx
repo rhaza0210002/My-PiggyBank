@@ -8,9 +8,9 @@ import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
 import { deleteMyAccount, exportMyData } from '@/services/personalDataService';
 import { exportFileName } from '@/utils/dataExport';
 
-const CARD = 'rounded-3xl border border-bordure bg-surface p-4 shadow-sm';
+const CARD = 'rounded-3xl border-2 border-bordure bg-surface p-4 shadow-sm';
 const BUTTON =
-  'min-h-11 rounded-2xl border border-bordure bg-accent-doux px-4 text-sm font-semibold text-accent-fort transition-colors hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60';
+  'min-h-11 rounded-2xl border-2 border-bordure bg-accent-doux px-4 text-sm font-semibold text-accent-fort transition-colors hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60';
 const CONFIRMATION_WORD = 'SUPPRIMER';
 
 export default function MyDataPage() {

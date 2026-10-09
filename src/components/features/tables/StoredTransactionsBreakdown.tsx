@@ -22,7 +22,7 @@ function formatShortDate(isoDate: string): string {
 
 function TransactionsList({ transactions }: { transactions: StoredTransaction[] }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-bordure/60 bg-surface/40">
+    <div className="overflow-hidden rounded-xl border-2 border-bordure/60 bg-surface/40">
       <table className="w-full min-w-0 border-collapse text-left text-[11px] sm:text-sm">
         <thead>
           <tr className="bg-surface-douce text-texte">
@@ -60,7 +60,7 @@ export default function StoredTransactionsBreakdown({ breakdown }: StoredTransac
       {breakdown.uncategorized.length > 0 && (
         <section
           aria-labelledby="uncategorized-title"
-          className="space-y-3 rounded-xl border border-accent bg-surface p-3"
+          className="space-y-3 rounded-xl border-2 border-accent bg-surface p-3"
         >
           <h3 id="uncategorized-title" className="text-lg font-black text-accent-fort">
             À catégoriser ({breakdown.uncategorized.length})
@@ -79,7 +79,7 @@ export default function StoredTransactionsBreakdown({ breakdown }: StoredTransac
           <section
             key={group.id}
             aria-label={`Détail ${group.title}`}
-            className={`overflow-hidden rounded-xl border ${palette.border} ${palette.section}`}
+            className={`overflow-hidden rounded-xl border-2 ${palette.border} ${palette.section}`}
           >
             <h3 className={`flex items-center justify-between gap-3 px-4 py-3 font-black text-texte ${palette.header}`}>
               <span>{group.title}</span>

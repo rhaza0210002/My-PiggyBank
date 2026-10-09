@@ -240,7 +240,7 @@ export default function BudgetDonut({
               />
             ))}
           </svg>
-          <div className="absolute inset-[18%] flex flex-col items-center justify-center rounded-full border border-[#d8b6a5]/60 bg-[#fbf2e9] px-2 text-center shadow-inner">
+          <div className="absolute inset-[18%] flex flex-col items-center justify-center rounded-full border-2 border-[#d8b6a5]/60 bg-[#fbf2e9] px-2 text-center shadow-inner">
             <span className="mb-1 text-xs font-bold uppercase text-[#6b574c]">
               {isMonthly ? monthLabel : 'Année'}
             </span>
@@ -251,7 +251,7 @@ export default function BudgetDonut({
         </div>
 
         {slices.length === 0 ? (
-          <p className="chart-legend-item rounded-xl border border-dashed border-[#d8b6a5] bg-surface/40 p-5 text-center text-sm italic text-[#6b574c]">
+          <p className="chart-legend-item rounded-xl border-2 border-dashed border-[#d8b6a5] bg-surface/40 p-5 text-center text-sm italic text-[#6b574c]">
             {emptyMessage}
           </p>
         ) : (
@@ -259,7 +259,7 @@ export default function BudgetDonut({
             {slices.map((slice) => (
               <li
                 key={slice.label}
-                className="chart-legend-item min-w-0 rounded-xl border border-[#d8b6a5]/60 bg-surface/55 p-3 shadow-sm"
+                className="chart-legend-item min-w-0 rounded-xl border-2 border-[#d8b6a5]/60 bg-surface/55 p-3 shadow-sm"
               >
                 <div className="mb-2 flex min-w-0 items-center gap-2">
                   <span

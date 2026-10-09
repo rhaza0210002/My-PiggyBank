@@ -47,7 +47,7 @@ export default function PushReminderToggle() {
   const canToggle = status === 'on' || status === 'off';
 
   return (
-    <div className="mt-4 rounded-2xl border border-bordure bg-surface/60 p-4">
+    <div className="mt-4 rounded-2xl border-2 border-bordure bg-surface/60 p-4">
       <h3 className="text-sm font-bold text-texte">
         <span aria-hidden="true">🔔 </span>Rappels sur cet appareil
       </h3>

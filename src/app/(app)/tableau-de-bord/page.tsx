@@ -93,7 +93,7 @@ export default function DashboardPage() {
       </div>
 
       {progressError && (
-        <p role="alert" className="shrink-0 rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+        <p role="alert" className="shrink-0 rounded-lg border-2 border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
           {progressError}
         </p>
       )}

@@ -18,7 +18,7 @@ export default function AuthCard({ title, intro, children }: { title: string; in
 }
 
 export const AUTH_INPUT_CLASS =
-  'w-full min-h-12 rounded-carte border-[2px] border-bordure-forte bg-surface px-4 py-3 text-texte placeholder-texte-doux shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus';
+  'w-full min-h-12 rounded-carte border-2 border-bordure-forte bg-surface px-4 py-3 text-texte placeholder-texte-doux shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus';
 export const AUTH_LABEL_CLASS = 'block px-1 text-sm font-bold text-texte';
 export const AUTH_BUTTON_CLASS =
   'min-h-12 w-full rounded-carte border-[3px] border-bordure bg-accent py-3 text-center font-bold text-sur-accent shadow-bonbon transition-all hover:translate-y-[2px] hover:shadow-bonbon focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-70';

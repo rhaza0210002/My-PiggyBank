@@ -227,7 +227,7 @@ export default function RapprochementPage() {
         <Tirelire pointed={progress?.pointedToday ?? 0} tick={pointingTick} />
 
         {month && month.total > 0 && (
-          <div className="flex items-center gap-3 rounded-2xl border border-bordure bg-surface px-3 py-1.5">
+          <div className="flex items-center gap-3 rounded-2xl border-2 border-bordure bg-surface px-3 py-1.5">
             <p className="shrink-0 text-sm font-bold text-texte">
               {month.done} / {month.total} pointées
             </p>
@@ -279,13 +279,13 @@ export default function RapprochementPage() {
         )}
 
         {loadError && (
-          <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+          <p role="alert" className="rounded-lg border-2 border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
             {loadError}
           </p>
         )}
 
         {actionError && (
-          <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+          <p role="alert" className="rounded-lg border-2 border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
             {actionError}
           </p>
         )}
@@ -320,7 +320,7 @@ export default function RapprochementPage() {
                   reconcile(readyIds);
                 }}
                 disabled={readyIds.some((id) => busyIds.has(id))}
-                className="min-h-11 w-full rounded-xl border border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte transition hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
+                className="min-h-11 w-full rounded-xl border-2 border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte transition hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
               >
                 Pointer d’un coup les {readyIds.length} déjà catégorisées
               </button>
@@ -350,7 +350,7 @@ export default function RapprochementPage() {
         )}
 
         {data && isAdmin && (
-          <details className="rounded-2xl border border-dashed border-bordure bg-surface-douce px-3 py-1">
+          <details className="rounded-2xl border-2 border-dashed border-bordure bg-surface-douce px-3 py-1">
             <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold text-texte">
               Créer une catégorie (administrateur)
             </summary>

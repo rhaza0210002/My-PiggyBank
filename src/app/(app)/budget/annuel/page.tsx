@@ -61,7 +61,7 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
         {group.title}
       </h2>
 
-      <div role="region" aria-label={`Tableau annuel ${group.title}`} tabIndex={0} className={`overflow-x-auto rounded-xl border ${palette.border} ${palette.table} shadow-inner`}>
+      <div role="region" aria-label={`Tableau annuel ${group.title}`} tabIndex={0} className={`overflow-x-auto rounded-xl border-2 ${palette.border} ${palette.table} shadow-inner`}>
         <table
           className="w-full min-w-[840px] border-collapse text-left"
           aria-label={`Tableau de ${group.title}`}

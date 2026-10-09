@@ -52,7 +52,7 @@ const TONE_CLASSES: Record<NonNullable<SummaryCardProps['tone']>, string> = {
 
 function SummaryCard({ label, value, tone = 'neutral', action }: SummaryCardProps) {
   return (
-    <div className="rounded-xl border border-bordure bg-surface px-2 py-1.5 shadow-sm sm:rounded-2xl sm:px-3 sm:py-2">
+    <div className="rounded-xl border-2 border-bordure bg-surface px-2 py-1.5 shadow-sm sm:rounded-2xl sm:px-3 sm:py-2">
       <dt className="text-xs font-semibold uppercase leading-tight tracking-[0.08em] text-texte-doux sm:text-xs">{label}</dt>
       <dd className={`flex items-center justify-between gap-1 text-sm font-black sm:text-lg ${TONE_CLASSES[tone]}`}>
         {value}
@@ -128,7 +128,7 @@ export default function DepenseReellePage() {
     : [];
 
   const monthNav = (
-    <div className="flex items-center gap-1 rounded-xl border border-bordure bg-surface/70 p-1">
+    <div className="flex items-center gap-1 rounded-xl border-2 border-bordure bg-surface/70 p-1">
       <button
         type="button"
         onClick={() => goToMonth(-1)}
@@ -161,7 +161,7 @@ export default function DepenseReellePage() {
         )}
 
         {data?.error && (
-          <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+          <p role="alert" className="rounded-lg border-2 border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
             {data.error}
           </p>
         )}

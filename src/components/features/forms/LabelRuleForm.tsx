@@ -55,7 +55,7 @@ export default function LabelRuleForm({ transactionLabel, category, onSaved, onC
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 rounded-xl border border-dashed border-bordure-forte bg-surface/60 p-3 sm:flex-row sm:items-end"
+      className="flex flex-col gap-3 rounded-xl border-2 border-dashed border-bordure-forte bg-surface/60 p-3 sm:flex-row sm:items-end"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <label htmlFor={fieldId} className="text-sm font-bold text-texte">
@@ -94,7 +94,7 @@ export default function LabelRuleForm({ transactionLabel, category, onSaved, onC
         <button
           type="button"
           onClick={onCancel}
-          className="min-h-11 rounded-xl border border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte"
+          className="min-h-11 rounded-xl border-2 border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte"
         >
           Annuler
         </button>

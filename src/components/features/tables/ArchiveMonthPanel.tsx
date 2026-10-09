@@ -22,7 +22,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
 
   if (isArchivedList(transactions)) {
     return (
-      <p className="rounded-xl border border-bordure bg-ok-fond px-3 py-2 text-center text-sm font-semibold text-ok">
+      <p className="rounded-xl border-2 border-bordure bg-ok-fond px-3 py-2 text-center text-sm font-semibold text-ok">
         <span aria-hidden="true">🗄️ </span>
         Mois archivé : seuls les totaux par catégorie sont conservés. Ton budget et tes points restent intacts.
       </p>

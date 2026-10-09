@@ -204,7 +204,7 @@ export default function BudgetVsActualDonuts({
       </div>
 
       {loadError && (
-        <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+        <p role="alert" className="rounded-lg border-2 border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
           {loadError}
         </p>
       )}
@@ -216,7 +216,7 @@ export default function BudgetVsActualDonuts({
       )}
 
       {budgetEntries && slices.length === 0 && (
-        <p className="rounded-xl border border-dashed border-[#d8b6a5] bg-surface/40 p-5 text-center text-sm italic text-[#6b574c]">
+        <p className="rounded-xl border-2 border-dashed border-[#d8b6a5] bg-surface/40 p-5 text-center text-sm italic text-[#6b574c]">
           Aucun budget ni aucune dépense catégorisée pour {monthLabel.toLowerCase()} {year}.
         </p>
       )}
@@ -248,7 +248,7 @@ export default function BudgetVsActualDonuts({
                       />
                     ))}
                   </svg>
-                  <div className="absolute inset-[18%] flex flex-col items-center justify-center rounded-full border border-[#d8b6a5]/60 bg-[#fbf2e9] px-2 text-center shadow-inner">
+                  <div className="absolute inset-[18%] flex flex-col items-center justify-center rounded-full border-2 border-[#d8b6a5]/60 bg-[#fbf2e9] px-2 text-center shadow-inner">
                     <span className="text-xs font-bold uppercase text-[#6b574c]">Total</span>
                     <span data-total={donut.kind} className="text-xs font-black text-[#5d4d44] sm:text-sm">
                       {euroFormatter.format(donut.total)}
@@ -259,7 +259,7 @@ export default function BudgetVsActualDonuts({
             ))}
           </div>
 
-          <div className="max-h-64 overflow-auto rounded-xl border border-[#d8b6a5]/60 bg-surface/55 lg:max-h-72" role="region" aria-label="Détail par catégorie" tabIndex={0}>
+          <div className="max-h-64 overflow-auto rounded-xl border-2 border-[#d8b6a5]/60 bg-surface/55 lg:max-h-72" role="region" aria-label="Détail par catégorie" tabIndex={0}>
             <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
               <caption className="sr-only">
                 Budget estimé et dépenses réelles par catégorie pour {monthLabel} {year}

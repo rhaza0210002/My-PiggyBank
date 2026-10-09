@@ -79,7 +79,7 @@ export default function BudgetGroupTable({
         <p className="mb-2 px-2 text-center text-xs text-texte-doux">{getGroupHint(group.key)}</p>
       )}
 
-      <div role="region" aria-label={`Tableau ${group.title}`} tabIndex={0} className={`w-full overflow-x-auto rounded-xl border ${palette.border} ${palette.table} shadow-inner`}>
+      <div role="region" aria-label={`Tableau ${group.title}`} tabIndex={0} className={`w-full overflow-x-auto rounded-xl border-2 ${palette.border} ${palette.table} shadow-inner`}>
         <table
           className="w-full min-w-[320px] border-collapse text-left"
           aria-label={`Tableau de ${group.title}`}
@@ -117,7 +117,7 @@ export default function BudgetGroupTable({
                           onChange={(event) => setDraftAmount(event.target.value)}
                           onKeyDown={(event) => handleEditorKeyDown(event, row.category)}
                           aria-label={`Modifier le montant de ${row.category}`}
-                          className="w-28 rounded-md border border-bordure-forte bg-surface px-2 py-1 text-right text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
+                          className="w-28 rounded-md border-2 border-bordure-forte bg-surface px-2 py-1 text-right text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
                         />
                         <button
                           type="button"

@@ -93,7 +93,7 @@ export default function MonthBudgetPage() {
   const isPastMonth = currentMonthIndex < currentCalendarMonth;
 
   const monthControls = (
-    <div className="flex items-center gap-1 rounded-xl border border-bordure bg-surface/70 p-1">
+    <div className="flex items-center gap-1 rounded-xl border-2 border-bordure bg-surface/70 p-1">
       <button
         type="button"
         onClick={handlePrevMonth}
