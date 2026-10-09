@@ -56,25 +56,25 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
   return (
     <section
       aria-labelledby={`${formId}-title`}
-      className="rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4"
+      className="rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-3 shadow-bonbon sm:p-4"
     >
-      <h2 id={`${formId}-title`} className="px-2 text-[1.2rem] font-black text-[#5d4d44]">
+      <h2 id={`${formId}-title`} className="px-2 text-[1.2rem] font-black text-texte">
         Nouvelle catégorie
-        <span className="ml-2 rounded-full bg-[#5b473d] px-2 py-0.5 align-middle text-xs font-bold text-[#fff8f2]">
+        <span className="ml-2 rounded-full bg-texte px-2 py-0.5 align-middle text-xs font-bold text-surface">
           Administrateur
         </span>
       </h2>
 
       <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <label htmlFor={`${formId}-group`} className="text-sm font-bold text-[#5d4d44]">
+          <label htmlFor={`${formId}-group`} className="text-sm font-bold text-texte">
             Groupe
           </label>
           <select
             id={`${formId}-group`}
             value={selectedGroupId}
             onChange={(event) => setGroupId(event.target.value)}
-            className="min-h-11 rounded-xl border-2 border-[#9c7560] bg-white px-3 text-sm font-semibold text-[#54433d]"
+            className="min-h-11 rounded-xl border-2 border-bordure-forte bg-white px-3 text-sm font-semibold text-texte"
           >
             {groups.map((group) => (
               <option key={group.id} value={group.id}>
@@ -85,7 +85,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <label htmlFor={`${formId}-label`} className="text-sm font-bold text-[#5d4d44]">
+          <label htmlFor={`${formId}-label`} className="text-sm font-bold text-texte">
             Nom de la catégorie
           </label>
           <input
@@ -99,26 +99,26 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
             aria-invalid={error !== null}
             aria-describedby={error ? `${formId}-error` : undefined}
             placeholder="Ex : Transport"
-            className="min-h-11 rounded-xl border-2 border-[#9c7560] bg-white px-3 text-sm font-semibold text-[#54433d] placeholder:text-[#7d685c]"
+            className="min-h-11 rounded-xl border-2 border-bordure-forte bg-white px-3 text-sm font-semibold text-texte placeholder:text-texte-doux"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting || label.trim() === ''}
-          className="min-h-11 rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-5 text-sm font-bold text-[#3d2a21] shadow-[0_3px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
+          className="min-h-11 rounded-xl border-2 border-bordure bg-accent px-5 text-sm font-bold text-sur-accent shadow-bonbon transition-transform hover:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? 'Création…' : 'Créer la catégorie'}
         </button>
       </form>
 
       {error && (
-        <p id={`${formId}-error`} role="alert" className="mt-3 text-sm font-semibold text-[#8a4a1c]">
+        <p id={`${formId}-error`} role="alert" className="mt-3 text-sm font-semibold text-attention">
           {error}
         </p>
       )}
       {status && (
-        <p role="status" className="mt-3 text-sm font-semibold text-[#2f5d32]">
+        <p role="status" className="mt-3 text-sm font-semibold text-ok">
           {status}
         </p>
       )}

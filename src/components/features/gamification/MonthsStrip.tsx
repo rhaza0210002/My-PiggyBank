@@ -3,11 +3,11 @@ import type { CSSProperties } from 'react';
 import type { MonthProgress, MonthStatus } from '@/utils/gamification';
 
 const STATUS_STYLE: Record<MonthStatus, { icon: string; text: string; className: string }> = {
-  complete: { icon: '✓', text: 'Bouclé', className: 'border-[#6f9a6f] bg-[#eaf4e6] text-[#1f4d25]' },
-  'in-progress': { icon: '●', text: 'En cours', className: 'border-[#a3452a] bg-[#F8D5CB] text-[#7a2f1a]' },
-  'catch-up': { icon: '↺', text: 'À rattraper', className: 'border-[#d6a85c] bg-[#fff1da] text-[#6b4210]' },
-  empty: { icon: '–', text: 'Vide', className: 'border-[#d8b7a5] bg-[#fff8f2] text-[#6b574c]' },
-  future: { icon: '', text: 'À venir', className: 'border-dashed border-[#d8b7a5] bg-transparent text-[#7d685c]' },
+  complete: { icon: '✓', text: 'Bouclé', className: 'border-bordure bg-ok-fond text-ok' },
+  'in-progress': { icon: '●', text: 'En cours', className: 'border-accent-fort bg-accent-doux text-depasse' },
+  'catch-up': { icon: '↺', text: 'À rattraper', className: 'border-bordure bg-attention-fond text-attention' },
+  empty: { icon: '–', text: 'Vide', className: 'border-bordure bg-surface text-texte-doux' },
+  future: { icon: '', text: 'À venir', className: 'border-dashed border-bordure bg-transparent text-texte-doux' },
 };
 
 interface MonthsStripProps {

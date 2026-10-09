@@ -21,7 +21,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
 
   if (isArchivedList(transactions)) {
     return (
-      <p className="rounded-xl border border-[#a8d0b9] bg-[#eaf5ee] px-3 py-2 text-center text-sm font-semibold text-[#1f4d25]">
+      <p className="rounded-xl border border-bordure bg-ok-fond px-3 py-2 text-center text-sm font-semibold text-ok">
         <span aria-hidden="true">🗄️ </span>
         Mois archivé : seuls les totaux par catégorie sont conservés. Ton budget et tes points restent intacts.
       </p>
@@ -46,26 +46,26 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
   };
 
   return (
-    <section aria-label="Archiver le mois" className="rounded-2xl border-2 border-dashed border-[#d8b6a5] bg-white/50 p-3 text-center">
+    <section aria-label="Archiver le mois" className="rounded-2xl border-2 border-dashed border-bordure bg-white/50 p-3 text-center">
       {!isConfirming ? (
         <>
-          <p className="text-sm font-semibold text-[#5d4d44]">
+          <p className="text-sm font-semibold text-texte">
             Tout est pointé : tu peux ne garder que les totaux de {monthLabel.toLowerCase()} et effacer le détail de ton relevé.
           </p>
           <button
             type="button"
             onClick={() => setIsConfirming(true)}
-            className="mt-2 min-h-11 rounded-xl border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-bold text-[#5a473d] transition hover:bg-[#F8D5CB] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+            className="mt-2 min-h-11 rounded-xl border-2 border-bordure bg-surface px-4 text-sm font-bold text-texte transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             <span aria-hidden="true">🗄️ </span>Archiver {monthLabel.toLowerCase()}
           </button>
         </>
       ) : (
         <div role="alertdialog" aria-labelledby="archive-confirm-title" aria-describedby="archive-confirm-text">
-          <p id="archive-confirm-title" className="text-sm font-black text-[#5d4d44]">
+          <p id="archive-confirm-title" className="text-sm font-black text-texte">
             Effacer le détail de {monthLabel.toLowerCase()} {year} ?
           </p>
-          <p id="archive-confirm-text" className="mt-1 text-sm text-[#5d4d44]">
+          <p id="archive-confirm-text" className="mt-1 text-sm text-texte">
             Les {transactions.length} opérations bancaires de ce mois seront supprimées définitivement. Restent : le total réel par
             catégorie, ton budget et tes points. Si tu réimportes ce relevé, ce mois sera ignoré.
           </p>
@@ -74,7 +74,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
               type="button"
               onClick={confirm}
               disabled={isBusy}
-              className="min-h-11 rounded-xl border-2 border-[#a3452a] bg-[#e59a86] px-4 text-sm font-black text-[#3d2a21] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-60"
+              className="min-h-11 rounded-xl border-2 border-accent-fort bg-accent px-4 text-sm font-black text-sur-accent focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60"
             >
               {isBusy ? 'Archivage…' : 'Oui, effacer le détail'}
             </button>
@@ -82,7 +82,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
               type="button"
               onClick={() => setIsConfirming(false)}
               disabled={isBusy}
-              className="min-h-11 rounded-xl border-2 border-[#d8b7a5] bg-white px-4 text-sm font-bold text-[#5a473d] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+              className="min-h-11 rounded-xl border-2 border-bordure bg-white px-4 text-sm font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               Annuler
             </button>
@@ -90,7 +90,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
         </div>
       )}
       {error && (
-        <p role="alert" className="mt-2 text-sm font-semibold text-[#9c3633]">{error}</p>
+        <p role="alert" className="mt-2 text-sm font-semibold text-depasse">{error}</p>
       )}
     </section>
   );

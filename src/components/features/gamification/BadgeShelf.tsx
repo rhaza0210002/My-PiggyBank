@@ -23,8 +23,8 @@ export default function BadgeShelf({ badges }: { badges: Badge[] }) {
           title={`${badge.label} : ${badge.description}`}
           className={`rise flex min-h-10 flex-col items-center justify-center rounded-xl border-2 px-0.5 py-1 text-center md:min-h-14 md:px-1 ${
             badge.earned
-              ? 'border-[#d6a85c] bg-[#fff1da] text-[#5a3d10]'
-              : 'border-dashed border-[#d8b7a5] bg-transparent text-[#6b574c]'
+              ? 'border-bordure bg-attention-fond text-attention'
+              : 'border-dashed border-bordure bg-transparent text-texte-doux'
           }`}
         >
           <span className={`text-lg ${badge.earned ? '' : 'opacity-40 grayscale'}`} aria-hidden="true">

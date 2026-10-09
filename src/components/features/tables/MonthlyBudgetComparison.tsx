@@ -108,10 +108,10 @@ export default function MonthlyBudgetComparison({
   if (currentYear === null) {
     return (
       <section className="space-y-4" aria-labelledby="monthly-comparison-title">
-        <h3 id="monthly-comparison-title" className="text-lg font-black text-[#5d4d44]">
+        <h3 id="monthly-comparison-title" className="text-lg font-black text-texte">
           Comparaison budget / réel
         </h3>
-        <p className="py-6 text-center text-sm font-semibold text-[#6b574c]">Chargement...</p>
+        <p className="py-6 text-center text-sm font-semibold text-texte-doux">Chargement...</p>
       </section>
     );
   }
@@ -191,10 +191,10 @@ export default function MonthlyBudgetComparison({
     <section className="space-y-4" aria-labelledby="monthly-comparison-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 id="monthly-comparison-title" className="text-lg font-black text-[#5d4d44]">
+          <h3 id="monthly-comparison-title" className="text-lg font-black text-texte">
             Comparaison budget / réel
           </h3>
-          <p className="text-sm text-[#6b574c]">
+          <p className="text-sm text-texte-doux">
             {isMonthControlled
               ? 'Le réel reprend les transactions enregistrées pour ce mois.'
               : 'Le réel reprend le cumul par catégorie affiché dans la liste des transactions importées.'}
@@ -202,12 +202,12 @@ export default function MonthlyBudgetComparison({
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {!isMonthControlled && (
-          <label className="flex items-center gap-2 text-sm font-semibold text-[#5d4d44]">
+          <label className="flex items-center gap-2 text-sm font-semibold text-texte">
             Mois
             <select
               value={monthIndex}
               onChange={(event) => setInternalMonthIndex(Number(event.target.value))}
-              className="rounded-lg border border-[#d8b7a5] bg-white px-3 py-2"
+              className="rounded-lg border border-bordure bg-white px-3 py-2"
             >
               {MONTHS.map((month, index) => (
                 <option key={month.key} value={index}>{month.label}</option>
@@ -217,12 +217,12 @@ export default function MonthlyBudgetComparison({
           )}
         </div>
       </div>
-      <p className="text-xs text-[#6b574c]">
+      <p className="text-xs text-texte-doux">
         Budget {MONTHS[monthIndex].label} {currentYear} comparé au réel {isMonthControlled ? 'enregistré' : 'du fichier CSV importé'}.
       </p>
 
       {isLoading ? (
-        <p className="py-6 text-center text-sm font-semibold text-[#6b574c]">Chargement du budget…</p>
+        <p className="py-6 text-center text-sm font-semibold text-texte-doux">Chargement du budget…</p>
       ) : error ? (
         <p className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800" role="alert">
           {error}
@@ -244,32 +244,32 @@ export default function MonthlyBudgetComparison({
                 className={`overflow-hidden rounded-xl border ${palette.border} ${palette.section}`}
                 aria-label={`Comparaison pour ${group.title}`}
               >
-                <h4 className={`px-4 py-3 font-black text-[#5d4d44] ${palette.header}`}>
+                <h4 className={`px-4 py-3 font-black text-texte ${palette.header}`}>
                   {group.title}
                 </h4>
                 <div className="space-y-2 p-2 md:hidden">
                   {group.rows.length === 0 ? (
-                    <p className="rounded-lg bg-white/55 p-3 text-center text-sm italic text-[#6b574c]">
+                    <p className="rounded-lg bg-white/55 p-3 text-center text-sm italic text-texte-doux">
                       Aucune donnée pour {MONTHS[monthIndex].label}.
                     </p>
                   ) : group.rows.map((row) => {
                     const difference = getDifference(group.isIncome, row.budget, row.actual);
                     return (
                       <article key={row.categoryId} className={`min-w-0 rounded-lg border ${palette.border} ${palette.table} p-3`}>
-                        <h5 className="mb-2 break-words text-sm font-bold text-[#5d4d44]">
+                        <h5 className="mb-2 break-words text-sm font-bold text-texte">
                           {row.label}
                         </h5>
                         <dl className="grid grid-cols-3 gap-2">
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Budget</dt>
-                            <dd className="break-words text-sm font-bold text-[#5a473d]">{formatCurrency(row.budget)}</dd>
+                            <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Budget</dt>
+                            <dd className="break-words text-sm font-bold text-texte">{formatCurrency(row.budget)}</dd>
                           </div>
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Réel</dt>
-                            <dd className="break-words text-sm font-bold text-[#5a473d]">{formatCurrency(row.actual)}</dd>
+                            <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Réel</dt>
+                            <dd className="break-words text-sm font-bold text-texte">{formatCurrency(row.actual)}</dd>
                           </div>
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Écart</dt>
+                            <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Écart</dt>
                             <dd className={`break-words text-sm font-black ${difference < 0 ? 'text-red-700' : 'text-green-800'}`}>
                               {formatCurrency(difference)}
                             </dd>
@@ -279,20 +279,20 @@ export default function MonthlyBudgetComparison({
                     );
                   })}
                   <article className={`rounded-lg border ${palette.border} ${palette.header} p-3`}>
-                    <h5 className="mb-2 break-words text-sm font-black text-[#5d4d44]">
+                    <h5 className="mb-2 break-words text-sm font-black text-texte">
                       Sous-total {group.title}
                     </h5>
                     <dl className="grid grid-cols-3 gap-2">
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Budget</dt>
+                        <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Budget</dt>
                         <dd className="break-words text-sm font-black">{formatCurrency(groupBudget)}</dd>
                       </div>
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Réel</dt>
+                        <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Réel</dt>
                         <dd className="break-words text-sm font-black">{formatCurrency(groupActual)}</dd>
                       </div>
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Écart</dt>
+                        <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Écart</dt>
                         <dd className={`break-words text-sm font-black ${groupDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
                           {formatCurrency(groupDifference)}
                         </dd>
@@ -304,7 +304,7 @@ export default function MonthlyBudgetComparison({
                 <div className="hidden overflow-x-auto md:block">
                   <table className="w-full min-w-[620px] border-collapse text-left">
                     <thead>
-                      <tr className={`${palette.header} text-[#5a473d]`}>
+                      <tr className={`${palette.header} text-texte`}>
                         <th scope="col" className={TABLE_STYLES.thCategory}>Catégorie</th>
                         <th scope="col" className={TABLE_STYLES.thAmount}>Budget</th>
                         <th scope="col" className={TABLE_STYLES.thAmount}>Réel</th>
@@ -314,7 +314,7 @@ export default function MonthlyBudgetComparison({
                     <tbody>
                       {group.rows.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="py-5 text-center text-sm italic text-[#6b574c]">
+                          <td colSpan={4} className="py-5 text-center text-sm italic text-texte-doux">
                             Aucune donnée pour ce groupe en {MONTHS[monthIndex].label}.
                           </td>
                         </tr>
@@ -346,22 +346,22 @@ export default function MonthlyBudgetComparison({
             );
           })}
 
-          <div className={`rounded-xl border p-3 md:hidden ${shownDifference > 0 ? 'border-[#83b5a6] bg-[#d2e9df]' : shownDifference < 0 ? 'border-[#d8846d] bg-[#f8e5da]' : 'border-[#b88f78] bg-[#efe0d6]'}`}>
+          <div className={`rounded-xl border p-3 md:hidden ${shownDifference > 0 ? 'border-bordure bg-ok-fond' : shownDifference < 0 ? 'border-accent bg-surface-douce' : 'border-bordure-forte bg-surface-douce'}`}>
             <div className="mb-2 flex items-center justify-between gap-2">
-              <h4 className="text-sm font-black text-[#5d4d44]">Solde général (revenus − dépenses)</h4>
+              <h4 className="text-sm font-black text-texte">Solde général (revenus − dépenses)</h4>
               <BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} subject="le solde général" />
             </div>
             <dl className="grid grid-cols-3 gap-2">
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Budget</dt>
+                <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Budget</dt>
                 <dd className="break-words text-sm font-black">{revealAmount(balance.isShown, formatCurrency(totalBudget))}</dd>
               </div>
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Réel</dt>
+                <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Réel</dt>
                 <dd className="break-words text-sm font-black">{revealAmount(balance.isShown, formatCurrency(totalActual))}</dd>
               </div>
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-[#6b574c]">Écart</dt>
+                <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Écart</dt>
                 <dd className={`break-words text-sm font-black ${balance.isShown && totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
                   {revealAmount(balance.isShown, formatCurrency(totalDifference))}
                 </dd>
@@ -369,10 +369,10 @@ export default function MonthlyBudgetComparison({
             </dl>
           </div>
 
-          <div className={`hidden overflow-x-auto rounded-xl border md:block ${shownDifference > 0 ? 'border-[#83b5a6] bg-[#d2e9df]' : shownDifference < 0 ? 'border-[#d8846d] bg-[#f8e5da]' : 'border-[#b88f78] bg-[#efe0d6]'}`}>
+          <div className={`hidden overflow-x-auto rounded-xl border md:block ${shownDifference > 0 ? 'border-bordure bg-ok-fond' : shownDifference < 0 ? 'border-accent bg-surface-douce' : 'border-bordure-forte bg-surface-douce'}`}>
             <table className="w-full min-w-[620px] border-collapse text-left" aria-label="Solde général de la comparaison">
               <tbody>
-                <tr className={`font-black ${shownDifference > 0 ? 'bg-[#d2e9df]' : shownDifference < 0 ? 'bg-[#f8e5da]' : 'bg-[#efe0d6]'}`}>
+                <tr className={`font-black ${shownDifference > 0 ? 'bg-ok-fond' : shownDifference < 0 ? 'bg-surface-douce' : 'bg-surface-douce'}`}>
                   <td className={TABLE_STYLES.cellCategory}>
                     <span className="flex items-center gap-2">
                       <BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} subject="le solde général" />
@@ -392,7 +392,7 @@ export default function MonthlyBudgetComparison({
       )}
 
       {uncategorizedGroup && uncategorizedGroup.records.length > 0 && (
-        <p className="text-xs font-semibold text-[#8a4a1c]">
+        <p className="text-xs font-semibold text-attention">
           {uncategorizedGroup.records.length} opération{uncategorizedGroup.records.length > 1 ? 's' : ''} sans catégorie
           ({formatCurrency(uncategorizedGroup.totalAmount)}) ne figure{uncategorizedGroup.records.length > 1 ? 'nt' : ''} pas
           dans ce tableau : catégorise-les dans le rapprochement.
@@ -400,7 +400,7 @@ export default function MonthlyBudgetComparison({
       )}
 
       {categorizedTransactionCount === 0 && transactionCount > 0 && (
-        <p className="text-xs text-[#6b574c]">
+        <p className="text-xs text-texte-doux">
           Aucune transaction catégorisée dans le fichier importé.
         </p>
       )}

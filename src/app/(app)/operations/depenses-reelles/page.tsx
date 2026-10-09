@@ -44,16 +44,16 @@ interface SummaryCardProps {
 }
 
 const TONE_CLASSES: Record<NonNullable<SummaryCardProps['tone']>, string> = {
-  neutral: 'text-[#5d4d44]',
-  positive: 'text-[#3c763d]',
-  negative: 'text-[#9c3633]',
-  warning: 'text-[#8a4a1c]',
+  neutral: 'text-texte',
+  positive: 'text-ok',
+  negative: 'text-depasse',
+  warning: 'text-attention',
 };
 
 function SummaryCard({ label, value, tone = 'neutral', action }: SummaryCardProps) {
   return (
-    <div className="rounded-xl border border-[#d8b7a5] bg-[#fff8f2] px-2 py-1.5 shadow-sm sm:rounded-2xl sm:px-3 sm:py-2">
-      <dt className="text-[0.6rem] font-semibold uppercase leading-tight tracking-[0.08em] text-[#6b574c] sm:text-[0.7rem]">{label}</dt>
+    <div className="rounded-xl border border-bordure bg-surface px-2 py-1.5 shadow-sm sm:rounded-2xl sm:px-3 sm:py-2">
+      <dt className="text-[0.6rem] font-semibold uppercase leading-tight tracking-[0.08em] text-texte-doux sm:text-[0.7rem]">{label}</dt>
       <dd className={`flex items-center justify-between gap-1 text-sm font-black sm:text-lg ${TONE_CLASSES[tone]}`}>
         {value}
         {action}
@@ -128,23 +128,23 @@ export default function DepenseReellePage() {
     : [];
 
   const monthNav = (
-    <div className="flex items-center gap-1 rounded-xl border border-[#d8b7a5] bg-white/70 p-1">
+    <div className="flex items-center gap-1 rounded-xl border border-bordure bg-white/70 p-1">
       <button
         type="button"
         onClick={() => goToMonth(-1)}
         aria-label="Mois précédent"
-        className="flex h-11 w-11 items-center justify-center rounded-lg text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+        className="flex h-11 w-11 items-center justify-center rounded-lg text-texte transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
       >
         <ChevronLeft size={18} aria-hidden="true" />
       </button>
-      <span className="min-w-[7.5rem] text-center text-sm font-bold text-[#5d4d44]" aria-live="polite">
+      <span className="min-w-[7.5rem] text-center text-sm font-bold text-texte" aria-live="polite">
         {MONTHS[monthIndex].label} {year}
       </span>
       <button
         type="button"
         onClick={() => goToMonth(1)}
         aria-label="Mois suivant"
-        className="flex h-11 w-11 items-center justify-center rounded-lg text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+        className="flex h-11 w-11 items-center justify-center rounded-lg text-texte transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
       >
         <ChevronRight size={18} aria-hidden="true" />
       </button>
@@ -155,7 +155,7 @@ export default function DepenseReellePage() {
     <ScreenCard flow title="Bilan du mois" icon="📊" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
       <div className="flex flex-col gap-2 md:h-full md:min-h-0">
         {isLoading && (
-          <p className="py-8 text-center text-sm font-semibold text-[#6b574c]" role="status">
+          <p className="py-8 text-center text-sm font-semibold text-texte-doux" role="status">
             Chargement des dépenses de {MONTHS[monthIndex].label.toLowerCase()}…
           </p>
         )}
@@ -168,16 +168,16 @@ export default function DepenseReellePage() {
 
         {data && !data.error && totals && breakdown && (
           totals.count === 0 ? (
-            <div className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-6 text-center">
-              <p className="text-lg font-bold text-[#5a473d]">
+            <div className="rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-6 text-center">
+              <p className="text-lg font-bold text-texte">
                 Aucune transaction en {MONTHS[monthIndex].label.toLowerCase()} {year}.
               </p>
-              <p className="mt-1 text-sm text-[#6b574c]">
+              <p className="mt-1 text-sm text-texte-doux">
                 Commence par importer ton relevé CSV : c’est la première étape.
               </p>
               <Link
                 href={ROUTES.import}
-                className="mt-3 inline-flex min-h-12 items-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px]"
+                className="mt-3 inline-flex min-h-12 items-center rounded-carte border-[3px] border-bordure bg-accent px-5 py-2 font-bold text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px]"
               >
                 Aller à l&apos;import CSV
               </Link>
@@ -211,7 +211,7 @@ export default function DepenseReellePage() {
               {breakdown.uncategorized.length > 0 && (
                 <Link
                   href={ROUTES.reconciliation}
-                  className="flex min-h-11 shrink-0 items-center justify-between gap-2 rounded-2xl border-2 border-[#d6a85c] bg-[#fff1da] px-4 text-sm font-bold text-[#5a3d10] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+                  className="flex min-h-11 shrink-0 items-center justify-between gap-2 rounded-2xl border-2 border-bordure bg-attention-fond px-4 text-sm font-bold text-attention focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 >
                   <span>{breakdown.uncategorized.length} opération{breakdown.uncategorized.length > 1 ? 's' : ''} sans catégorie</span>
                   <span aria-hidden="true">Pointer →</span>
@@ -240,7 +240,7 @@ export default function DepenseReellePage() {
                     id: 'comparison',
                     label: 'Écarts par catégorie',
                     content: (
-                      <section className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3">
+                      <section className="rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-3">
                         <MonthlyBudgetComparison
                           key={year}
                           groups={comparisonGroups}
@@ -254,7 +254,7 @@ export default function DepenseReellePage() {
                     id: 'detail',
                     label: `Opérations (${totals.count})`,
                     content: (
-                      <section aria-label="Détail des opérations" className="space-y-3 rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3">
+                      <section aria-label="Détail des opérations" className="space-y-3 rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-3">
                         <StoredTransactionsBreakdown breakdown={breakdown} />
                       </section>
                     ),

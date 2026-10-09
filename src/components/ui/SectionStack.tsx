@@ -15,7 +15,7 @@ interface SectionStackProps {
   /** Nom de la barre de raccourcis, lu par les lecteurs d'écran. */
   label: string;
   /** Fond de la rangée de puces collante (doit être celui du conteneur pour ne pas former de bande). */
-  background?: string;
+  background?: 'surface' | 'surface-douce';
 }
 
 const prefersReducedMotion = () =>
@@ -72,7 +72,9 @@ function animateScroll(parent: HTMLElement, getTargetTop: () => number, onDone: 
  * (défilement doux), indique celui qu'on lit, et chaque bloc apparaît quand on y arrive : le contenu n'est
  * monté qu'à ce moment, ce qui relance aussi les animations des graphiques.
  */
-export default function SectionStack({ sections, label, background = '#f2e6d8' }: SectionStackProps) {
+const BACKGROUND_CLASSES = { surface: 'bg-surface', 'surface-douce': 'bg-surface-douce' } as const;
+
+export default function SectionStack({ sections, label, background = 'surface-douce' }: SectionStackProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
@@ -186,10 +188,9 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
           ref={navRef}
           aria-label={label}
           style={{
-            backgroundColor: background,
             ...(fadeRight ? { maskImage: 'linear-gradient(to right, black calc(100% - 32px), transparent)' } : {}),
           }}
-          className="sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible md:py-2"
+          className={`${BACKGROUND_CLASSES[background]} sticky top-0 z-10 flex shrink-0 flex-nowrap justify-start gap-1.5 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible md:py-2`}
         >
           {sections.map((section) => (
             <button
@@ -200,7 +201,7 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
               type="button"
               onClick={() => goTo(section.id)}
               aria-current={activeId === section.id ? 'true' : undefined}
-              className="min-h-11 shrink-0 rounded-full border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-semibold text-[#5a4d41] transition hover:-translate-y-0.5 hover:bg-[#F8D5CB] motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[current=true]:border-[#a3452a] aria-[current=true]:bg-[#F8D5CB] aria-[current=true]:font-bold aria-[current=true]:text-[#7a2f1a]"
+              className="min-h-11 shrink-0 rounded-full border-2 border-bordure bg-surface px-4 text-sm font-semibold text-texte transition hover:-translate-y-0.5 hover:bg-accent-doux motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[current=true]:border-accent-fort aria-[current=true]:bg-accent-doux aria-[current=true]:font-bold aria-[current=true]:text-accent-fort"
             >
               {section.label}
             </button>
@@ -223,7 +224,7 @@ export default function SectionStack({ sections, label, background = '#f2e6d8' }
             >
               <h2
                 id={`section-${section.id}-title`}
-                className={section.hideTitle ? 'sr-only' : 'mb-1 px-1 text-center text-base font-black text-[#5d4d44]'}
+                className={section.hideTitle ? 'sr-only' : 'mb-1 px-1 text-center text-base font-black text-texte'}
               >
                 {section.label}
               </h2>

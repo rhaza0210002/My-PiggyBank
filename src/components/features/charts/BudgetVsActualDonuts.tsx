@@ -195,7 +195,7 @@ export default function BudgetVsActualDonuts({
     <section
       ref={sectionRef}
       aria-labelledby={titleId}
-      className="overflow-hidden rounded-[1.5rem] border-[3px] border-[#d8b6a5] bg-gradient-to-br from-[#fbf2e9] to-[#f2e3d7] p-3 shadow-[0_3px_0_rgba(140,103,86,0.1)] sm:p-4"
+      className="overflow-hidden rounded-carte border-[3px] border-[#d8b6a5] bg-gradient-to-br from-[#fbf2e9] to-[#f2e3d7] p-3 shadow-bonbon sm:p-4"
     >
       <div className="mb-2 text-center">
         <h2 id={titleId} className="text-base font-black text-[#5d4d44] sm:text-lg">

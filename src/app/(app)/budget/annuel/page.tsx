@@ -55,8 +55,8 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
   const palette = getBudgetGroupPalette(group.key, group.title);
 
   return (
-    <div className={`rounded-[2rem] border-[3px] border-dashed ${palette.border} ${palette.section} p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)]`}>
-      <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+    <div className={`rounded-carte border-[3px] border-dashed ${palette.border} ${palette.section} p-3 shadow-bonbon`}>
+      <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-texte">
         {group.title}
       </h2>
 
@@ -66,7 +66,7 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
           aria-label={`Tableau de ${group.title}`}
         >
           <thead>
-            <tr className={`${palette.header} text-[#5a473d]`}>
+            <tr className={`${palette.header} text-texte`}>
               <th scope="col" className={TABLE_STYLES.thCategory}>Catégorie</th>
               {MONTHS.map((month) => (
                 <th key={month.key} scope="col" className={TABLE_STYLES.thAmount}>
@@ -78,7 +78,7 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
           <tbody>
             {group.rows.length === 0 ? (
               <tr>
-                <td colSpan={MONTHS.length + 1} className="py-6 text-center text-[1.1rem] italic text-[#6b574c]">
+                <td colSpan={MONTHS.length + 1} className="py-6 text-center text-[1.1rem] italic text-texte-doux">
                   Aucune donnée enregistrée pour le moment.
                 </td>
               </tr>

@@ -19,12 +19,12 @@ interface CsvTransactionsTableProps {
 }
 
 const categoryBackgrounds = [
-  'bg-[#e8d5cc]/80',
-  'bg-[#d5e2e8]/80',
-  'bg-[#d5e8d6]/80',
-  'bg-[#e8d5d5]/80',
-  'bg-[#e8e5d5]/80',
-  'bg-[#d5e8e5]/80',
+  'bg-surface-douce/80',
+  'bg-surface-douce/80',
+  'bg-ok-fond/80',
+  'bg-depasse-fond/80',
+  'bg-attention-fond/80',
+  'bg-ok-fond/80',
 ];
 
 function getCategoryBackground(categoryLabel: string): string {
@@ -50,38 +50,38 @@ function CategoryRows({
 
   return (
     <>
-      <tr className={`border-b border-[#d8b7a5]/30 transition-colors ${highlightClass}`}>
+      <tr className={`border-b border-bordure/30 transition-colors ${highlightClass}`}>
         <td className={TABLE_STYLES.cellCategory}>
           <button
             type="button"
             onClick={onToggle}
             aria-expanded={isExpanded}
-            className="flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-1 text-left text-xs font-bold text-[#5d4d44] transition hover:bg-white/40"
+            className="flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-1 text-left text-xs font-bold text-texte transition hover:bg-white/40"
           >
             {group.categoryId ? (
-              <span className="rounded-full border border-[#d8b7a5] bg-white/75 px-2.5 py-1 shadow-sm">
+              <span className="rounded-full border border-bordure bg-white/75 px-2.5 py-1 shadow-sm">
                 {group.categoryLabel}
               </span>
             ) : (
-              <span className="italic text-[#6b574c]">Non catégorisé</span>
+              <span className="italic text-texte-doux">Non catégorisé</span>
             )}
-            <span className="text-[11px] font-black text-[#6a534c]">
+            <span className="text-[11px] font-black text-texte-doux">
               {isExpanded ? '▾' : '▸'}
             </span>
           </button>
         </td>
         <td className={TABLE_STYLES.cellCategory}>{group.records.length}</td>
-        <td className={`${TABLE_STYLES.cellAmount} ${group.totalAmount < 0 ? 'text-[#9c3633]' : 'text-[#3c763d]'}`}>
+        <td className={`${TABLE_STYLES.cellAmount} ${group.totalAmount < 0 ? 'text-depasse' : 'text-ok'}`}>
           {group.totalAmount.toFixed(2)} €
         </td>
       </tr>
       {isExpanded && (
         <tr>
-          <td colSpan={3} className="bg-[#f9f1ea] p-3">
-            <div className="overflow-hidden rounded-xl border border-[#d8b7a5]/60 bg-white/40">
+          <td colSpan={3} className="bg-surface p-3">
+            <div className="overflow-hidden rounded-xl border border-bordure/60 bg-white/40">
               <table className="w-full min-w-0 border-collapse text-left text-[11px] sm:text-sm">
                 <thead>
-                  <tr className="bg-[#efe0d6] text-[#5d4d44]">
+                  <tr className="bg-surface-douce text-texte">
                     <th className="px-2 py-2 font-bold sm:px-3">Date</th>
                     <th className="px-2 py-2 font-bold sm:px-3">Libellé</th>
                     <th className="px-2 py-2 text-right font-bold sm:px-3">Montant</th>
@@ -89,12 +89,12 @@ function CategoryRows({
                 </thead>
                 <tbody>
                   {group.records.map((transaction) => (
-                    <tr key={transaction.id} className="border-t border-[#d8b7a5]/40 align-top">
-                      <td className="px-2 py-2 text-[#5d4d44] sm:px-3">{transaction.date}</td>
-                      <td className="max-w-[160px] break-words px-2 py-2 text-[#5d4d44] sm:px-3">
+                    <tr key={transaction.id} className="border-t border-bordure/40 align-top">
+                      <td className="px-2 py-2 text-texte sm:px-3">{transaction.date}</td>
+                      <td className="max-w-[160px] break-words px-2 py-2 text-texte sm:px-3">
                         {transaction.label || transaction.detail}
                       </td>
-                      <td className={`px-2 py-2 text-right font-semibold sm:px-3 ${transaction.amount < 0 ? 'text-[#9c3633]' : 'text-[#3c763d]'}`}>
+                      <td className={`px-2 py-2 text-right font-semibold sm:px-3 ${transaction.amount < 0 ? 'text-depasse' : 'text-ok'}`}>
                         {transaction.amount.toFixed(2)} €
                       </td>
                     </tr>
@@ -199,10 +199,10 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
   if (transactions.length === 0) return null;
 
   return (
-    <section className="space-y-4 rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4">
+    <section className="space-y-4 rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-3 shadow-bonbon sm:p-4">
       <SectionStack
         label="Parties de l'import"
-        background="#f5eadf"
+        background="surface-douce"
         sections={[
           {
             id: 'transactions',
@@ -210,18 +210,18 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
             hideTitle: true,
             content: (
               <div className="space-y-4">
-          <p className="px-2 text-sm font-semibold text-[#6b574c]" role="status">
+          <p className="px-2 text-sm font-semibold text-texte-doux" role="status">
             {categorizedCount} catégorisée{categorizedCount !== 1 ? 's' : ''} sur {transactions.length}
           </p>
           {categorizedCount === 0 && unmatchedExamples.length > 0 && (
-            <p className="rounded-lg border border-[#d8b6a5] bg-white/50 p-3 text-sm text-[#76513f]" role="alert">
+            <p className="rounded-lg border border-bordure bg-white/50 p-3 text-sm text-texte-doux" role="alert">
               Aucun détail ne correspond aux labels de <code>libelle_transacts</code>. Exemples lus : {unmatchedExamples.join(' | ')}
             </p>
           )}
-          <div role="region" aria-label="Transactions importées" tabIndex={0} className="max-w-full overflow-x-auto rounded-xl border border-[#d8b7a5]/50 shadow-inner">
+          <div role="region" aria-label="Transactions importées" tabIndex={0} className="max-w-full overflow-x-auto rounded-xl border border-bordure/50 shadow-inner">
             <table className="w-full min-w-0 border-collapse text-left" aria-label="Synthèse par catégorie des transactions importées du CSV">
               <thead>
-                <tr className="bg-[#f0d8c8] text-[#5a473d]">
+                <tr className="bg-surface-douce text-texte">
                   <th scope="col" className={TABLE_STYLES.thCategory}>Groupe / Catégorie</th>
                   <th scope="col" className={TABLE_STYLES.thCategory}>Nb items</th>
                   <th scope="col" className={TABLE_STYLES.thAmount}>Montant</th>
@@ -240,7 +240,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
             </table>
           </div>
           {isDemo && (
-            <p className="rounded-lg border border-[#d8b6a5] bg-white/60 p-3 text-sm font-semibold text-[#76513f]" role="status">
+            <p className="rounded-lg border border-bordure bg-white/60 p-3 text-sm font-semibold text-texte-doux" role="status">
               🧪 Exemple : rien n’est enregistré. Importe ton vrai relevé pour retrouver tes opérations.
             </p>
           )}
@@ -249,7 +249,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
               type="button"
               onClick={handleSaveTransactions}
               disabled={isSavingTransactions || isDemo}
-              className="rounded-[1.5rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-3 font-black text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#5b473d] disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-carte border-[3px] border-bordure bg-accent px-6 py-3 font-black text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-focus disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingTransactions ? 'Enregistrement...' : `Enregistrer les ${transactions.length} transactions`}
             </button>
@@ -257,7 +257,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
               type="button"
               onClick={handleSaveLabels}
               disabled={isSavingLabels || isDemo || importedLabels.length === 0}
-              className="rounded-[1.5rem] border-[3px] border-[#82b89f] bg-[#8cd3b3] px-6 py-3 font-black text-[#2e4d3d] shadow-[0_4px_0_rgba(92,143,115,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#2e4d3d] disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-carte border-[3px] border-bordure bg-ok-fond px-6 py-3 font-black text-ok shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-ok disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingLabels ? 'Enregistrement...' : 'Enregistrer les libellés reconnus'}
             </button>
@@ -283,7 +283,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
             </p>
           )}
           {importedLabels.length === 0 && (
-            <p className="text-sm italic text-[#6b574c]">
+            <p className="text-sm italic text-texte-doux">
               Aucun libellé reconnu à enregistrer dans la table de correspondance.
             </p>
           )}

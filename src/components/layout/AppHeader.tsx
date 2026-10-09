@@ -43,15 +43,15 @@ export default function AppHeader() {
   }, [userId]);
 
   return (
-    <header className="sticky top-0 z-40 mx-2 mt-2 rounded-xl border-b border-[#E5C4B4] bg-[#FFF5EE] p-1.5 shadow-xs sm:mx-auto sm:w-[90%]">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 rounded-xl border-[0.12rem] border-dashed border-[#E5C4B4] px-2">
+    <header className="sticky top-0 z-40 mx-2 mt-2 rounded-xl border-b border-bordure bg-surface p-1.5 shadow-xs sm:mx-auto sm:w-[90%]">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 rounded-xl border-[0.12rem] border-dashed border-bordure px-2">
         <Link
           href={ROUTES.dashboard}
           aria-label="My PiggyBank, retour à l'accueil"
-          className="flex min-h-12 shrink-0 items-center gap-2 rounded-xl p-1 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+          className="flex min-h-12 shrink-0 items-center gap-2 rounded-xl p-1 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           <span className="text-2xl" aria-hidden="true">🐷</span>
-          <span className="whitespace-nowrap text-lg font-bold tracking-tight text-[#5A4D41] sm:text-xl">My PiggyBank</span>
+          <span className="whitespace-nowrap text-lg font-bold tracking-tight text-texte sm:text-xl">My PiggyBank</span>
         </Link>
 
         <nav aria-label="Navigation principale" className="hidden md:block">
@@ -61,7 +61,7 @@ export default function AppHeader() {
                 <Link
                   href={section.href}
                   aria-current={activeSection?.id === section.id ? 'page' : undefined}
-                  className={`${NAV_LINK_BASE} min-h-12 px-2! text-sm font-semibold lg:px-3! focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]`}
+                  className={`${NAV_LINK_BASE} min-h-12 px-2! text-sm font-semibold lg:px-3! focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus`}
                 >
                   <span aria-hidden="true">{section.icon}</span>
                   {section.label}
@@ -73,8 +73,8 @@ export default function AppHeader() {
 
         <div className="flex shrink-0 items-center gap-2">
           {pseudo && (
-            <span className="hidden max-w-[16rem] truncate text-sm font-medium text-[#6b574c] xl:inline">
-              Bonjour, <strong className="text-[#5A4D41]">{pseudo}</strong>
+            <span className="hidden max-w-[16rem] truncate text-sm font-medium text-texte-doux xl:inline">
+              Bonjour, <strong className="text-texte">{pseudo}</strong>
             </span>
           )}
           {userId && <LogoutButton variant="compact" />}

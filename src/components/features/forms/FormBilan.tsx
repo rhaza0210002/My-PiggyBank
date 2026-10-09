@@ -69,11 +69,11 @@ export default function FormBilan({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-wrap items-end gap-4 rounded-[1.5rem] border-[2px] border-[#d7b59d] bg-[#f5eadf] p-4 shadow-sm"
+      className="flex flex-wrap items-end gap-4 rounded-carte border-[2px] border-bordure bg-surface-douce p-4 shadow-sm"
       aria-label="Formulaire d'ajout de transaction"
     >
       <div className="flex flex-1 min-w-[150px] flex-col gap-1">
-        <label htmlFor="group-select" className="text-sm font-bold text-[#5d4d44]">
+        <label htmlFor="group-select" className="text-sm font-bold text-texte">
           Groupe
         </label>
         <select
@@ -82,7 +82,7 @@ export default function FormBilan({
           onChange={(e) => setGroupKey(e.target.value)}
           disabled={readOnly || groups.length === 0}
           aria-label="Sélectionner un groupe"
-          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
+          className="rounded-xl border border-bordure bg-white p-2.5 text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
         >
           {groups.map((g) => (
             <option key={g.key} value={g.key}>
@@ -93,7 +93,7 @@ export default function FormBilan({
       </div>
 
       <div className="flex flex-1 min-w-[180px] flex-col gap-1">
-        <label htmlFor="category-input" className="text-sm font-bold text-[#5d4d44]">
+        <label htmlFor="category-input" className="text-sm font-bold text-texte">
           Catégorie
         </label>
         <input
@@ -107,7 +107,7 @@ export default function FormBilan({
           disabled={readOnly}
           aria-required="true"
           aria-invalid={submitError !== null}
-          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
+          className="rounded-xl border border-bordure bg-white p-2.5 text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
         />
         <datalist id="category-suggestions">
           {categorySuggestions.map((suggestion) => (
@@ -117,7 +117,7 @@ export default function FormBilan({
       </div>
 
       <div className="flex flex-1 min-w-[120px] flex-col gap-1">
-        <label htmlFor="amount-input" className="text-sm font-bold text-[#5d4d44]">
+        <label htmlFor="amount-input" className="text-sm font-bold text-texte">
           Montant (€)
         </label>
         <input
@@ -129,14 +129,14 @@ export default function FormBilan({
           placeholder="0.00"
           disabled={readOnly}
           aria-label="Montant en euros"
-          className="rounded-xl border border-[#d8b7a5] bg-white p-2.5 text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
+          className="rounded-xl border border-bordure bg-white p-2.5 text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
         />
       </div>
 
       <button
         type="submit"
         disabled={readOnly || groups.length === 0 || isSubmitting}
-        className="rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-5 py-2.5 text-sm font-bold text-[#3d2a21] shadow-[0_3px_0_rgba(171,98,77,0.85)] transition-transform active:translate-y-[2px] active:shadow-none"
+        className="rounded-xl border-2 border-bordure bg-accent px-5 py-2.5 text-sm font-bold text-sur-accent shadow-bonbon transition-transform active:translate-y-[2px] active:shadow-none"
       >
         {isSubmitting ? 'Ajout en cours...' : 'Ajouter la ligne'}
       </button>

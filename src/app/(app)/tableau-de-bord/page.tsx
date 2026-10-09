@@ -19,9 +19,9 @@ import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { getStartSteps } from '@/utils/startSteps';
 import { pickTip } from '@/utils/tips';
 
-const PANEL = 'items-center text-center rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-3 shadow-sm sm:p-4';
+const PANEL = 'items-center text-center rounded-3xl border border-bordure bg-surface p-3 shadow-sm sm:p-4';
 const PRIMARY_LINK =
-  'inline-flex min-h-12 items-center justify-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 text-center font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] motion-reduce:transition-none';
+  'inline-flex min-h-12 items-center justify-center rounded-carte border-[3px] border-bordure bg-accent px-5 py-2 text-center font-bold text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus motion-reduce:transition-none';
 
 export default function DashboardPage() {
   const balance = useBalanceVisibility();
@@ -83,11 +83,11 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col gap-2 overflow-y-auto px-3 py-2 sm:px-5">
       <div className="flex shrink-0 flex-col items-center gap-0.5 px-1 text-center">
-        <h1 className="flex items-center gap-2 text-[clamp(1.35rem,2.2vw,1.9rem)] font-black tracking-[-0.04em] text-[#5d4d44]">
+        <h1 className="flex items-center gap-2 text-[clamp(1.35rem,2.2vw,1.9rem)] font-black tracking-[-0.04em] text-texte">
           <span aria-hidden="true" className="inline-block motion-safe:animate-[wiggle_2.4s_ease-in-out_infinite]">🐷</span>
           Salut{pseudo ? ` ${pseudo}` : ''} !
         </h1>
-        <p className="text-sm text-[#6b574c]">Un petit pas à la fois : chaque pointage compte, rien ne se perd.</p>
+        <p className="text-sm text-texte-doux">Un petit pas à la fois : chaque pointage compte, rien ne se perd.</p>
       </div>
 
       {progressError && (
@@ -105,20 +105,20 @@ export default function DashboardPage() {
       <div className="grid shrink-0 gap-2 md:grid-cols-12">
         {/* Action du moment : toujours en premier, une seule chose à faire. */}
         <section aria-labelledby="month-title" style={{ '--i': 0 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-5`}>
-          <h2 id="month-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+          <h2 id="month-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
             {monthName}
           </h2>
 
           {!month ? (
-            <p role="status" className="text-sm font-semibold text-[#6b574c]">Chargement…</p>
+            <p role="status" className="text-sm font-semibold text-texte-doux">Chargement…</p>
           ) : month.total === 0 ? (
             <>
-              <p className="text-lg font-bold text-[#5a4d41]">Pas encore d’opérations ce mois-ci.</p>
+              <p className="text-lg font-bold text-texte">Pas encore d’opérations ce mois-ci.</p>
               <Link href={ROUTES.import} className={PRIMARY_LINK}>Importer mon relevé</Link>
             </>
           ) : pending === 0 ? (
             <>
-              <p className="text-lg font-bold text-[#1f4d25]">
+              <p className="text-lg font-bold text-ok">
                 <span aria-hidden="true">🎉 </span>Mois bouclé, bravo !
               </p>
               <ProgressBar value={month.done} max={month.total} label={`Opérations de ${monthName} pointées`} valueText={`${month.done} sur ${month.total}`} />
@@ -126,7 +126,7 @@ export default function DashboardPage() {
             </>
           ) : (
             <>
-              <p className="text-lg font-bold text-[#5a4d41]">
+              <p className="text-lg font-bold text-texte">
                 {pending} opération{pending > 1 ? 's' : ''} à pointer
               </p>
               <ProgressBar
@@ -135,16 +135,16 @@ export default function DashboardPage() {
                 label={`Opérations de ${monthName} pointées`}
                 valueText={`${month.done} sur ${month.total} opérations pointées`}
               />
-              <p className="text-xs text-[#6b574c]">{month.done} sur {month.total} déjà pointées</p>
+              <p className="text-xs text-texte-doux">{month.done} sur {month.total} déjà pointées</p>
               <Link href={ROUTES.reconciliation} className={PRIMARY_LINK}>Commencer à pointer</Link>
             </>
           )}
 
-          <p className="mt-auto flex flex-wrap items-center gap-x-2 text-sm text-[#6b574c]">
+          <p className="mt-auto flex flex-wrap items-center gap-x-2 text-sm text-texte-doux">
             <BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} />
             <span>
               Solde du mois :{' '}
-              <strong className={balance.isShown && hasBalance && monthTotals.net < 0 ? 'text-[#9c3633]' : 'text-[#2f5d32]'}>
+              <strong className={balance.isShown && hasBalance && monthTotals.net < 0 ? 'text-depasse' : 'text-ok'}>
                 {revealAmount(balance.isShown, hasBalance ? signedEuroFormatter.format(monthTotals.net) : '—')}
               </strong>
               {balance.isShown && hasBalance && (
@@ -155,12 +155,12 @@ export default function DashboardPage() {
         </section>
 
         <section aria-labelledby="level-title" style={{ '--i': 1 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-4`}>
-          <h2 id="level-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+          <h2 id="level-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
             Ma progression
           </h2>
           {level && progress ? (
             <>
-              <p className="text-lg font-bold text-[#5a4d41]">
+              <p className="text-lg font-bold text-texte">
                 Niveau {level.level} · {level.title}
               </p>
               <ProgressBar
@@ -169,10 +169,10 @@ export default function DashboardPage() {
                 label="Progression vers le niveau suivant"
                 valueText={`${level.xpIntoLevel} points sur ${level.xpForNext}`}
               />
-              <p className="text-xs text-[#6b574c]">
+              <p className="text-xs text-texte-doux">
                 {level.xp} points au total · encore {level.xpForNext - level.xpIntoLevel} pour le niveau {level.level + 1}
               </p>
-              <p className="text-xs font-semibold text-[#6b574c]">
+              <p className="text-xs font-semibold text-texte-doux">
                 <span aria-hidden="true">📅 </span>
                 {progress.activeDaysLast7 > 0
                   ? `${progress.activeDaysLast7} jour${progress.activeDaysLast7 > 1 ? 's' : ''} actif${progress.activeDaysLast7 > 1 ? 's' : ''} ces 7 derniers jours`
@@ -181,20 +181,20 @@ export default function DashboardPage() {
               <BadgeShelf badges={progress.badges} />
             </>
           ) : (
-            <p role="status" className="text-sm font-semibold text-[#6b574c]">Chargement…</p>
+            <p role="status" className="text-sm font-semibold text-texte-doux">Chargement…</p>
           )}
         </section>
 
         <section aria-labelledby="tip-title" style={{ '--i': 2 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-3`}>
-          <h2 id="tip-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+          <h2 id="tip-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
             Astuce du jour
           </h2>
-          <p className="font-bold text-[#5a4d41]">{tip.title}</p>
-          <p className="text-sm text-[#5a4d41]">{tip.text}</p>
+          <p className="font-bold text-texte">{tip.title}</p>
+          <p className="text-sm text-texte">{tip.text}</p>
           <button
             type="button"
             onClick={() => setTipOffset((offset) => offset + 1)}
-            className="mt-auto min-h-11 self-center rounded-xl border border-[#b88f78] bg-white/70 px-3 text-sm font-bold text-[#5d4d44] hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+            className="mt-auto min-h-11 self-center rounded-xl border border-bordure-forte bg-white/70 px-3 text-sm font-bold text-texte hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Une autre astuce
           </button>
@@ -203,16 +203,16 @@ export default function DashboardPage() {
 
       <section aria-labelledby="months-title" style={{ '--i': 3 } as CSSProperties} className={`${PANEL} rise shrink-0`}>
         <div className="mb-2 flex flex-col items-center gap-0.5 text-center">
-          <h2 id="months-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+          <h2 id="months-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
             Mon année {today.getFullYear()}
           </h2>
           {progress && (
-            <p className="text-xs text-[#6b574c]">
+            <p className="text-xs text-texte-doux">
               {progress.completedMonths} mois bouclé{progress.completedMonths > 1 ? 's' : ''} · un mois manqué se rattrape à tout moment
             </p>
           )}
         </div>
-        {progress ? <MonthsStrip months={progress.months} /> : <p role="status" className="text-sm text-[#6b574c]">Chargement…</p>}
+        {progress ? <MonthsStrip months={progress.months} /> : <p role="status" className="text-sm text-texte-doux">Chargement…</p>}
       </section>
     </div>
   );

@@ -14,9 +14,9 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
   return (
     <section
       aria-labelledby="start-title"
-      className="shrink-0 rounded-3xl border-[3px] border-dashed border-[#e4a58f] bg-[#fff1ea] p-3 text-center shadow-sm sm:p-4"
+      className="shrink-0 rounded-3xl border-[3px] border-dashed border-bordure bg-surface p-3 text-center shadow-sm sm:p-4"
     >
-      <h2 id="start-title" className="text-sm font-bold uppercase tracking-[0.15em] text-[#a3452a]">
+      <h2 id="start-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
         Pour commencer · {doneCount} sur {steps.length}
       </h2>
       <ol className="mt-2 grid gap-2 md:grid-cols-3">
@@ -28,29 +28,29 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
               aria-current={isNext ? 'step' : undefined}
               className={`flex flex-col items-center gap-1 rounded-2xl border-2 p-3 ${
                 step.done
-                  ? 'border-[#a8d0b9] bg-[#eaf5ee]'
+                  ? 'border-bordure bg-ok-fond'
                   : isNext
-                    ? 'border-[#a3452a] bg-white'
-                    : 'border-[#e5c4b4] bg-white/60'
+                    ? 'border-accent-fort bg-white'
+                    : 'border-bordure bg-white/60'
               }`}
             >
               <span
                 aria-hidden="true"
                 className={`flex size-8 items-center justify-center rounded-full text-sm font-black ${
-                  step.done ? 'bg-[#3f7f66] text-white' : 'bg-[#a3452a] text-white'
+                  step.done ? 'bg-ok text-white' : 'bg-accent-fort text-white'
                 }`}
               >
                 {step.done ? '✓' : index + 1}
               </span>
-              <p className="font-bold text-[#5a4d41]">
+              <p className="font-bold text-texte">
                 {step.title}
                 {step.done && <span className="sr-only"> : fait</span>}
               </p>
-              {!step.done && <p className="text-xs text-[#6b574c]">{step.hint}</p>}
+              {!step.done && <p className="text-xs text-texte-doux">{step.hint}</p>}
               {isNext && (
                 <Link
                   href={step.href}
-                  className="mt-1 inline-flex min-h-11 items-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 font-black text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+                  className="mt-1 inline-flex min-h-11 items-center rounded-carte border-[3px] border-bordure bg-accent px-5 font-black text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 >
                   C’est parti
                 </Link>

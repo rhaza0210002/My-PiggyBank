@@ -6,7 +6,7 @@ import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
 
 export const metadata: Metadata = { title: 'Politique de confidentialité' };
 
-const CELL = 'border border-[#d8b7a5] px-2 py-1.5 align-top text-left text-sm';
+const CELL = 'border border-bordure px-2 py-1.5 align-top text-left text-sm';
 
 export default function ConfidentialitePage() {
   return (
@@ -28,7 +28,7 @@ export default function ConfidentialitePage() {
       <div className="mt-2 overflow-x-auto" role="region" aria-label="Tableau des données traitées" tabIndex={0}>
         <table className="w-full min-w-[34rem] border-collapse">
           <caption className="sr-only">Données traitées, finalités et bases légales</caption>
-          <thead className="bg-[#f0d8c8]">
+          <thead className="bg-surface-douce">
             <tr>
               <th scope="col" className={CELL}>Données</th>
               <th scope="col" className={CELL}>Finalité</th>

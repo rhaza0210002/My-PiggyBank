@@ -1,5 +1,6 @@
 "use client";
 
+import GoogleLogo from '@/components/features/forms/GoogleLogo';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
@@ -23,9 +24,9 @@ interface AuthFormProps {
 
 const MIN_PASSWORD_LENGTH = 8;
 const INPUT_CLASS =
-  'w-full min-h-12 rounded-[1.2rem] border-[2px] border-[#9c7560] bg-[#fcf9f6] px-4 py-3 text-[#5d4d44] placeholder-[#7d685c] shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[invalid=true]:border-red-700';
-const LABEL_CLASS = 'block px-1 text-sm font-bold text-[#5d4d44]';
-const HINT_CLASS = 'px-1 text-xs text-[#6b574c]';
+  'w-full min-h-12 rounded-carte border-[2px] border-bordure-forte bg-surface px-4 py-3 text-texte placeholder-texte-doux shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[invalid=true]:border-red-700';
+const LABEL_CLASS = 'block px-1 text-sm font-bold text-texte';
+const HINT_CLASS = 'px-1 text-xs text-texte-doux';
 
 export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, serverError = null }: AuthFormProps) {
   const [email, setEmail] = useState('');
@@ -101,17 +102,17 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
   const passwordType = showPassword ? 'text' : 'password';
 
   return (
-    <div className="relative w-full max-w-[440px] rounded-[2.2rem] bg-[#fff8f5] p-2 shadow-[0_10px_30px_rgba(140,103,86,0.12)] sm:p-5">
-      <div className="space-y-6 rounded-[2.2rem] border-[3px] border-dashed border-[#d8b6a5] p-5 shadow-[0_10px_30px_rgba(140,103,86,0.12)] sm:p-6">
+    <div className="relative w-full max-w-[440px] rounded-carte bg-surface p-2 shadow-doux sm:p-5">
+      <div className="space-y-6 rounded-carte border-[3px] border-dashed border-bordure p-5 shadow-doux sm:p-6">
 
         <div className="space-y-2 text-center">
-          <div className="mb-2 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#e59a86] text-white shadow-md motion-safe:animate-bounce" aria-hidden="true">
+          <div className="mb-2 inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-md motion-safe:animate-bounce" aria-hidden="true">
             🐷
           </div>
-          <h1 className="text-[1.8rem] font-black tracking-[-0.05em] text-[#5d4d44]">
+          <h1 className="text-[1.8rem] font-black tracking-[-0.05em] text-texte">
             {isRegister ? "Crée ta tirelire" : "Connexion à My PiggyBank"}
           </h1>
-          <p className="text-[0.95rem] text-[#6b574c]">
+          <p className="text-[0.95rem] text-texte-doux">
             {isRegister
               ? "Inscris-toi pour suivre tes dépenses et tes rapprochements."
               : "Retrouve ton budget en un clin d'œil."}
@@ -124,7 +125,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             ref={errorRef}
             role="alert"
             tabIndex={-1}
-            className="rounded-xl border border-red-700 bg-red-50 p-3 text-center text-sm font-bold text-red-800 outline-none focus-visible:outline-3 focus-visible:outline-[#5b473d]"
+            className="rounded-xl border border-red-700 bg-red-50 p-3 text-center text-sm font-bold text-red-800 outline-none focus-visible:outline-3 focus-visible:outline-focus"
           >
             {error}
           </div>
@@ -181,7 +182,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             ) : (
               <Link
                 href={ROUTES.forgotPassword}
-                className="mx-auto flex min-h-11 w-fit items-center px-1 text-sm font-bold text-[#8c4a38] underline underline-offset-4"
+                className="mx-auto flex min-h-11 w-fit items-center px-1 text-sm font-bold text-accent-fort underline underline-offset-4"
               >
                 Mot de passe oublié ?
               </Link>
@@ -204,34 +205,34 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             </div>
           )}
 
-          <label className="flex min-h-11 cursor-pointer items-center gap-3 px-1 text-sm font-semibold text-[#5d4d44]">
+          <label className="flex min-h-11 cursor-pointer items-center gap-3 px-1 text-sm font-semibold text-texte">
             <input
               type="checkbox"
               checked={showPassword}
               onChange={(event) => setShowPassword(event.target.checked)}
-              className="h-5 w-5 accent-[#a3452a]"
+              className="h-5 w-5 accent-accent-fort"
             />
             Afficher le mot de passe
           </label>
 
           {isRegister && (
-            <div className="rounded-xl border border-[#d8b7a5] bg-[#fff8f2] p-3">
-              <label className="flex min-h-11 cursor-pointer items-start gap-3 text-sm font-semibold text-[#5d4d44]">
+            <div className="rounded-xl border border-bordure bg-surface p-3">
+              <label className="flex min-h-11 cursor-pointer items-start gap-3 text-sm font-semibold text-texte">
                 <input
                   type="checkbox"
                   checked={acceptedTerms}
                   onChange={(event) => setAcceptedTerms(event.target.checked)}
                   required
-                  className="mt-0.5 h-5 w-5 shrink-0 accent-[#a3452a]"
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-accent-fort"
                   {...fieldProps('terms')}
                 />
                 <span>
                   J’accepte les{' '}
-                  <Link href={LEGAL_ROUTES.terms} target="_blank" className="font-black text-[#8c4a38] underline">
+                  <Link href={LEGAL_ROUTES.terms} target="_blank" className="font-black text-accent-fort underline">
                     conditions d’utilisation<span className="sr-only"> (nouvel onglet)</span>
                   </Link>{' '}
                   et la{' '}
-                  <Link href={LEGAL_ROUTES.privacy} target="_blank" className="font-black text-[#8c4a38] underline">
+                  <Link href={LEGAL_ROUTES.privacy} target="_blank" className="font-black text-accent-fort underline">
                     politique de confidentialité<span className="sr-only"> (nouvel onglet)</span>
                   </Link>
                   .
@@ -246,7 +247,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
           <button
             type="submit"
             disabled={isLoading}
-            className="mt-2 min-h-12 w-full rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] py-3.5 text-center text-[1rem] font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-all hover:translate-y-[2px] hover:shadow-[0_2px_0_rgba(171,98,77,0.85)] active:translate-y-[4px] active:shadow-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-70"
+            className="mt-2 min-h-12 w-full rounded-carte border-[3px] border-bordure bg-accent py-3.5 text-center text-[1rem] font-bold text-sur-accent shadow-bonbon transition-all hover:translate-y-[2px] hover:shadow-bonbon active:translate-y-[4px] active:shadow-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-70"
           >
             {isLoading ? "Chargement…" : isRegister ? "S'inscrire" : "Se connecter"}
           </button>
@@ -254,33 +255,28 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
 
         {onGoogle && (
           <div className="space-y-3">
-            <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-wide text-[#6b574c]" aria-hidden="true">
-              <span className="h-px flex-1 bg-[#d8b7a5]" />
+            <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-wide text-texte-doux" aria-hidden="true">
+              <span className="h-px flex-1 bg-bordure" />
               ou
-              <span className="h-px flex-1 bg-[#d8b7a5]" />
+              <span className="h-px flex-1 bg-bordure" />
             </p>
             <button
               type="button"
               onClick={handleGoogle}
               disabled={isLoading}
-              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-[1.25rem] border-[2px] border-[#9c7560] bg-white py-3 font-bold text-[#3d2a21] transition-colors hover:bg-[#fcf9f6] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-70"
+              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-carte border-[2px] border-bordure-forte bg-white py-3 font-bold text-sur-accent transition-colors hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-70"
             >
-              <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
-                <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z" />
-                <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.2 5.5-4.7 7.2l7.5 5.8c4.4-4.1 7-10.1 7-17.5z" />
-                <path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z" />
-                <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z" />
-              </svg>
+              <GoogleLogo />
               {isRegister ? 'S’inscrire avec Google' : 'Continuer avec Google'}
             </button>
             {!isRegister && (
               <p className={`${HINT_CLASS} text-center`}>
                 Si tu n’as pas encore de compte, il sera créé : tu acceptes alors les{' '}
-                <Link href={LEGAL_ROUTES.terms} target="_blank" className="font-bold text-[#8c4a38] underline">
+                <Link href={LEGAL_ROUTES.terms} target="_blank" className="font-bold text-accent-fort underline">
                   conditions<span className="sr-only"> (nouvel onglet)</span>
                 </Link>{' '}
                 et la{' '}
-                <Link href={LEGAL_ROUTES.privacy} target="_blank" className="font-bold text-[#8c4a38] underline">
+                <Link href={LEGAL_ROUTES.privacy} target="_blank" className="font-bold text-accent-fort underline">
                   politique de confidentialité<span className="sr-only"> (nouvel onglet)</span>
                 </Link>
                 .
@@ -289,12 +285,12 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
           </div>
         )}
 
-        <div className="border-t border-[#d8b7a5]/60 pt-4 text-center">
-          <p className="text-[0.95rem] text-[#5d4d44]">
+        <div className="border-t border-bordure/60 pt-4 text-center">
+          <p className="text-[0.95rem] text-texte">
             {isRegister ? "Déjà un compte ? " : "Pas encore de compte ? "}
             <Link
               href={isRegister ? ROUTES.login : ROUTES.register}
-              className="inline-flex min-h-11 items-center font-black text-[#8c4a38] underline underline-offset-4"
+              className="inline-flex min-h-11 items-center font-black text-accent-fort underline underline-offset-4"
             >
               {isRegister ? "Se connecter" : "Créer un compte"}
             </Link>

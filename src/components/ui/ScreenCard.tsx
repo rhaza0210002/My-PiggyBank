@@ -18,22 +18,22 @@ interface ScreenCardProps {
 export default function ScreenCard({ title, subtitle, actions, children, flow = false, icon }: ScreenCardProps) {
   return (
     <div className={`mx-auto flex min-h-0 w-full ${flow ? 'md:h-full' : 'h-full'} max-w-[1200px] flex-col px-3 py-2 sm:px-5`}>
-      <div className={`flex min-h-0 flex-col gap-2 rounded-[1.6rem] border-[3px] border-[#d8b6a5] bg-[#f2e6d8] p-3 shadow-[inset_0_0_0_3px_rgba(255,255,255,0.18)] sm:rounded-[2rem] sm:p-4 ${flow ? 'md:flex-1' : 'flex-1'}`}>
+      <div className={`flex min-h-0 flex-col gap-2 rounded-carte border-[3px] border-bordure bg-surface-douce p-3 shadow-[inset_0_0_0_3px_color-mix(in_srgb,var(--color-surface)_18%,transparent)] sm:p-4 ${flow ? 'md:flex-1' : 'flex-1'}`}>
         <div className="flex flex-col items-center gap-1 px-1 text-center">
           <div className="flex items-center justify-center gap-2.5">
             {icon && (
               <span
                 aria-hidden="true"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-white/70 bg-[#F8D5CB] text-xl shadow-[0_2px_0_rgba(171,98,77,0.35)] motion-safe:animate-[float_3s_ease-in-out_infinite]"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-white/70 bg-accent-doux text-xl shadow-bonbon motion-safe:animate-[float_3s_ease-in-out_infinite]"
               >
                 {icon}
               </span>
             )}
-            <h1 className="text-[clamp(1.35rem,2.2vw,1.9rem)] font-black leading-tight tracking-[-0.04em] text-[#5d4d44]">
+            <h1 className="text-[clamp(1.35rem,2.2vw,1.9rem)] font-black leading-tight tracking-[-0.04em] text-texte">
               {title}
             </h1>
           </div>
-          {subtitle && <p className="hidden max-w-xl text-sm sm:block text-[#6b574c]">{subtitle}</p>}
+          {subtitle && <p className="hidden max-w-xl text-sm sm:block text-texte-doux">{subtitle}</p>}
           {actions && <div className="mt-1 flex flex-wrap items-center justify-center gap-2">{actions}</div>}
         </div>
         <div className={flow ? 'md:min-h-0 md:flex-1 md:overflow-y-auto' : 'min-h-0 flex-1 overflow-y-auto'}>{children}</div>

@@ -198,7 +198,7 @@ export default function BudgetDonut({
   return (
     <section
       ref={sectionRef}
-      className="overflow-hidden rounded-[2rem] border-[3px] border-[#d8b6a5] bg-gradient-to-br from-[#fbf2e9] to-[#f2e3d7] p-5 shadow-[0_5px_0_rgba(140,103,86,0.1)] sm:p-7"
+      className="overflow-hidden rounded-carte border-[3px] border-[#d8b6a5] bg-gradient-to-br from-[#fbf2e9] to-[#f2e3d7] p-5 shadow-bonbon sm:p-7"
       aria-labelledby="budget-chart-title"
     >
       <h2 id="budget-chart-title" className="chart-heading mb-6 text-xl font-black text-[#5d4d44]">
@@ -206,7 +206,7 @@ export default function BudgetDonut({
       </h2>
       <div className="grid items-center gap-7 lg:grid-cols-[minmax(13rem,0.8fr)_minmax(0,1.2fr)]">
         <div
-          className="chart-donut relative mx-auto aspect-square w-52 max-w-full rounded-full shadow-[0_12px_28px_rgba(110,76,56,0.18)]"
+          className="chart-donut relative mx-auto aspect-square w-52 max-w-full rounded-full shadow-doux"
           role="img"
           aria-label={slices.length > 0
             ? `Répartition des dépenses, total ${formatCurrency(total)}`

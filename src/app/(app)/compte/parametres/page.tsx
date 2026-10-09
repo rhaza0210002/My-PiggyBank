@@ -9,7 +9,7 @@ import {
   type UserSettings,
 } from '@/services/userSettingsService';
 
-const CARD = 'rounded-[2rem] border border-[#e5c4b4] bg-[#fff8f2] p-6 shadow-sm';
+const CARD = 'rounded-carte border border-bordure bg-surface p-6 shadow-sm';
 
 const OPTIONS: Array<{ key: keyof UserSettings; label: string; description: string }> = [
   {
@@ -70,12 +70,12 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-5xl flex-col gap-4 px-4 py-10 sm:px-6 lg:px-8">
       <div className={CARD}>
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a3452a]">Paramètres</p>
-        <h1 className="mt-2 text-2xl font-bold text-[#5a4d41]">Tes préférences de suivi</h1>
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent-fort">Paramètres</p>
+        <h1 className="mt-2 text-2xl font-bold text-texte">Tes préférences de suivi</h1>
       </div>
 
       <section aria-labelledby="notif-prefs-title" className={CARD}>
-        <h2 id="notif-prefs-title" className="text-lg font-bold text-[#5a4d41]">Notifications</h2>
+        <h2 id="notif-prefs-title" className="text-lg font-bold text-texte">Notifications</h2>
 
         {error && (
           <p role="alert" className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
@@ -84,7 +84,7 @@ export default function SettingsPage() {
         )}
 
         {isLoading ? (
-          <p className="mt-3 text-sm text-[#6b574c]" role="status">Chargement…</p>
+          <p className="mt-3 text-sm text-texte-doux" role="status">Chargement…</p>
         ) : (
           <ul className="mt-3 space-y-3">
             {OPTIONS.map((option) => (
@@ -95,11 +95,11 @@ export default function SettingsPage() {
                     checked={settings[option.key]}
                     disabled={isSaving}
                     onChange={() => void toggle(option.key)}
-                    className="mt-1 h-4 w-4 accent-[#a3452a]"
+                    className="mt-1 h-4 w-4 accent-accent-fort"
                   />
                   <span>
-                    <span className="block text-sm font-bold text-[#5a4d41]">{option.label}</span>
-                    <span className="block text-sm text-[#6b574c]">{option.description}</span>
+                    <span className="block text-sm font-bold text-texte">{option.label}</span>
+                    <span className="block text-sm text-texte-doux">{option.description}</span>
                   </span>
                 </label>
               </li>

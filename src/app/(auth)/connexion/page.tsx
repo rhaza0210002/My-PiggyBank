@@ -56,7 +56,7 @@ function LoginScreen() {
   };
 
   return (
-    <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden bg-[#ebcfc6] px-4 py-8 text-[#5b473d]">
+    <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden bg-fond px-4 py-8 text-texte">
       <div className="w-full max-w-[440px]">
         <AuthForm mode="login" onSubmit={handleLoginSubmit} onGoogle={handleGoogle} isLoading={isLoading} serverError={errorMessage} />
         {unconfirmedEmail && (
@@ -64,7 +64,7 @@ function LoginScreen() {
             {resent ? (
               <span role="status" className="text-sm font-bold">Nouvel e-mail envoyé à {unconfirmedEmail}.</span>
             ) : (
-              <button type="button" onClick={handleResend} className="min-h-11 text-sm font-black text-[#8c4a38] underline underline-offset-4">
+              <button type="button" onClick={handleResend} className="min-h-11 text-sm font-black text-accent-fort underline underline-offset-4">
                 Renvoyer l’e-mail de confirmation
               </button>
             )}

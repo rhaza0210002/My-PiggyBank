@@ -17,10 +17,10 @@ export default function ProgressBar({ value, max, label, valueText }: ProgressBa
       aria-valuemax={max}
       aria-valuenow={Math.min(value, max)}
       aria-valuetext={valueText}
-      className="h-3 w-full overflow-hidden rounded-full border border-[#d8b6a5] bg-[#efe3d8]"
+      className="h-3 w-full overflow-hidden rounded-full border border-bordure bg-surface-douce"
     >
       <div
-        className="grow h-full rounded-full bg-[#a3452a] transition-[width] duration-700 ease-out motion-reduce:transition-none"
+        className="grow h-full rounded-full bg-accent-fort transition-[width] duration-700 ease-out motion-reduce:transition-none"
         style={{ width: `${percent}%` }}
       />
     </div>
