@@ -21,7 +21,7 @@ export default function BottomNav() {
             <Link
               href={section.href}
               aria-current={activeSection?.id === section.id ? 'page' : undefined}
-              className={`${NAV_LINK_BASE} min-h-16 flex-col gap-0.5 rounded-none py-2 text-xs font-semibold focus-visible:outline-3 focus-visible:-outline-offset-4 focus-visible:outline-focus aria-[current=page]:border-t-4 aria-[current=page]:border-accent-fort`}
+              className={`${NAV_LINK_BASE} min-h-16 flex-col gap-0.5 rounded-none py-2 text-xs font-semibold focus-visible:outline-3 focus-visible:-outline-offset-4 focus-visible:outline-focus`}
             >
               <span className="text-xl" aria-hidden="true">{section.icon}</span>
               {section.label}

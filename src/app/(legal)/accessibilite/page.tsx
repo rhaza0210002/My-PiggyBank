@@ -27,6 +27,10 @@ export default function AccessibilitePage() {
         <li>Respect du réglage « réduire les animations » du système.</li>
         <li>Une seule action mise en avant par écran et des étapes courtes, pour limiter la charge mentale.</li>
         <li>Graphiques circulaires doublés d’un tableau de chiffres.</li>
+        <li>
+          Police Luciole, dessinée avec des personnes malvoyantes (Laurent Bourcellier et Jonathan Perez, licence
+          Creative Commons Attribution 4.0).
+        </li>
       </ul>
 
       <h2>Comment cela a été vérifié</h2>

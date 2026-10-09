@@ -1,12 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
+// Luciole : police conçue avec des personnes malvoyantes (licence CC BY 4.0, voir la page Accessibilité).
+const luciole = localFont({
+  src: [
+    { path: "./fonts/Luciole-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Luciole-Bold.woff2", weight: "700", style: "normal" },
+  ],
   display: "swap",
-  variable: "--font-montserrat",
+  variable: "--font-luciole",
 });
 
 export const metadata: Metadata = {
@@ -20,8 +24,8 @@ export const viewport: Viewport = { themeColor: "#8fd36f" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" className={`${montserrat.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className={`${montserrat.className} min-h-full flex flex-col bg-[#f5efe8] text-[#5b473d]`}>
+    <html lang="fr" className={`${luciole.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className={`${luciole.className} min-h-full flex flex-col bg-fond text-texte`}>
         {children}
       </body>
     </html>

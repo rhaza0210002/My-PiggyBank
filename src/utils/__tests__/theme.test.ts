@@ -16,7 +16,7 @@ function role(name: string): string {
 const REQUIRED_ROLES = [
   'fond', 'surface', 'surface-douce', 'bordure', 'bordure-forte', 'texte', 'texte-doux',
   'accent', 'sur-accent', 'accent-fort', 'accent-doux', 'ok', 'ok-fond', 'attention', 'attention-fond',
-  'depasse', 'depasse-fond', 'piece', 'piece-bord', 'cochon', 'cochon-bord', 'focus',
+  'depasse', 'depasse-fond', 'corail', 'corail-clair', 'sur-corail', 'piece', 'piece-bord', 'cochon', 'cochon-bord', 'focus',
 ];
 
 describe('contrastRatio', () => {
@@ -47,6 +47,8 @@ describe('rôles de couleur', () => {
     ['texte', 'accent-doux'],
     ['texte-doux', 'accent-doux'],
     ['texte-doux', 'surface-douce'],
+    ['sur-corail', 'corail'],
+    ['sur-corail', 'corail-clair'],
   ])('texte lisible : %s sur %s (4,5:1 minimum)', (foreground, background) => {
     expect(contrastRatio(role(foreground), role(background))).toBeGreaterThanOrEqual(4.5);
   });
@@ -56,5 +58,11 @@ describe('rôles de couleur', () => {
     ['focus', 'fond'],
   ])('contrôle visible : %s sur %s (3:1 minimum)', (foreground, background) => {
     expect(contrastRatio(role(foreground), role(background))).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe('onglet actif en corail', () => {
+  it('passe par un seul utilitaire onglet-actif (dégradé + ombrage), défini dans globals.css', () => {
+    expect(css).toMatch(/@utility onglet-actif\s*\{[^}]*linear-gradient[^}]*corail-clair[^}]*corail[^}]*box-shadow/);
   });
 });

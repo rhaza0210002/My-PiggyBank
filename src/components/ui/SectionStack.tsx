@@ -231,7 +231,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
               type="button"
               onClick={() => goTo(section.id)}
               aria-current={activeId === section.id ? 'true' : undefined}
-              className="min-h-11 shrink-0 rounded-full border-2 border-bordure bg-surface px-4 text-sm font-semibold text-texte transition hover:-translate-y-0.5 hover:bg-accent-doux motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[current=true]:border-accent-fort aria-[current=true]:bg-accent-doux aria-[current=true]:font-bold aria-[current=true]:text-accent-fort"
+              className="min-h-11 shrink-0 rounded-full border-2 border-bordure bg-surface px-4 text-sm font-semibold text-texte transition hover:-translate-y-0.5 hover:bg-accent-doux motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[current=true]:border-transparent aria-[current=true]:onglet-actif aria-[current=true]:font-bold"
             >
               {section.label}
             </button>

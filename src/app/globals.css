@@ -6,7 +6,7 @@
  * Un test (theme.test.ts) lit ce bloc et vérifie les contrastes de chaque paire texte/fond.
  */
 @theme {
-  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
 
   --color-fond: #f2fbea;
   --color-surface: #ffffff;
@@ -25,6 +25,9 @@
   --color-attention-fond: #fff0b8;
   --color-depasse: #a8431f;
   --color-depasse-fond: #ffe3d8;
+  --color-corail: #e8795a;
+  --color-corail-clair: #ffb199;
+  --color-sur-corail: #1f2a1b;
   --color-piece: #ffe066;
   --color-piece-bord: #e0b020;
   --color-cochon: #ffc7d6;
@@ -36,7 +39,15 @@
   --radius-bonbon: 9999px;
 
   --shadow-bonbon: 0 3px 0 color-mix(in srgb, var(--color-accent-fort) 70%, transparent);
+  --shadow-corail: 0 3px 0 #b5533a;
   --shadow-doux: 0 8px 24px color-mix(in srgb, var(--color-texte) 12%, transparent);
+}
+
+/* Onglet ou puce actif : toujours le même dégradé corail, pour que « où suis-je » se lise d'un coup d'œil. */
+@utility onglet-actif {
+  background-image: linear-gradient(180deg, var(--color-corail-clair), var(--color-corail));
+  color: var(--color-sur-corail);
+  box-shadow: var(--shadow-corail);
 }
 
 :root {
