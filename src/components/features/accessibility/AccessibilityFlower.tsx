@@ -4,22 +4,31 @@ import { useEffect, useRef, useState } from 'react';
 import {
   DEFAULT_PREFS,
   STORAGE_KEY,
+  ZOOM_MAX,
+  ZOOM_MIN,
+  ZOOM_STEP,
   applyPrefs,
+  clampZoom,
   parsePrefs,
-  type AccessibilityKey,
   type AccessibilityPrefs,
+  type AccessibilityToggleKey,
 } from '@/utils/accessibilityPrefs';
 
-const PETALS: { key: AccessibilityKey; label: string; symbol: string }[] = [
-  { key: 'police', label: 'Police lisible (Luciole)', symbol: 'Aa' },
-  { key: 'grand', label: 'Texte plus grand', symbol: 'A+' },
-  { key: 'contraste', label: 'Contraste renforcé', symbol: '◐' },
-  { key: 'calme', label: 'Moins d’animations', symbol: '⏸' },
-  { key: 'espace', label: 'Lettres plus espacées', symbol: '↔' },
+type Petal =
+  | { kind: 'toggle'; key: AccessibilityToggleKey; label: string; symbol: string }
+  | { kind: 'zoom'; step: 1 | -1; verb: string; symbol: string };
+
+const PETALS: Petal[] = [
+  { kind: 'toggle', key: 'police', label: 'Police lisible (Luciole)', symbol: 'Aa' },
+  { kind: 'zoom', step: -1, verb: 'Réduire le texte', symbol: 'A↓' },
+  { kind: 'zoom', step: 1, verb: 'Agrandir le texte', symbol: 'A↑' },
+  { kind: 'toggle', key: 'contraste', label: 'Contraste renforcé', symbol: '◐' },
+  { kind: 'toggle', key: 'calme', label: 'Moins d’animations', symbol: '⏸' },
+  { kind: 'toggle', key: 'espace', label: 'Lettres plus espacées', symbol: '↔' },
 ];
 
 /** Les pétales s'ouvrent en quart de cercle, de la gauche du bouton jusqu'au-dessus de lui. */
-const RADIUS_PX = 150;
+const RADIUS_PX = 200;
 const petalOffset = (index: number) => {
   const angle = Math.PI + (index * (Math.PI / 2)) / (PETALS.length - 1);
   return { x: Math.round(RADIUS_PX * Math.cos(angle)), y: Math.round(RADIUS_PX * Math.sin(angle)) };
@@ -65,8 +74,7 @@ export default function AccessibilityFlower() {
     };
   }, [open]);
 
-  const toggle = (key: AccessibilityKey, label: string) => {
-    const next = { ...prefs, [key]: !prefs[key] };
+  const update = (next: AccessibilityPrefs, message: string) => {
     setPrefs(next);
     applyPrefs(document.documentElement, next);
     try {
@@ -74,25 +82,39 @@ export default function AccessibilityFlower() {
     } catch {
       // Stockage indisponible (navigation privée) : le réglage vaut pour cette visite seulement.
     }
-    setAnnouncement(`${label} : ${next[key] ? 'activé' : 'désactivé'}`);
+    setAnnouncement(message);
+  };
+
+  const toggle = (key: AccessibilityToggleKey, label: string) => {
+    const next = { ...prefs, [key]: !prefs[key] };
+    update(next, `${label} : ${next[key] ? 'activé' : 'désactivé'}`);
+  };
+
+  const changeZoom = (step: 1 | -1) => {
+    const zoom = clampZoom(prefs.zoom + step * ZOOM_STEP);
+    update({ ...prefs, zoom }, `Zoom du texte : ${zoom} %`);
   };
 
   return (
     <div ref={rootRef} className="fixed right-4 bottom-20 z-40 md:right-6 md:bottom-6">
       {PETALS.map((petal, index) => {
         const { x, y } = petalOffset(index);
-        const pressed = prefs[petal.key];
+        const isZoom = petal.kind === 'zoom';
+        const pressed = !isZoom && prefs[petal.key];
+        const label = isZoom ? `${petal.verb} (zoom actuel ${prefs.zoom} %)` : petal.label;
+        const atLimit = isZoom && (petal.step === 1 ? prefs.zoom >= ZOOM_MAX : prefs.zoom <= ZOOM_MIN);
         return (
           <button
-            key={petal.key}
+            key={isZoom ? `zoom${petal.step}` : petal.key}
             type="button"
-            aria-label={petal.label}
-            aria-pressed={pressed}
-            data-tip={petal.label}
+            aria-label={label}
+            aria-pressed={isZoom ? undefined : pressed}
+            data-tip={isZoom ? `${petal.verb} · ${prefs.zoom} %` : label}
+            disabled={atLimit}
             tabIndex={open ? 0 : -1}
-            onClick={() => toggle(petal.key, petal.label)}
+            onClick={() => (isZoom ? changeZoom(petal.step) : toggle(petal.key, petal.label))}
             style={open ? { transform: `translate(${x}px, ${y}px)` } : undefined}
-            className={`absolute right-0.5 bottom-0.5 z-10 flex size-13 items-center justify-center rounded-full border-[3px] border-accent-fort text-base font-black text-texte shadow-bonbon transition-[transform,opacity] duration-300 ease-out after:pointer-events-none after:absolute after:right-1/2 after:bottom-[calc(100%+8px)] after:translate-x-[30%] after:rounded-xl after:bg-texte after:px-2.5 after:py-1.5 after:text-sm after:font-bold after:whitespace-nowrap after:text-surface after:opacity-0 after:content-[attr(data-tip)] hover:z-30 hover:after:opacity-100 focus-visible:z-30 focus-visible:after:opacity-100 ${
+            className={`absolute right-0.5 bottom-0.5 z-10 flex size-13 items-center justify-center rounded-full border-[3px] border-accent-fort text-base font-black text-texte shadow-bonbon transition-[transform,opacity] duration-300 ease-out after:pointer-events-none after:absolute after:left-1/2 after:bottom-[calc(100%+8px)] after:-translate-x-1/2 after:rounded-xl after:bg-texte after:px-2.5 after:py-1.5 after:text-sm after:font-bold after:whitespace-nowrap after:text-surface after:opacity-0 after:content-[attr(data-tip)] hover:z-30 hover:after:opacity-100 focus-visible:z-30 focus-visible:after:opacity-100 disabled:opacity-50 ${
               pressed ? 'onglet-actif border-transparent' : 'bg-accent-doux'
             } ${open ? 'opacity-100' : 'invisible scale-50 opacity-0'}`}
           >

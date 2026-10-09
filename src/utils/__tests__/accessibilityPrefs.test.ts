@@ -3,6 +3,11 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   ACCESSIBILITY_ATTRIBUTES,
+  ZOOM_ATTRIBUTE,
+  ZOOM_MAX,
+  ZOOM_MIN,
+  ZOOM_STEP,
+  clampZoom,
   DEFAULT_PREFS,
   STORAGE_KEY,
   applyPrefs,
@@ -33,6 +38,13 @@ describe('parsePrefs', () => {
       calme: true,
     });
   });
+
+  it('n’accepte qu’un zoom tombant sur un pas entre 100 % et 150 %', () => {
+    expect(parsePrefs(JSON.stringify({ zoom: 120 })).zoom).toBe(120);
+    [95, 155, 123, '120', null].forEach((zoom) => {
+      expect(parsePrefs(JSON.stringify({ zoom })).zoom).toBe(ZOOM_MIN);
+    });
+  });
 });
 
 describe('applyPrefs', () => {
@@ -41,10 +53,23 @@ describe('applyPrefs', () => {
     applyPrefs(root, { ...DEFAULT_PREFS, police: true, contraste: true });
     expect(root.attributes.get('data-police')).toBe('luciole');
     expect(root.attributes.get('data-contraste')).toBe('fort');
-    expect(root.attributes.has('data-taille')).toBe(false);
+    expect(root.attributes.has('data-zoom')).toBe(false);
 
     applyPrefs(root, DEFAULT_PREFS);
     expect(root.attributes.size).toBe(0);
+  });
+
+  it('pose le zoom seulement au-dessus de 100 %', () => {
+    const root = fakeRoot();
+    applyPrefs(root, { ...DEFAULT_PREFS, zoom: 130 });
+    expect(root.attributes.get(ZOOM_ATTRIBUTE)).toBe('130');
+    applyPrefs(root, DEFAULT_PREFS);
+    expect(root.attributes.has(ZOOM_ATTRIBUTE)).toBe(false);
+  });
+
+  it('borne le zoom', () => {
+    expect(clampZoom(ZOOM_MIN - ZOOM_STEP)).toBe(ZOOM_MIN);
+    expect(clampZoom(ZOOM_MAX + ZOOM_STEP)).toBe(ZOOM_MAX);
   });
 });
 
@@ -64,6 +89,10 @@ describe('feuille de style', () => {
 
   it.each(Object.values(ACCESSIBILITY_ATTRIBUTES))('a une règle pour $name="$value"', ({ name, value }) => {
     expect(css).toContain(`html[${name}='${value}']`);
+  });
+
+  it.each([110, 120, 130, 140, 150])('a une règle pour le zoom %i %%', (zoom) => {
+    expect(css).toContain(`html[data-zoom='${zoom}'] { font-size: ${zoom}%; }`);
   });
 
   it('garde Nunito par défaut et Luciole sur demande', () => {

@@ -200,9 +200,12 @@ html[data-police='luciole'] {
   --font-sans: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
 }
 
-html[data-taille='grand'] {
-  font-size: 118.75%;
-}
+/* Le zoom est un pourcentage du réglage du navigateur (rem) : on ne l'écrase jamais. */
+html[data-zoom='110'] { font-size: 110%; }
+html[data-zoom='120'] { font-size: 120%; }
+html[data-zoom='130'] { font-size: 130%; }
+html[data-zoom='140'] { font-size: 140%; }
+html[data-zoom='150'] { font-size: 150%; }
 
 html[data-espace='large'] body {
   letter-spacing: 0.06em;
