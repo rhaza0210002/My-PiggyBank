@@ -25,7 +25,7 @@ interface AuthFormProps {
 
 const MIN_PASSWORD_LENGTH = 8;
 const INPUT_CLASS =
-  'w-full min-h-12 rounded-carte border-[2px] border-bordure-forte bg-surface px-4 py-3 text-texte placeholder-texte-doux shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[invalid=true]:border-red-700';
+  'w-full min-h-12 rounded-carte border-[2px] border-bordure-forte bg-surface px-4 py-3 text-texte placeholder-texte-doux shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[invalid=true]:border-depasse';
 const LABEL_CLASS = 'block px-1 text-sm font-bold text-texte';
 const HINT_CLASS = 'px-1 text-xs text-texte-doux';
 
@@ -107,7 +107,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
       <div className="space-y-6 rounded-carte border-[3px] border-dashed border-bordure p-5 shadow-doux sm:p-6">
 
         <div className="space-y-2 text-center">
-          <div className="mb-2 inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-md motion-safe:animate-bounce" aria-hidden="true">
+          <div className="mb-2 inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-surface shadow-md motion-safe:animate-bounce" aria-hidden="true">
             🐷
           </div>
           <h1 className="text-[1.8rem] font-black tracking-[-0.05em] text-texte">
@@ -126,7 +126,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             ref={errorRef}
             role="alert"
             tabIndex={-1}
-            className="rounded-xl border border-red-700 bg-red-50 p-3 text-center text-sm font-bold text-red-800 outline-none focus-visible:outline-3 focus-visible:outline-focus"
+            className="rounded-xl border border-depasse bg-depasse-fond p-3 text-center text-sm font-bold text-depasse outline-none focus-visible:outline-3 focus-visible:outline-focus"
           >
             {error}
           </div>
@@ -261,7 +261,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
               type="button"
               onClick={handleGoogle}
               disabled={isLoading}
-              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-carte border-[2px] border-bordure-forte bg-white py-3 font-bold text-sur-accent transition-colors hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-70"
+              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-carte border-[2px] border-bordure-forte bg-surface py-3 font-bold text-sur-accent transition-colors hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-70"
             >
               <GoogleLogo />
               {isRegister ? 'S’inscrire avec Google' : 'Continuer avec Google'}

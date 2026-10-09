@@ -65,7 +65,7 @@ export default function RegisterPage() {
             Une fois confirmé, tu seras connecté. Pense aux courriers indésirables.
           </p>
           {resendState === 'sent' && <p role="status" className="text-sm font-bold">Nouvel e-mail envoyé.</p>}
-          {resendState === 'error' && <p role="alert" className="text-sm font-bold text-red-800">Envoi impossible pour le moment, réessaie dans quelques minutes.</p>}
+          {resendState === 'error' && <p role="alert" className="text-sm font-bold text-depasse">Envoi impossible pour le moment, réessaie dans quelques minutes.</p>}
           <button type="button" onClick={handleResend} className="min-h-11 text-sm font-black text-accent-fort underline underline-offset-4">
             Renvoyer l&apos;e-mail
           </button>

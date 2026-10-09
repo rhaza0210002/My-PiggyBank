@@ -46,7 +46,7 @@ function CategoryRows({
 }) {
   const highlightClass = group.categoryId
     ? getCategoryBackground(group.categoryLabel)
-    : 'bg-white/40';
+    : 'bg-surface/40';
 
   return (
     <>
@@ -56,10 +56,10 @@ function CategoryRows({
             type="button"
             onClick={onToggle}
             aria-expanded={isExpanded}
-            className="flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-1 text-left text-xs font-bold text-texte transition hover:bg-white/40"
+            className="flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-1 text-left text-xs font-bold text-texte transition hover:bg-surface/40"
           >
             {group.categoryId ? (
-              <span className="rounded-full border border-bordure bg-white/75 px-2.5 py-1 shadow-sm">
+              <span className="rounded-full border border-bordure bg-surface/75 px-2.5 py-1 shadow-sm">
                 {group.categoryLabel}
               </span>
             ) : (
@@ -78,7 +78,7 @@ function CategoryRows({
       {isExpanded && (
         <tr>
           <td colSpan={3} className="bg-surface p-3">
-            <div className="overflow-hidden rounded-xl border border-bordure/60 bg-white/40">
+            <div className="overflow-hidden rounded-xl border border-bordure/60 bg-surface/40">
               <table className="w-full min-w-0 border-collapse text-left text-[11px] sm:text-sm">
                 <thead>
                   <tr className="bg-surface-douce text-texte">
@@ -214,7 +214,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
             {categorizedCount} catégorisée{categorizedCount !== 1 ? 's' : ''} sur {transactions.length}
           </p>
           {categorizedCount === 0 && unmatchedExamples.length > 0 && (
-            <p className="rounded-lg border border-bordure bg-white/50 p-3 text-sm text-texte-doux" role="alert">
+            <p className="rounded-lg border border-bordure bg-surface/50 p-3 text-sm text-texte-doux" role="alert">
               Aucun détail ne correspond aux labels de <code>libelle_transacts</code>. Exemples lus : {unmatchedExamples.join(' | ')}
             </p>
           )}
@@ -240,7 +240,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
             </table>
           </div>
           {isDemo && (
-            <p className="rounded-lg border border-bordure bg-white/60 p-3 text-sm font-semibold text-texte-doux" role="status">
+            <p className="rounded-lg border border-bordure bg-surface/60 p-3 text-sm font-semibold text-texte-doux" role="status">
               🧪 Exemple : rien n’est enregistré. Importe ton vrai relevé pour retrouver tes opérations.
             </p>
           )}
@@ -263,22 +263,22 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
             </button>
           </div>
           {transactionsMessage && (
-            <p className="text-sm font-semibold text-green-800" role="status">
+            <p className="text-sm font-semibold text-ok" role="status">
               {transactionsMessage}
             </p>
           )}
           {transactionsError && (
-            <p className="text-sm font-semibold text-red-700" role="alert">
+            <p className="text-sm font-semibold text-depasse" role="alert">
               {transactionsError}
             </p>
           )}
           {saveMessage && (
-            <p className="text-sm font-semibold text-green-800" role="status">
+            <p className="text-sm font-semibold text-ok" role="status">
               {saveMessage}
             </p>
           )}
           {saveError && (
-            <p className="text-sm font-semibold text-red-700" role="alert">
+            <p className="text-sm font-semibold text-depasse" role="alert">
               {saveError}
             </p>
           )}

@@ -18,7 +18,7 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
           </Link>
           <Link
             href={ROUTES.dashboard}
-            className="inline-flex min-h-11 items-center rounded-xl border border-bordure-forte bg-white/70 px-4 text-sm font-bold text-texte hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            className="inline-flex min-h-11 items-center rounded-xl border border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Retour à l’application
           </Link>

@@ -22,7 +22,7 @@ function formatShortDate(isoDate: string): string {
 
 function TransactionsList({ transactions }: { transactions: StoredTransaction[] }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-bordure/60 bg-white/40">
+    <div className="overflow-hidden rounded-xl border border-bordure/60 bg-surface/40">
       <table className="w-full min-w-0 border-collapse text-left text-[11px] sm:text-sm">
         <thead>
           <tr className="bg-surface-douce text-texte">
@@ -147,7 +147,7 @@ function ExpandableCategoryRows({
             type="button"
             onClick={onToggle}
             aria-expanded={isExpanded}
-            className="flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left font-semibold text-texte transition hover:bg-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus"
+            className="flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left font-semibold text-texte transition hover:bg-surface/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus"
           >
             <span aria-hidden="true" className="text-[11px] font-black text-texte-doux">{isExpanded ? '▾' : '▸'}</span>
             {label}

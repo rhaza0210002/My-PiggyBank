@@ -93,13 +93,13 @@ export default function MonthBudgetPage() {
   const isPastMonth = currentMonthIndex < currentCalendarMonth;
 
   const monthControls = (
-    <div className="flex items-center gap-1 rounded-xl border border-bordure bg-white/70 p-1">
+    <div className="flex items-center gap-1 rounded-xl border border-bordure bg-surface/70 p-1">
       <button
         type="button"
         onClick={handlePrevMonth}
         disabled={currentMonthIndex <= currentCalendarMonth}
         aria-label="Mois précédent"
-        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-texte hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:text-texte-doux"
+        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-texte hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:text-texte-doux"
       >
         <span aria-hidden="true">←</span>
       </button>
@@ -108,7 +108,7 @@ export default function MonthBudgetPage() {
         id="month-selector"
         value={currentMonthIndex}
         onChange={(e) => setCurrentMonthIndex(Number(e.target.value))}
-        className="min-h-11 rounded-lg border-2 border-bordure-forte bg-white px-2 text-sm font-bold text-texte"
+        className="min-h-11 rounded-lg border-2 border-bordure-forte bg-surface px-2 text-sm font-bold text-texte"
       >
         {MONTHS.map((m, idx) => (
           <option key={m.key} value={idx} disabled={idx < currentCalendarMonth}>
@@ -121,7 +121,7 @@ export default function MonthBudgetPage() {
         onClick={handleNextMonth}
         disabled={currentMonthIndex >= MONTHS.length - 1}
         aria-label="Mois suivant"
-        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-texte hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:text-texte-doux"
+        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-texte hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:text-texte-doux"
       >
         <span aria-hidden="true">→</span>
       </button>

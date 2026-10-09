@@ -72,7 +72,7 @@ export default function ResetPasswordPage() {
   return (
     <AuthCard title="Nouveau mot de passe" intro="Choisis-en un que tu n’utilises nulle part ailleurs.">
       {error && (
-        <div id="reset-error" role="alert" className="rounded-xl border border-red-700 bg-red-50 p-3 text-center text-sm font-bold text-red-800">
+        <div id="reset-error" role="alert" className="rounded-xl border border-depasse bg-depasse-fond p-3 text-center text-sm font-bold text-depasse">
           {error}
         </div>
       )}

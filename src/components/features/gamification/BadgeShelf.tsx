@@ -30,7 +30,7 @@ export default function BadgeShelf({ badges }: { badges: Badge[] }) {
           <span className={`text-lg ${badge.earned ? '' : 'opacity-40 grayscale'}`} aria-hidden="true">
             {BADGE_ICONS[badge.id] ?? '⭐'}
           </span>
-          <span aria-hidden="true" className="hidden text-[0.65rem] font-bold leading-tight md:inline">{badge.label}</span>
+          <span aria-hidden="true" className="hidden text-xs font-bold leading-tight md:inline">{badge.label}</span>
           <span className="sr-only">
             {badge.label} : {badge.earned ? 'obtenu' : `à débloquer, ${badge.description}`}
           </span>

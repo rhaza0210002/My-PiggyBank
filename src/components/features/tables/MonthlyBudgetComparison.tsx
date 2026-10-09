@@ -207,7 +207,7 @@ export default function MonthlyBudgetComparison({
             <select
               value={monthIndex}
               onChange={(event) => setInternalMonthIndex(Number(event.target.value))}
-              className="rounded-lg border border-bordure bg-white px-3 py-2"
+              className="rounded-lg border border-bordure bg-surface px-3 py-2"
             >
               {MONTHS.map((month, index) => (
                 <option key={month.key} value={index}>{month.label}</option>
@@ -224,7 +224,7 @@ export default function MonthlyBudgetComparison({
       {isLoading ? (
         <p className="py-6 text-center text-sm font-semibold text-texte-doux">Chargement du budget…</p>
       ) : error ? (
-        <p className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800" role="alert">
+        <p className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse" role="alert">
           {error}
         </p>
       ) : (
@@ -249,7 +249,7 @@ export default function MonthlyBudgetComparison({
                 </h4>
                 <div className="space-y-2 p-2 md:hidden">
                   {group.rows.length === 0 ? (
-                    <p className="rounded-lg bg-white/55 p-3 text-center text-sm italic text-texte-doux">
+                    <p className="rounded-lg bg-surface/55 p-3 text-center text-sm italic text-texte-doux">
                       Aucune donnée pour {MONTHS[monthIndex].label}.
                     </p>
                   ) : group.rows.map((row) => {
@@ -261,16 +261,16 @@ export default function MonthlyBudgetComparison({
                         </h5>
                         <dl className="grid grid-cols-3 gap-2">
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Budget</dt>
+                            <dt className="text-xs font-semibold uppercase text-texte-doux">Budget</dt>
                             <dd className="break-words text-sm font-bold text-texte">{formatCurrency(row.budget)}</dd>
                           </div>
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Réel</dt>
+                            <dt className="text-xs font-semibold uppercase text-texte-doux">Réel</dt>
                             <dd className="break-words text-sm font-bold text-texte">{formatCurrency(row.actual)}</dd>
                           </div>
                           <div className="min-w-0">
-                            <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Écart</dt>
-                            <dd className={`break-words text-sm font-black ${difference < 0 ? 'text-red-700' : 'text-green-800'}`}>
+                            <dt className="text-xs font-semibold uppercase text-texte-doux">Écart</dt>
+                            <dd className={`break-words text-sm font-black ${difference < 0 ? 'text-depasse' : 'text-ok'}`}>
                               {formatCurrency(difference)}
                             </dd>
                           </div>
@@ -284,16 +284,16 @@ export default function MonthlyBudgetComparison({
                     </h5>
                     <dl className="grid grid-cols-3 gap-2">
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Budget</dt>
+                        <dt className="text-xs font-semibold uppercase text-texte-doux">Budget</dt>
                         <dd className="break-words text-sm font-black">{formatCurrency(groupBudget)}</dd>
                       </div>
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Réel</dt>
+                        <dt className="text-xs font-semibold uppercase text-texte-doux">Réel</dt>
                         <dd className="break-words text-sm font-black">{formatCurrency(groupActual)}</dd>
                       </div>
                       <div className="min-w-0">
-                        <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Écart</dt>
-                        <dd className={`break-words text-sm font-black ${groupDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
+                        <dt className="text-xs font-semibold uppercase text-texte-doux">Écart</dt>
+                        <dd className={`break-words text-sm font-black ${groupDifference < 0 ? 'text-depasse' : 'text-ok'}`}>
                           {formatCurrency(groupDifference)}
                         </dd>
                       </div>
@@ -325,7 +325,7 @@ export default function MonthlyBudgetComparison({
                             <td className={TABLE_STYLES.cellCategory}>{row.label}</td>
                             <td className={TABLE_STYLES.cellAmount}>{formatCurrency(row.budget)}</td>
                             <td className={TABLE_STYLES.cellAmount}>{formatCurrency(row.actual)}</td>
-                            <td className={`${TABLE_STYLES.cellAmount} font-bold ${difference < 0 ? 'text-red-700' : 'text-green-800'}`}>
+                            <td className={`${TABLE_STYLES.cellAmount} font-bold ${difference < 0 ? 'text-depasse' : 'text-ok'}`}>
                               {formatCurrency(difference)}
                             </td>
                           </tr>
@@ -335,7 +335,7 @@ export default function MonthlyBudgetComparison({
                         <td className={TABLE_STYLES.cellCategory}>Sous-total {group.title}</td>
                         <td className={TABLE_STYLES.cellAmount}>{formatCurrency(groupBudget)}</td>
                         <td className={TABLE_STYLES.cellAmount}>{formatCurrency(groupActual)}</td>
-                        <td className={`${TABLE_STYLES.cellAmount} ${groupDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
+                        <td className={`${TABLE_STYLES.cellAmount} ${groupDifference < 0 ? 'text-depasse' : 'text-ok'}`}>
                           {formatCurrency(groupDifference)}
                         </td>
                       </tr>
@@ -353,16 +353,16 @@ export default function MonthlyBudgetComparison({
             </div>
             <dl className="grid grid-cols-3 gap-2">
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Budget</dt>
+                <dt className="text-xs font-semibold uppercase text-texte-doux">Budget</dt>
                 <dd className="break-words text-sm font-black">{revealAmount(balance.isShown, formatCurrency(totalBudget))}</dd>
               </div>
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Réel</dt>
+                <dt className="text-xs font-semibold uppercase text-texte-doux">Réel</dt>
                 <dd className="break-words text-sm font-black">{revealAmount(balance.isShown, formatCurrency(totalActual))}</dd>
               </div>
               <div className="min-w-0">
-                <dt className="text-[0.65rem] font-semibold uppercase text-texte-doux">Écart</dt>
-                <dd className={`break-words text-sm font-black ${balance.isShown && totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
+                <dt className="text-xs font-semibold uppercase text-texte-doux">Écart</dt>
+                <dd className={`break-words text-sm font-black ${balance.isShown && totalDifference < 0 ? 'text-depasse' : 'text-ok'}`}>
                   {revealAmount(balance.isShown, formatCurrency(totalDifference))}
                 </dd>
               </div>
@@ -381,7 +381,7 @@ export default function MonthlyBudgetComparison({
                   </td>
                   <td className={TABLE_STYLES.cellAmount}>{revealAmount(balance.isShown, formatCurrency(totalBudget))}</td>
                   <td className={TABLE_STYLES.cellAmount}>{revealAmount(balance.isShown, formatCurrency(totalActual))}</td>
-                  <td className={`${TABLE_STYLES.cellAmount} ${balance.isShown && totalDifference < 0 ? 'text-red-700' : 'text-green-800'}`}>
+                  <td className={`${TABLE_STYLES.cellAmount} ${balance.isShown && totalDifference < 0 ? 'text-depasse' : 'text-ok'}`}>
                     {revealAmount(balance.isShown, formatCurrency(totalDifference))}
                   </td>
                 </tr>

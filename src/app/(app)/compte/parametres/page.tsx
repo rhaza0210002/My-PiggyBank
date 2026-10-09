@@ -78,7 +78,7 @@ export default function SettingsPage() {
         <h2 id="notif-prefs-title" className="text-lg font-bold text-texte">Notifications</h2>
 
         {error && (
-          <p role="alert" className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
+          <p role="alert" className="mt-3 rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
             {error}
           </p>
         )}

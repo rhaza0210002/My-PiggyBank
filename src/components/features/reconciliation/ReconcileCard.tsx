@@ -110,7 +110,7 @@ export default function ReconcileCard({
               disabled={isBusy}
               aria-pressed={item.id === transaction.category_id}
               onClick={() => onChangeCategory(item.id)}
-              className="min-h-11 rounded-full border-2 border-bordure bg-white px-3 text-sm font-semibold text-texte transition-colors hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50 aria-pressed:border-accent-fort aria-pressed:bg-accent-doux aria-pressed:font-bold aria-pressed:text-accent-fort"
+              className="min-h-11 rounded-full border-2 border-bordure bg-surface px-3 text-sm font-semibold text-texte transition-colors hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50 aria-pressed:border-accent-fort aria-pressed:bg-accent-doux aria-pressed:font-bold aria-pressed:text-accent-fort"
             >
               {item.label}
             </button>
@@ -128,7 +128,7 @@ export default function ReconcileCard({
           value={transaction.category_id ?? ''}
           disabled={isBusy}
           onChange={(event) => onChangeCategory(event.target.value)}
-          className="mt-1 min-h-12 w-full rounded-xl border-2 border-bordure-forte bg-white px-3 text-center text-base text-texte disabled:opacity-50"
+          className="mt-1 min-h-12 w-full rounded-xl border-2 border-bordure-forte bg-surface px-3 text-center text-base text-texte disabled:opacity-50"
         >
           <option value="">— Choisir une catégorie —</option>
           {categoryGroups.map((group) => {
@@ -160,7 +160,7 @@ export default function ReconcileCard({
             type="button"
             onClick={onSkip}
             disabled={isBusy}
-            className="min-h-14 rounded-carte border-2 border-bordure-forte bg-white/70 px-5 font-bold text-texte transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
+            className="min-h-14 rounded-carte border-2 border-bordure-forte bg-surface/70 px-5 font-bold text-texte transition hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
           >
             Plus tard
           </button>

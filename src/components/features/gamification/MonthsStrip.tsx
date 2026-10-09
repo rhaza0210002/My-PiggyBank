@@ -31,7 +31,7 @@ export default function MonthsStrip({ months }: MonthsStripProps) {
             <span className="text-xs font-bold leading-tight" aria-hidden="true">
               {MONTH_SHORT_LABELS[month.monthIndex]}
             </span>
-            <span className="text-[0.65rem] font-semibold leading-tight" aria-hidden="true">
+            <span className="text-xs font-semibold leading-tight" aria-hidden="true">
               {style.icon || '·'} <span className="hidden sm:inline">{style.text}</span>
             </span>
             <span className="sr-only">

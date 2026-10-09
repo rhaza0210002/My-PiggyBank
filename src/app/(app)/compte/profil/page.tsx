@@ -10,7 +10,7 @@ import { updatePassword } from '@/services/authService';
 import { getUserProfile, updateUserProfile } from '@/services/userService';
 
 const CARD = 'rounded-3xl border border-bordure bg-surface p-4 shadow-sm';
-const INPUT = 'mt-1 min-h-11 w-full rounded-xl border-2 border-bordure-forte bg-white px-3 text-texte';
+const INPUT = 'mt-1 min-h-11 w-full rounded-xl border-2 border-bordure-forte bg-surface px-3 text-texte';
 const BUTTON =
   'mx-auto flex min-h-11 items-center justify-center rounded-2xl border border-bordure bg-accent-doux px-4 py-2 text-sm font-semibold text-accent-fort transition-colors hover:bg-accent-doux focus:outline-hidden focus:ring-2 focus:ring-focus disabled:opacity-60';
 const MIN_PASSWORD_LENGTH = 8;
@@ -25,7 +25,7 @@ function FeedbackMessage({ feedback }: { feedback: Feedback | null }) {
   return (
     <p
       role={feedback.tone === 'error' ? 'alert' : 'status'}
-      className={`mt-3 text-sm font-semibold ${feedback.tone === 'error' ? 'text-red-700' : 'text-green-800'}`}
+      className={`mt-3 text-sm font-semibold ${feedback.tone === 'error' ? 'text-depasse' : 'text-ok'}`}
     >
       {feedback.message}
     </p>

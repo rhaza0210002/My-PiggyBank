@@ -75,7 +75,7 @@ export default function BudgetTotalsSection({
           Total dépenses — {currentMonthLabel}
         </h2>
 
-        <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border border-bordure/50 bg-white/40 shadow-inner">
+        <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border border-bordure/50 bg-surface/40 shadow-inner">
           <table className="w-full min-w-[320px] border-collapse text-left" aria-label="Tableau des totaux mensuels">
             <thead>
               <tr className="bg-surface-douce text-texte">
@@ -118,7 +118,7 @@ export default function BudgetTotalsSection({
         Totaux Annuels par mois
       </h2>
 
-      <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border border-bordure/50 bg-white/40 shadow-inner">
+      <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border border-bordure/50 bg-surface/40 shadow-inner">
         <table className="w-full min-w-[840px] border-collapse text-left" aria-label="Tableau des totaux annuels">
           <thead>
             <tr className="bg-surface-douce text-texte">

@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes } from 'react';
 export type ButtonVariant = 'principal' | 'secondaire' | 'lien' | 'doux';
 
 const BASE =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-bonbon px-5 text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60';
+  'inline-flex min-h-11 items-center justify-center gap-2 rounded-bonbon px-5 text-base font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60';
 
 const VARIANTS: Record<ButtonVariant, string> = {
   principal: 'bg-accent text-sur-accent shadow-bonbon hover:bg-accent-doux',

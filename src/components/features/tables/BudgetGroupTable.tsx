@@ -117,14 +117,14 @@ export default function BudgetGroupTable({
                           onChange={(event) => setDraftAmount(event.target.value)}
                           onKeyDown={(event) => handleEditorKeyDown(event, row.category)}
                           aria-label={`Modifier le montant de ${row.category}`}
-                          className="w-28 rounded-md border border-bordure bg-white px-2 py-1 text-right text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
+                          className="w-28 rounded-md border border-bordure bg-surface px-2 py-1 text-right text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
                         />
                         <button
                           type="button"
                           onClick={() => void saveEditing(row.category)}
                           title="Valider le montant"
                           aria-label={`Valider le montant de ${row.category}`}
-                          className="rounded p-1 text-green-700 hover:bg-green-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-green-700"
+                          className="rounded p-1 text-ok hover:bg-ok-fond focus-visible:outline focus-visible:outline-2 focus-visible:outline-ok"
                         >
                           <Check size={17} aria-hidden="true" />
                         </button>
@@ -133,7 +133,7 @@ export default function BudgetGroupTable({
                           onClick={cancelEditing}
                           title="Annuler la modification"
                           aria-label={`Annuler la modification de ${row.category}`}
-                          className="rounded p-1 text-red-700 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-700"
+                          className="rounded p-1 text-depasse hover:bg-depasse-fond focus-visible:outline focus-visible:outline-2 focus-visible:outline-depasse"
                         >
                           <X size={17} aria-hidden="true" />
                         </button>
@@ -147,7 +147,7 @@ export default function BudgetGroupTable({
                             onClick={() => beginEditing(row.category, row.values[monthIndex] ?? '-')}
                             title="Modifier le montant"
                             aria-label={`Modifier le montant de ${row.category}`}
-                            className="rounded p-1 text-texte-doux opacity-0 transition-opacity hover:bg-white/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus group-hover:opacity-100 group-focus-within:opacity-100"
+                            className="rounded p-1 text-texte-doux opacity-0 transition-opacity hover:bg-surface/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus group-hover:opacity-100 group-focus-within:opacity-100"
                           >
                             <Pencil size={16} aria-hidden="true" />
                           </button>
@@ -162,7 +162,7 @@ export default function BudgetGroupTable({
         </table>
       </div>
       {saveError && (
-        <p className="mt-2 text-sm font-semibold text-red-700" role="alert">
+        <p className="mt-2 text-sm font-semibold text-depasse" role="alert">
           {saveError}
         </p>
       )}

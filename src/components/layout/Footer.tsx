@@ -25,7 +25,7 @@ export default function Footer({ variant = 'full' }: FooterProps) {
   if (variant === 'compact') {
     return (
       // Sur mobile, la barre d'onglets est juste en dessous dans la colonne : le pied de page la touche, sans marge à deviner.
-      <footer className="shrink-0 border-t border-bordure bg-surface px-3 py-1 text-[0.7rem] text-texte md:px-4 md:text-xs">
+      <footer className="shrink-0 border-t border-bordure bg-surface px-3 py-1 text-xs text-texte md:px-4 md:text-xs">
         {/* Mobile : une seule ligne, les liens se déplient à la demande (moins de bruit pendant une tâche). */}
         <details className="group mx-auto max-w-6xl text-center md:hidden">
           <summary className="flex min-h-8 cursor-pointer list-none items-center justify-center gap-1 rounded focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus [&::-webkit-details-marker]:hidden">

@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthCard title="Mot de passe oublié" intro="Pas de panique : on t’envoie un lien pour en choisir un nouveau.">
       {error && (
-        <div id="forgot-error" role="alert" className="rounded-xl border border-red-700 bg-red-50 p-3 text-center text-sm font-bold text-red-800">
+        <div id="forgot-error" role="alert" className="rounded-xl border border-depasse bg-depasse-fond p-3 text-center text-sm font-bold text-depasse">
           {error}
         </div>
       )}

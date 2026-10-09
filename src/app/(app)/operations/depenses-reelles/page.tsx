@@ -53,7 +53,7 @@ const TONE_CLASSES: Record<NonNullable<SummaryCardProps['tone']>, string> = {
 function SummaryCard({ label, value, tone = 'neutral', action }: SummaryCardProps) {
   return (
     <div className="rounded-xl border border-bordure bg-surface px-2 py-1.5 shadow-sm sm:rounded-2xl sm:px-3 sm:py-2">
-      <dt className="text-[0.6rem] font-semibold uppercase leading-tight tracking-[0.08em] text-texte-doux sm:text-[0.7rem]">{label}</dt>
+      <dt className="text-xs font-semibold uppercase leading-tight tracking-[0.08em] text-texte-doux sm:text-xs">{label}</dt>
       <dd className={`flex items-center justify-between gap-1 text-sm font-black sm:text-lg ${TONE_CLASSES[tone]}`}>
         {value}
         {action}
@@ -128,12 +128,12 @@ export default function DepenseReellePage() {
     : [];
 
   const monthNav = (
-    <div className="flex items-center gap-1 rounded-xl border border-bordure bg-white/70 p-1">
+    <div className="flex items-center gap-1 rounded-xl border border-bordure bg-surface/70 p-1">
       <button
         type="button"
         onClick={() => goToMonth(-1)}
         aria-label="Mois précédent"
-        className="flex h-11 w-11 items-center justify-center rounded-lg text-texte transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+        className="flex h-11 w-11 items-center justify-center rounded-lg text-texte transition hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
       >
         <ChevronLeft size={18} aria-hidden="true" />
       </button>
@@ -144,7 +144,7 @@ export default function DepenseReellePage() {
         type="button"
         onClick={() => goToMonth(1)}
         aria-label="Mois suivant"
-        className="flex h-11 w-11 items-center justify-center rounded-lg text-texte transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+        className="flex h-11 w-11 items-center justify-center rounded-lg text-texte transition hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
       >
         <ChevronRight size={18} aria-hidden="true" />
       </button>
@@ -161,7 +161,7 @@ export default function DepenseReellePage() {
         )}
 
         {data?.error && (
-          <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
+          <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
             {data.error}
           </p>
         )}

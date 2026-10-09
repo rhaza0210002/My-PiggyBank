@@ -90,7 +90,7 @@ export default function CsvUploaderPage() {
       <div className="mx-auto max-w-3xl space-y-4">
         <div className="rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-4 text-center sm:p-6">
           <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl p-2 focus-within:ring-2 focus-within:ring-focus">
-            <span className="rounded-full bg-accent p-3 text-2xl text-white shadow-md" aria-hidden="true">
+            <span className="rounded-full bg-accent p-3 text-2xl text-surface shadow-md" aria-hidden="true">
               📂
             </span>
             <span className="text-lg font-bold text-texte">
@@ -115,11 +115,11 @@ export default function CsvUploaderPage() {
             type="button"
             onClick={showDemo}
             disabled={isLoadingMappings}
-            className="mt-3 rounded-full border-2 border-bordure bg-white/70 px-4 py-2 text-sm font-bold text-texte focus:outline-none focus:ring-2 focus:ring-focus disabled:opacity-55"
+            className="mt-3 rounded-full border-2 border-bordure bg-surface/70 px-4 py-2 text-sm font-bold text-texte focus:outline-none focus:ring-2 focus:ring-focus disabled:opacity-55"
           >
             🧪 Essayer avec un exemple
           </button>
-          {error && <p role="alert" className="mt-3 font-semibold text-red-700">{error}</p>}
+          {error && <p role="alert" className="mt-3 font-semibold text-depasse">{error}</p>}
         </div>
 
         <CsvTransactionsTable transactions={transactions} isDemo={isDemo} />
