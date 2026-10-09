@@ -42,6 +42,11 @@ describe('rôles de couleur', () => {
     ['ok', 'ok-fond'],
     ['attention', 'attention-fond'],
     ['depasse', 'depasse-fond'],
+    ['accent-fort', 'accent-doux'],
+    ['accent-fort', 'surface-douce'],
+    ['texte', 'accent-doux'],
+    ['texte-doux', 'accent-doux'],
+    ['texte-doux', 'surface-douce'],
   ])('texte lisible : %s sur %s (4,5:1 minimum)', (foreground, background) => {
     expect(contrastRatio(role(foreground), role(background))).toBeGreaterThanOrEqual(4.5);
   });
