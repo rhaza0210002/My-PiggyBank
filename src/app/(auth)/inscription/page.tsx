@@ -4,9 +4,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AuthForm from '@/components/features/forms/AuthForm';
+import RegisterWelcome from '@/components/features/forms/RegisterWelcome';
+import { isGoogleAuthEnabled } from '@/constants/features';
 import { ROUTES } from '@/constants/routes';
 import { supabase } from '@/lib/supabaseClient';
 import { registerUser, resendConfirmationEmail, signInWithGoogle } from '@/services/authService';
+import { deleteMyAccount } from '@/services/personalDataService';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -14,6 +17,9 @@ export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [needsConfirmation, setNeedsConfirmation] = useState<string | null>(null);
   const [resendState, setResendState] = useState<'idle' | 'sent' | 'error'>('idle');
+  const [welcomeEmail, setWelcomeEmail] = useState<string | null>(null);
+  const [welcomeError, setWelcomeError] = useState<string | null>(null);
+  const [isUndoing, setIsUndoing] = useState(false);
 
   const handleRegisterSubmit = async (data: { email: string; password: string; pseudo?: string }) => {
     setIsLoading(true);
@@ -25,7 +31,8 @@ export default function RegisterPage() {
       // Selon la configuration Supabase, le compte est connecté tout de suite ou après confirmation par e-mail.
       const { data: sessionData } = await supabase.auth.getSession();
       if (sessionData.session) {
-        router.push(ROUTES.dashboard);
+        // Compte actif tout de suite : on rappelle l'adresse avant d'entrer, pour rattraper une faute de frappe.
+        setWelcomeEmail(data.email);
       } else {
         setNeedsConfirmation(data.email);
       }
@@ -54,6 +61,34 @@ export default function RegisterPage() {
       setResendState('error');
     }
   };
+
+  // Mauvaise adresse : le compte vide tout juste créé est supprimé, on recommence l'inscription.
+  const handleWrongEmail = async () => {
+    setIsUndoing(true);
+    setWelcomeError(null);
+    try {
+      await deleteMyAccount();
+      setWelcomeEmail(null);
+    } catch (err) {
+      setWelcomeError(err instanceof Error ? err.message : 'Suppression impossible pour le moment.');
+    } finally {
+      setIsUndoing(false);
+    }
+  };
+
+  if (welcomeEmail) {
+    return (
+      <div className="relative flex w-full flex-1 items-center justify-center bg-fond px-4 py-8 text-texte">
+        <RegisterWelcome
+          email={welcomeEmail}
+          onEnter={() => router.push(ROUTES.dashboard)}
+          onWrongEmail={handleWrongEmail}
+          isBusy={isUndoing}
+          error={welcomeError}
+        />
+      </div>
+    );
+  }
 
   if (needsConfirmation) {
     return (
@@ -85,7 +120,7 @@ export default function RegisterPage() {
       <div className="pointer-events-none absolute -left-24 -top-24 h-96 w-96 rounded-full bg-accent/20 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-surface-douce/40 blur-3xl" aria-hidden="true" />
 
-      <AuthForm mode="register" onSubmit={handleRegisterSubmit} onGoogle={handleGoogle} isLoading={isLoading} serverError={errorMessage} />
+      <AuthForm mode="register" onSubmit={handleRegisterSubmit} onGoogle={isGoogleAuthEnabled() ? handleGoogle : undefined} isLoading={isLoading} serverError={errorMessage} />
     </div>
   );
 }
