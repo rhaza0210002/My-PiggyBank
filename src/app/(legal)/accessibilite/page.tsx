@@ -28,6 +28,12 @@ export default function AccessibilitePage() {
         <li>Une seule action mise en avant par écran et des étapes courtes, pour limiter la charge mentale.</li>
         <li>Graphiques circulaires doublés d’un tableau de chiffres.</li>
         <li>
+          Un bouton d’accessibilité (♿) propose, sur tout le site : police Luciole, zoom du texte jusqu’à 150 %, contraste
+          renforcé, moins d’animations et lettres plus espacées. Les réglages restent sur l’appareil et le bouton peut être
+          retiré, puis remis depuis Compte → Paramètres.
+        </li>
+        <li>Chaque page a son propre titre, et le contenu reste lisible à 320 pixels de large, y compris avec le zoom.</li>
+        <li>
           Police Luciole, dessinée avec des personnes malvoyantes (Laurent Bourcellier et Jonathan Perez, licence
           Creative Commons Attribution 4.0).
         </li>
