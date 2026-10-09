@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { disablePush, enablePush, getPushStatus, type PushStatus } from '@/services/pushService';
+import Icon from '@/components/ui/Icon';
 
 const MESSAGES: Record<PushStatus, string> = {
   unsupported:
@@ -49,7 +50,7 @@ export default function PushReminderToggle() {
   return (
     <div className="mt-4 rounded-2xl border-[1.5px] border-bordure bg-surface/60 p-4">
       <h3 className="text-sm font-bold text-texte">
-        <span aria-hidden="true">🔔 </span>Rappels sur cet appareil
+        <Icon name="bell" className="mr-1 inline size-4 align-[-3px]" />Rappels sur cet appareil
       </h3>
       <p className="mt-1 text-sm text-texte-doux" role="status">
         {status ? MESSAGES[status] : 'Vérification…'}

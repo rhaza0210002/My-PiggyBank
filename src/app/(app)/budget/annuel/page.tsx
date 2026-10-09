@@ -27,6 +27,8 @@ export default function BilanBank() {
           action={{ href: ROUTES.budgetMonthly, label: 'Prévoir mon budget' }}
         />
       ) : (
+        // Conteneur pleine hauteur : sans lui, la zone de blocs (hauteur de conteneur) s'écrase à zéro sur tablette et ordinateur.
+        <div className="flex flex-col md:h-full md:min-h-0">
         <SectionStack
           fillZone
           label="Parties du budget annuel"
@@ -53,6 +55,7 @@ export default function BilanBank() {
             { id: 'chart', label: 'Graphique', hideTitle: true, content: <BudgetDonut dataGroups={dataGroups} /> },
           ]}
         />
+        </div>
       )}
     </ScreenCard>
   );

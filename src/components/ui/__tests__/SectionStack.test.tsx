@@ -10,6 +10,10 @@ const sections = [
 describe('SectionStack : cartes qui se suivent sur ordinateur', () => {
   const html = renderToStaticMarkup(<SectionStack sections={sections} label="Parties du budget" fillZone />);
 
+  it('laisse de la marge sur les côtés : une carte grossie au survol n’est pas rognée', () => {
+    expect(html).toMatch(/md:overflow-y-auto[^"]*md:px-2|md:px-2[^"]*md:overflow-y-auto/);
+  });
+
   it('accroche doucement le défilement sur chaque carte (proximity, jamais mandatory)', () => {
     expect(html).toContain('md:snap-y');
     expect(html).toContain('md:snap-proximity');
@@ -65,7 +69,11 @@ describe('SectionStack : bloc court (formulaire)', () => {
 
   it('prend la hauteur de son contenu, sans grand vide en dessous', () => {
     expect(short.slice(0, short.indexOf('</section>'))).not.toContain('min-h-[calc(100cqh');
-    expect(short.slice(0, short.indexOf('</section>'))).not.toContain('min-h-40');
+  });
+
+  it('garde une place d’attente tant qu’il n’est pas monté (sinon il ne serait jamais « atteint »)', () => {
+    const block = short.slice(0, short.indexOf('</section>'));
+    expect(block).toContain('min-h-40');
   });
 
   it('reste une étape du défilement accroché', () => {
