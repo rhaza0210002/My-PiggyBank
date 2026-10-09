@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import ScreenCard from '@/components/ui/ScreenCard';
 import { getNotifications, type AppNotification } from '@/services/notificationService';
 import { getUserSettings } from '@/services/userSettingsService';
 
@@ -30,11 +31,10 @@ export default function NotificationsPage() {
   }, []);
 
   return (
-    <div className="mx-auto flex min-h-[60vh] max-w-5xl flex-col gap-4 px-4 py-10 sm:px-6 lg:px-8">
+    <ScreenCard flow title="Notifications" icon="bell" subtitle="Ce qui demande ton attention.">
+      <div className="mx-auto flex max-w-3xl flex-col gap-4">
       <div className={CARD}>
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent-fort">Notifications</p>
-        <h1 className="mt-2 text-2xl font-bold text-texte">Ce qui demande ton attention</h1>
-        <p className="mt-2 text-sm text-texte-doux">
+        <p className="text-sm text-texte-doux">
           Choisis ce que tu veux voir dans les{' '}
           <Link href="/compte/parametres" className="font-semibold text-accent-fort underline">paramètres</Link>.
         </p>
@@ -75,6 +75,7 @@ export default function NotificationsPage() {
           ))}
         </ul>
       )}
-    </div>
+      </div>
+    </ScreenCard>
   );
 }

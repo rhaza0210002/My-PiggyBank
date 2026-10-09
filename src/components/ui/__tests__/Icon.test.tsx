@@ -14,7 +14,7 @@ describe('Icon', () => {
   });
 
   it('couvre le menu et les titres de pages', () => {
-    for (const name of ['home', 'budget', 'operations', 'account', 'import', 'chart', 'calendar', 'target', 'lock', 'coins', 'folder', 'flask', 'archive'] as const) {
+    for (const name of ['home', 'budget', 'operations', 'account', 'import', 'chart', 'calendar', 'target', 'lock', 'coins', 'folder', 'flask', 'archive', 'settings', 'bell'] as const) {
       expect(ICON_NAMES).toContain(name);
     }
   });
