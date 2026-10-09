@@ -56,12 +56,12 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
   const palette = getBudgetGroupPalette(group.key, group.title);
 
   return (
-    <div className={`rounded-carte border-[3px] border-dashed ${palette.border} ${palette.section} p-3 shadow-bonbon`}>
+    <div className={`rounded-carte border-2 border-dashed ${palette.border} ${palette.section} p-3 shadow-bonbon`}>
       <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-texte">
         {group.title}
       </h2>
 
-      <div role="region" aria-label={`Tableau annuel ${group.title}`} tabIndex={0} className={`overflow-x-auto rounded-xl border ${palette.border} ${palette.table} shadow-inner`}>
+      <div role="region" aria-label={`Tableau annuel ${group.title}`} tabIndex={0} className={`overflow-x-auto rounded-xl border-[1.5px] ${palette.border} ${palette.table} shadow-inner`}>
         <table
           className="w-full min-w-[840px] border-collapse text-left"
           aria-label={`Tableau de ${group.title}`}

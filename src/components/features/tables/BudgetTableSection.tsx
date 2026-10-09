@@ -70,12 +70,12 @@ export default function BudgetTotalsSection({
     const restLibVal = restantLibreValues[currentMonthIndex] || 0;
 
     return (
-      <div className="rounded-carte sm:rounded-carte border-[3px] border-bordure border-dashed bg-surface-douce p-3 sm:p-4 shadow-bonbon">
+      <div className="rounded-carte sm:rounded-carte border-2 border-bordure border-dashed bg-surface-douce p-3 sm:p-4 shadow-bonbon">
         <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-texte">
           Total dépenses — {currentMonthLabel}
         </h2>
 
-        <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border border-bordure/50 bg-surface/40 shadow-inner">
+        <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border-[1.5px] border-bordure/50 bg-surface/40 shadow-inner">
           <table className="w-full min-w-[320px] border-collapse text-left" aria-label="Tableau des totaux mensuels">
             <thead>
               <tr className="bg-surface-douce text-texte">
@@ -113,12 +113,12 @@ export default function BudgetTotalsSection({
 
   // Mode Annuel : Affichage de tous les mois en colonnes
   return (
-    <div className="rounded-carte sm:rounded-carte border-[3px] border-bordure border-dashed bg-surface-douce p-3 sm:p-4 shadow-bonbon">
+    <div className="rounded-carte sm:rounded-carte border-2 border-bordure border-dashed bg-surface-douce p-3 sm:p-4 shadow-bonbon">
       <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-texte">
         Totaux Annuels par mois
       </h2>
 
-      <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border border-bordure/50 bg-surface/40 shadow-inner">
+      <div role="region" aria-label="Tableau des totaux" tabIndex={0} className="w-full overflow-x-auto rounded-xl border-[1.5px] border-bordure/50 bg-surface/40 shadow-inner">
         <table className="w-full min-w-[840px] border-collapse text-left" aria-label="Tableau des totaux annuels">
           <thead>
             <tr className="bg-surface-douce text-texte">
@@ -181,4 +181,4 @@ export default function BudgetTotalsSection({
       </div>
     </div>
   );
-}
+}

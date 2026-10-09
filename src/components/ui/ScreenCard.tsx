@@ -18,13 +18,13 @@ interface ScreenCardProps {
 export default function ScreenCard({ title, subtitle, actions, children, flow = false, icon }: ScreenCardProps) {
   return (
     <div className={`mx-auto flex min-h-0 w-full ${flow ? 'md:h-full' : 'h-full'} max-w-[1200px] flex-col px-3 py-2 sm:px-5`}>
-      <div className={`flex min-h-0 flex-col gap-2 rounded-carte border-[3px] border-texte bg-surface-douce p-3 shadow-sticker sm:p-4 ${flow ? 'md:flex-1' : 'flex-1'}`}>
+      <div className={`flex min-h-0 flex-col gap-2 rounded-carte border-2 border-texte bg-surface-douce p-3 shadow-sticker sm:p-4 ${flow ? 'md:flex-1' : 'flex-1'}`}>
         <div className="flex flex-col items-center gap-1 px-1 text-center">
           <div className="flex items-center justify-center gap-2.5">
             {icon && (
               <span
                 aria-hidden="true"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-[3px] border-texte bg-piece text-xl shadow-sticker-petit"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-texte bg-piece text-xl shadow-sticker-petit"
               >
                 {icon}
               </span>

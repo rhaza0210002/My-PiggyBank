@@ -61,7 +61,7 @@ export default function Tabs({ tabs, label, panelClassName = 'min-h-0 flex-1 ove
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActiveId(tab.id)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              className="min-h-11 shrink-0 rounded-full border-2 border-bordure bg-surface px-4 text-sm font-semibold text-texte transition hover:-translate-y-0.5 hover:bg-accent-doux motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-selected:border-transparent aria-selected:onglet-actif aria-selected:font-bold"
+              className="min-h-11 shrink-0 rounded-full border-[1.5px] border-bordure bg-surface px-4 text-sm font-semibold text-texte transition hover:-translate-y-0.5 hover:bg-accent-doux motion-safe:hover:animate-[wiggle_0.4s_ease-in-out_1] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-selected:border-transparent aria-selected:onglet-actif aria-selected:font-bold"
             >
               {tab.label}
             </button>

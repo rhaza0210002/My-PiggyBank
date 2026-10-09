@@ -39,7 +39,7 @@ export default function DemoBanner() {
       <button
         type="button"
         onClick={quit}
-        className="min-h-11 rounded-full border-2 border-attention px-4 font-bold focus:outline-none focus:ring-2 focus:ring-focus"
+        className="min-h-11 rounded-full border-[1.5px] border-attention px-4 font-bold focus:outline-none focus:ring-2 focus:ring-focus"
       >
         Quitter l’exemple
       </button>

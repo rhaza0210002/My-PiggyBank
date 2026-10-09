@@ -21,7 +21,7 @@ export default function BadgeShelf({ badges }: { badges: Badge[] }) {
           key={badge.id}
           style={{ '--i': index * 0.6 } as CSSProperties}
           title={`${badge.label} : ${badge.description}`}
-          className={`rise flex min-h-10 min-w-0 flex-col items-center justify-center rounded-2xl border-[3px] px-0.5 py-1 text-center md:min-h-16 md:px-1 md:odd:-rotate-2 md:even:rotate-2 ${
+          className={`rise flex min-h-10 min-w-0 flex-col items-center justify-center rounded-2xl border-2 px-0.5 py-1 text-center md:min-h-16 md:px-1 md:odd:-rotate-2 md:even:rotate-2 ${
             badge.earned
               ? 'border-texte bg-surface text-texte shadow-sticker-petit'
               : 'border-dashed border-bordure-forte bg-transparent text-texte'

@@ -6,8 +6,8 @@ const BASE =
   'inline-flex min-h-11 items-center justify-center gap-2 rounded-bonbon px-5 font-titre text-lg font-extrabold transition-colors disabled:cursor-not-allowed disabled:opacity-60';
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  principal: 'border-[3px] border-texte bg-corail text-sur-corail shadow-bonbon hover:bg-corail-clair',
-  secondaire: 'border-[3px] border-texte bg-surface text-texte shadow-bonbon hover:bg-surface-douce',
+  principal: 'border-2 border-texte bg-corail text-sur-corail shadow-bonbon hover:bg-corail-clair',
+  secondaire: 'border-2 border-texte bg-surface text-texte shadow-bonbon hover:bg-surface-douce',
   lien: 'px-2 text-accent-fort underline underline-offset-2 hover:text-texte',
   doux: 'bg-depasse-fond text-depasse hover:bg-accent-doux',
 };

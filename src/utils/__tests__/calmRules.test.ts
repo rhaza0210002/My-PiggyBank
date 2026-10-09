@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const SRC = join(process.cwd(), 'src');
@@ -12,7 +12,7 @@ function tsxFiles(directory: string): string[] {
   });
 }
 
-const files = tsxFiles(SRC).map((path) => ({ file: relative(SRC, path), content: readFileSync(path, 'utf8') }));
+const files = tsxFiles(SRC).map((path) => ({ file: relative(SRC, path).split(sep).join('/'), content: readFileSync(path, 'utf8') }));
 
 describe('règles de calme', () => {
   it('aucune animation en boucle dans les composants (le clignement du cochon est en CSS, sans boucle)', () => {

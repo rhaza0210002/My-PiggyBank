@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Footer from '@/components/layout/Footer';
 import SkipLink from '@/components/layout/SkipLink';
 import { ROUTES } from '@/constants/routes';
+import Pig from '@/components/ui/Pig';
 
 export default function LegalLayout({ children }: { children: ReactNode }) {
   return (
@@ -14,11 +15,11 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
             href={ROUTES.dashboard}
             className="flex min-h-12 items-center gap-2 rounded-xl p-1 text-lg font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
-            <span aria-hidden="true">🐷</span> My PiggyBank
+            <Pig className="size-8" /> My PiggyBank
           </Link>
           <Link
             href={ROUTES.dashboard}
-            className="inline-flex min-h-11 items-center rounded-xl border border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            className="inline-flex min-h-11 items-center rounded-xl border-[1.5px] border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Retour à l’application
           </Link>

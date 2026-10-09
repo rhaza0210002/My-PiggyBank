@@ -26,7 +26,7 @@ export default function SectionTabs({ sectionId }: SectionTabsProps) {
               <Link
                 href={page.href}
                 aria-current={isCurrent ? 'page' : undefined}
-                className="flex min-h-11 items-center justify-center rounded-full border-2 border-bordure bg-surface px-4 text-sm font-semibold text-texte transition hover:-translate-y-0.5 hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[current=page]:border-transparent aria-[current=page]:onglet-actif aria-[current=page]:font-bold"
+                className="flex min-h-11 items-center justify-center rounded-full border-[1.5px] border-bordure bg-surface px-4 text-sm font-semibold text-texte transition hover:-translate-y-0.5 hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[current=page]:border-transparent aria-[current=page]:onglet-actif aria-[current=page]:font-bold"
               >
                 {page.label}
               </Link>

@@ -55,7 +55,7 @@ export default function LabelRuleForm({ transactionLabel, category, onSaved, onC
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 rounded-xl border border-dashed border-bordure-forte bg-surface/60 p-3 sm:flex-row sm:items-end"
+      className="flex flex-col gap-3 rounded-xl border-[1.5px] border-dashed border-bordure-forte bg-surface/60 p-3 sm:flex-row sm:items-end"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <label htmlFor={fieldId} className="text-sm font-bold text-texte">
@@ -70,7 +70,7 @@ export default function LabelRuleForm({ transactionLabel, category, onSaved, onC
           autoComplete="off"
           aria-invalid={error !== null}
           aria-describedby={`${fieldId}-help${error ? ` ${fieldId}-error` : ''}`}
-          className="min-h-11 rounded-xl border-2 border-bordure-forte bg-surface px-3 text-sm font-semibold text-texte"
+          className="min-h-11 rounded-xl border-[1.5px] border-bordure-forte bg-surface px-3 text-sm font-semibold text-texte"
         />
         <p id={`${fieldId}-help`} className="text-xs text-texte-doux">
           Les prochaines opérations dont le libellé contient ce mot seront classées automatiquement. Garde un mot
@@ -87,14 +87,14 @@ export default function LabelRuleForm({ transactionLabel, category, onSaved, onC
         <button
           type="submit"
           disabled={isSaving}
-          className="min-h-11 rounded-xl border-2 border-bordure bg-accent px-4 text-sm font-bold text-sur-accent disabled:opacity-60"
+          className="min-h-11 rounded-xl border-[1.5px] border-bordure bg-accent px-4 text-sm font-bold text-sur-accent disabled:opacity-60"
         >
           {isSaving ? 'Enregistrement…' : 'Enregistrer la règle'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="min-h-11 rounded-xl border border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte"
+          className="min-h-11 rounded-xl border-[1.5px] border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte"
         >
           Annuler
         </button>

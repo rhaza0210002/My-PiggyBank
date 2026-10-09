@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { LEGAL } from '@/constants/legal';
 import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
 import { hasContactEmail } from '@/constants/legal';
+import Pig from '@/components/ui/Pig';
 
 const LINK =
   'inline-flex min-h-8 items-center rounded px-1 text-texte underline-offset-2 hover:underline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus';
@@ -60,7 +61,7 @@ export default function Footer({ variant = 'full' }: FooterProps) {
       <div className="mx-auto grid max-w-5xl gap-6 px-4 py-6 sm:grid-cols-3 sm:px-6">
         <div>
           <p className="flex items-center gap-2 text-lg font-bold">
-            <span aria-hidden="true">🐷</span> {LEGAL.appName}
+            <Pig className="size-8" /> {LEGAL.appName}
           </p>
           <p className="mt-2 text-texte-doux">
             Un outil de suivi de trésorerie personnelle, pensé pour rester simple. Tes données sont hébergées

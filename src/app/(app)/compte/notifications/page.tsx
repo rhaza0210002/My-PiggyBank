@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getNotifications, type AppNotification } from '@/services/notificationService';
 import { getUserSettings } from '@/services/userSettingsService';
 
-const CARD = 'rounded-carte border border-bordure bg-surface p-6 shadow-sm';
+const CARD = 'rounded-carte border-[1.5px] border-bordure bg-surface p-6 shadow-sm';
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<AppNotification[] | null>(null);
@@ -41,7 +41,7 @@ export default function NotificationsPage() {
       </div>
 
       {error && (
-        <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+        <p role="alert" className="rounded-lg border-[1.5px] border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
           {error}
         </p>
       )}

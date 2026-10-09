@@ -8,5 +8,5 @@ interface CardProps {
 
 /** Carte commune : fond surface, bordure douce, contour d'encre et ombre pleine (style autocollant). */
 export default function Card({ children, as: Tag = 'div', className = '' }: CardProps) {
-  return <Tag className={`rounded-carte border-[3px] border-texte bg-surface p-4 shadow-sticker-petit ${className}`}>{children}</Tag>;
+  return <Tag className={`rounded-carte border-2 border-texte bg-surface p-4 shadow-sticker-petit ${className}`}>{children}</Tag>;
 }

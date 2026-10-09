@@ -22,7 +22,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
 
   if (isArchivedList(transactions)) {
     return (
-      <p className="rounded-xl border border-bordure bg-ok-fond px-3 py-2 text-center text-sm font-semibold text-ok">
+      <p className="rounded-xl border-[1.5px] border-bordure bg-ok-fond px-3 py-2 text-center text-sm font-semibold text-ok">
         <span aria-hidden="true">🗄️ </span>
         Mois archivé : seuls les totaux par catégorie sont conservés. Ton budget et tes points restent intacts.
       </p>
@@ -48,7 +48,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
   };
 
   return (
-    <section aria-label="Archiver le mois" className="rounded-2xl border-2 border-dashed border-bordure bg-surface/50 p-3 text-center">
+    <section aria-label="Archiver le mois" className="rounded-2xl border-[1.5px] border-dashed border-bordure bg-surface/50 p-3 text-center">
       {!isConfirming ? (
         <>
           <p className="text-sm font-semibold text-texte">
@@ -57,7 +57,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
           <button
             type="button"
             onClick={() => setIsConfirming(true)}
-            className="mt-2 min-h-11 rounded-xl border-2 border-bordure bg-surface px-4 text-sm font-bold text-texte transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            className="mt-2 min-h-11 rounded-xl border-[1.5px] border-bordure bg-surface px-4 text-sm font-bold text-texte transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             <span aria-hidden="true">🗄️ </span>Archiver {monthLabel.toLowerCase()}
           </button>
@@ -76,7 +76,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
               type="button"
               onClick={confirm}
               disabled={isBusy}
-              className="min-h-11 rounded-xl border-2 border-accent-fort bg-accent px-4 text-sm font-black text-sur-accent focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60"
+              className="min-h-11 rounded-xl border-[1.5px] border-accent-fort bg-accent px-4 text-sm font-black text-sur-accent focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60"
             >
               {isBusy ? 'Archivage…' : 'Oui, effacer le détail'}
             </button>
@@ -84,7 +84,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
               type="button"
               onClick={() => setIsConfirming(false)}
               disabled={isBusy}
-              className="min-h-11 rounded-xl border-2 border-bordure bg-surface px-4 text-sm font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+              className="min-h-11 rounded-xl border-[1.5px] border-bordure bg-surface px-4 text-sm font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               Annuler
             </button>

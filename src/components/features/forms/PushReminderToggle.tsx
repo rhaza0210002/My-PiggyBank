@@ -47,7 +47,7 @@ export default function PushReminderToggle() {
   const canToggle = status === 'on' || status === 'off';
 
   return (
-    <div className="mt-4 rounded-2xl border border-bordure bg-surface/60 p-4">
+    <div className="mt-4 rounded-2xl border-[1.5px] border-bordure bg-surface/60 p-4">
       <h3 className="text-sm font-bold text-texte">
         <span aria-hidden="true">🔔 </span>Rappels sur cet appareil
       </h3>
@@ -63,7 +63,7 @@ export default function PushReminderToggle() {
           onClick={toggle}
           disabled={isBusy}
           aria-pressed={status === 'on'}
-          className="mt-3 min-h-11 rounded-xl border-2 border-bordure bg-surface px-4 text-sm font-bold text-texte transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60"
+          className="mt-3 min-h-11 rounded-xl border-[1.5px] border-bordure bg-surface px-4 text-sm font-bold text-texte transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60"
         >
           {isBusy ? 'Un instant…' : status === 'on' ? 'Couper les rappels' : 'Activer les rappels'}
         </button>

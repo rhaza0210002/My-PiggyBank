@@ -26,7 +26,7 @@ export default function MonthsStrip({ months }: MonthsStripProps) {
           <li
             key={month.monthIndex}
             style={{ '--i': month.monthIndex * 0.5 } as CSSProperties}
-            className={`rise flex min-h-12 flex-col items-center justify-center rounded-2xl border-[3px] px-1 py-1 text-center ${style.className}`}
+            className={`rise flex min-h-12 flex-col items-center justify-center rounded-2xl border-2 px-1 py-1 text-center ${style.className}`}
           >
             <span className="text-xs font-bold leading-tight" aria-hidden="true">
               {MONTH_SHORT_LABELS[month.monthIndex]}
