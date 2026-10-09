@@ -18,15 +18,16 @@ export const MONTHS = [
 /** Abréviations courtes pour les petits espaces (même ordre que MONTHS). */
 export const MONTH_SHORT_LABELS = ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."] as const;
 
+/** Tableaux aérés : couleurs du thème, montants à droite en chiffres de largeur égale pour que les colonnes tombent juste. */
 export const TABLE_STYLES = {
-  rowEven: "bg-[#f7e8df]",
-  rowOdd: "bg-[#e5f0d9]",
+  rowEven: "bg-surface",
+  rowOdd: "bg-surface-douce/60",
   cellCategory:
-    "border-r border-[#d8b7a5] border-t border-[#d8b7a5] px-3 py-1.5 text-[0.95rem] font-semibold text-[#54433d] break-words",
+    "border-t border-bordure px-3 py-2.5 text-[0.95rem] font-semibold text-texte break-words",
   cellAmount:
-    "border-t border-[#d8b7a5] px-3 py-1.5 text-center text-[0.95rem] font-semibold text-[#4a3d37] whitespace-nowrap",
+    "border-t border-bordure px-3 py-2.5 text-right text-[0.95rem] font-semibold tabular-nums text-texte whitespace-nowrap",
   thCategory:
-    "border-r border-[#d8b7a5] px-3 py-1.5 text-left text-[0.95rem] font-bold",
+    "px-3 py-2.5 text-left text-[0.95rem] font-bold",
   thAmount:
-    "px-3 py-1.5 text-center text-[0.95rem] font-bold whitespace-nowrap",
+    "px-3 py-2.5 text-right text-[0.95rem] font-bold tabular-nums whitespace-nowrap",
 } as const;
