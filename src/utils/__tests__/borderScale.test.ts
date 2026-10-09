@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
@@ -21,7 +21,7 @@ describe('échelle des contours', () => {
   it('n’utilise que 2 px (blocs) ou 1,5 px (champs) pour le contour complet d’un bloc', () => {
     const offenders = sourceFiles(SRC)
       .filter((path) => OFF_SCALE.test(readFileSync(path, 'utf8')))
-      .map((path) => relative(SRC, path));
+      .map((path) => relative(SRC, path).split(sep).join('/'));
     expect(offenders).toEqual([]);
   });
 });

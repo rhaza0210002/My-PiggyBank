@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const SRC = join(process.cwd(), 'src');
@@ -35,7 +35,7 @@ function hasHardCodedColor(path: string): boolean {
 }
 
 const checked = sourceFiles(SRC)
-  .map((path) => relative(SRC, path))
+  .map((path) => relative(SRC, path).split(sep).join('/'))
   .filter((file) => !DATA_FILES.includes(file) && !DATA_DIRS.some((dir) => file.startsWith(dir)));
 
 describe('couleurs en dur', () => {
