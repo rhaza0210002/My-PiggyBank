@@ -7,7 +7,8 @@ import ScreenCard from '@/components/ui/ScreenCard';
 import { ROUTES } from '@/constants/routes';
 import { SocieteGeneraleParser, type BankTransaction } from '@/services/csvParser';
 import { scrollIntoZone } from '@/utils/scroll';
-import { buildDemoTransactions } from '@/utils/demoStatement';
+import { endDemo, isDemoActive } from '@/services/demoStore';
+import { buildDemoTransactions, shouldConfirmReplaceDemo } from '@/utils/demoStatement';
 import { getLibelleTransacts } from '@/services/transactionCategoryService';
 
 export default function CsvUploaderPage() {
@@ -16,6 +17,7 @@ export default function CsvUploaderPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoadingMappings, setIsLoadingMappings] = useState(false);
   const [isDemo, setIsDemo] = useState(false);
+  const [demoSaved, setDemoSaved] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   // Sur un petit écran le résultat arrive sous la zone de dépôt, hors de vue : on y amène la personne.
@@ -29,6 +31,15 @@ export default function CsvUploaderPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    if (shouldConfirmReplaceDemo(isDemoActive(), false)) {
+      if (!window.confirm('Ton exemple sera effacé. Continuer ?')) {
+        event.target.value = '';
+        return;
+      }
+      endDemo();
+    }
+
+    setDemoSaved(false);
     setFileName(file.name);
     setIsDemo(false);
     setError(null);
@@ -76,6 +87,7 @@ export default function CsvUploaderPage() {
   };
 
   const showDemo = async () => {
+    setDemoSaved(false);
     setError(null);
     setFileName(null);
     setIsLoadingMappings(true);
@@ -140,10 +152,10 @@ export default function CsvUploaderPage() {
         </p>
 
         <div ref={resultsRef} className="scroll-mt-2">
-          <CsvTransactionsTable transactions={transactions} isDemo={isDemo} />
+          <CsvTransactionsTable transactions={transactions} isDemo={isDemo} onDemoSaved={() => setDemoSaved(true)} />
         </div>
 
-        {transactions.length > 0 && !isDemo && (
+        {transactions.length > 0 && (!isDemo || demoSaved) && (
           <p className="text-center text-sm text-texte-doux">
             Une fois les transactions enregistrées, passe à l’étape suivante.{' '}
             <Link href={ROUTES.reconciliation} className="font-black text-accent-fort underline underline-offset-4">

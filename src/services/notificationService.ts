@@ -1,4 +1,5 @@
 import { ROUTES } from '@/constants/routes';
+import { isDemoActive } from '@/services/demoStore';
 import { getBudgetEntries } from '@/services/budgetService';
 import { getCategories } from '@/services/transactionCategoryService';
 import { countTransactionsToReconcile, getTransactionsForMonth } from '@/services/transactionService';
@@ -16,6 +17,9 @@ export interface AppNotification {
 
 /** Calcule les notifications à partir des données du mois en cours, selon les préférences. */
 export async function getNotifications(settings: UserSettings, now = new Date()): Promise<AppNotification[]> {
+  // L'exemple est fictif : aucun rappel ne doit en naître.
+  if (isDemoActive()) return [];
+
   const year = now.getFullYear();
   const monthIndex = now.getMonth();
   const monthLabel = MONTHS[monthIndex].label.toLowerCase();

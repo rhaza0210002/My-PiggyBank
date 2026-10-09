@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import localFont from "next/font/local";
-import { Nunito } from "next/font/google";
+import { Baloo_2, Nunito } from "next/font/google";
 import AccessibilityFlower from "@/components/features/accessibility/AccessibilityFlower";
 import { noFlashScript } from "@/utils/accessibilityPrefs";
 import "./globals.css";
@@ -10,6 +10,14 @@ const nunito = Nunito({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-nunito",
+});
+
+// Titres ronds et joyeux ; Luciole les remplace aussi quand la personne l'a choisie (voir globals.css).
+const baloo = Baloo_2({
+  subsets: ["latin"],
+  weight: ["600", "800"],
+  display: "swap",
+  variable: "--font-baloo",
 });
 
 // Luciole, proposée par le bouton accessibilité : police conçue avec des personnes malvoyantes (licence CC BY 4.0, voir la page Accessibilité).
@@ -33,7 +41,7 @@ export const viewport: Viewport = { themeColor: "#8fd36f" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" className={`${nunito.variable} ${luciole.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="fr" className={`${nunito.variable} ${baloo.variable} ${luciole.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashScript() }} />
       </head>

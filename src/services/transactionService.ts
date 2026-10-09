@@ -6,6 +6,7 @@ import { getArchivedMonthActuals, getArchivedMonths } from '@/services/archiveSe
 import { archivedActivityRows, archivedToTransactions } from '@/utils/archive';
 import { fingerprint, sanitizeBankLabel } from '@/utils/bankPrivacy';
 import { prepareTransactionsForStorage } from '@/utils/transactionDedupe';
+import { isDemoActive, isDemoId, readDemoTransactions, updateDemoTransactions } from '@/services/demoStore';
 
 export type StoredTransaction = Pick<
   TransactionRow,
@@ -31,6 +32,29 @@ function toServiceError(error: { code?: string; message: string }, action: strin
     );
   }
   return new Error(`${action} : ${error.message}`);
+}
+
+
+// --- Mode exemple : les opérations fictives vivent dans le navigateur (demoStore), jamais dans Supabase. ---
+
+const newestFirst = (rows: StoredTransaction[]) =>
+  [...rows].sort((first, second) => second.booked_on.localeCompare(first.booked_on));
+
+const demoRows = () => newestFirst(readDemoTransactions());
+
+const DEMO_CHANGED = "L'exemple a changé dans un autre onglet : recharge la page.";
+
+function patchDemo(ids: string[], patch: Partial<StoredTransaction>): void {
+  const targets = new Set(ids);
+  const known = new Set(readDemoTransactions().map((row) => row.id));
+  if (ids.some((id) => !known.has(id)) || !updateDemoTransactions((rows) => rows.map((row) => (targets.has(row.id) ? { ...row, ...patch } : row)))) {
+    throw new Error(DEMO_CHANGED);
+  }
+}
+
+/** Hors exemple, des identifiants d'exemple ne doivent jamais partir vers la base. */
+function rejectDemoIds(ids: string[]): void {
+  if (ids.some(isDemoId)) throw new Error(DEMO_CHANGED);
 }
 
 
@@ -75,6 +99,7 @@ export async function saveImportedTransactions(
 }
 
 export async function getRecentTransactions(limit: number): Promise<StoredTransaction[]> {
+  if (isDemoActive()) return demoRows().slice(0, limit);
   const { data, error } = await supabase
     .from('transactions')
     .select(COLUMNS)
@@ -88,6 +113,7 @@ export async function getRecentTransactions(limit: number): Promise<StoredTransa
 
 /** Opérations pas encore pointées par l'utilisateur (rapprochement), de la plus récente à la plus ancienne. */
 export async function getTransactionsToReconcile(limit: number): Promise<StoredTransaction[]> {
+  if (isDemoActive()) return demoRows().filter((row) => row.reconciled_at === null).slice(0, limit);
   const { data, error } = await supabase
     .from('transactions')
     .select(COLUMNS)
@@ -101,6 +127,7 @@ export async function getTransactionsToReconcile(limit: number): Promise<StoredT
 }
 
 export async function countTransactionsToReconcile(): Promise<number> {
+  if (isDemoActive()) return readDemoTransactions().filter((row) => row.reconciled_at === null).length;
   const { count, error } = await supabase
     .from('transactions')
     .select('id', { count: 'exact', head: true })
@@ -112,6 +139,8 @@ export async function countTransactionsToReconcile(): Promise<number> {
 
 /** Rattache une opération à une catégorie (donc à la ligne de budget de cette catégorie et de son mois). */
 export async function updateTransactionCategory(id: string, categoryId: string | null): Promise<void> {
+  if (isDemoActive()) return patchDemo([id], { category_id: categoryId, category_key: null });
+  rejectDemoIds([id]);
   const { error } = await supabase
     .from('transactions')
     .update({ category_id: categoryId, category_key: null })
@@ -122,6 +151,8 @@ export async function updateTransactionCategory(id: string, categoryId: string |
 
 /** Pointe des opérations : elles ne sont plus à rapprocher. */
 export async function markTransactionsReconciled(ids: string[]): Promise<void> {
+  if (isDemoActive()) return patchDemo(ids, { reconciled_at: new Date().toISOString() });
+  rejectDemoIds(ids);
   if (ids.length === 0) return;
 
   const { error } = await supabase
@@ -134,6 +165,8 @@ export async function markTransactionsReconciled(ids: string[]): Promise<void> {
 
 /** Annule un pointage fait par erreur : les opérations reviennent dans celles à rapprocher. */
 export async function unreconcileTransactions(ids: string[]): Promise<void> {
+  if (isDemoActive()) return patchDemo(ids, { reconciled_at: null });
+  rejectDemoIds(ids);
   if (ids.length === 0) return;
 
   const { error } = await supabase
@@ -146,6 +179,12 @@ export async function unreconcileTransactions(ids: string[]): Promise<void> {
 
 /** Libellés déjà pointés avec leur catégorie : sert uniquement à suggérer une catégorie (calcul dans le navigateur). */
 export async function getPointedLabelHistory(limit = 1000): Promise<Array<{ label: string; category_id: string }>> {
+  if (isDemoActive()) {
+    return demoRows()
+      .filter((row) => row.reconciled_at !== null)
+      .flatMap((row) => (row.category_id ? [{ label: row.label, category_id: row.category_id }] : []))
+      .slice(0, limit);
+  }
   const { data, error } = await supabase
     .from('transactions')
     .select('label, category_id')
@@ -160,6 +199,7 @@ export async function getPointedLabelHistory(limit = 1000): Promise<Array<{ labe
 
 /** Opérations sans catégorie : celles qu'il reste à traiter. */
 export async function getUncategorizedTransactions(limit: number): Promise<StoredTransaction[]> {
+  if (isDemoActive()) return demoRows().filter((row) => row.category_id === null).slice(0, limit);
   const { data, error } = await supabase
     .from('transactions')
     .select(COLUMNS)
@@ -172,6 +212,7 @@ export async function getUncategorizedTransactions(limit: number): Promise<Store
 }
 
 export async function countUncategorizedTransactions(): Promise<number> {
+  if (isDemoActive()) return readDemoTransactions().filter((row) => row.category_id === null).length;
   const { count, error } = await supabase
     .from('transactions')
     .select('id', { count: 'exact', head: true })
@@ -203,6 +244,7 @@ export async function getTransactionsForMonth(
   monthIndex: number,
 ): Promise<StoredTransaction[]> {
   const { start, next } = getMonthRange(year, monthIndex);
+  if (isDemoActive()) return demoRows().filter((row) => row.booked_on >= start && row.booked_on < next);
 
   const { data, error } = await supabase
     .from('transactions')
@@ -223,6 +265,13 @@ export async function getTransactionsForMonth(
 /** Revenus, dépenses et solde net d'un mois (monthIndex : 0 = janvier). */
 export async function getMonthTotals(year: number, monthIndex: number): Promise<MonthTotals> {
   const { start, next } = getMonthRange(year, monthIndex);
+  if (isDemoActive()) {
+    return summarizeAmounts(
+      readDemoTransactions()
+        .filter((row) => row.booked_on >= start && row.booked_on < next)
+        .map((row) => row.amount),
+    );
+  }
 
   const { data, error } = await supabase
     .from('transactions')
@@ -259,6 +308,8 @@ const ACTIVITY_PAGE_SIZE = 1000;
 
 /** Date et état de pointage de toutes les opérations de l'utilisateur (alimente les récompenses). */
 export async function getReconciliationActivity(): Promise<Array<Pick<StoredTransaction, 'booked_on' | 'reconciled_at'>>> {
+  // Un exemple ne donne ni pièces ni badges réels.
+  if (isDemoActive()) return [];
   const rows: Array<Pick<StoredTransaction, 'booked_on' | 'reconciled_at'>> = [];
 
   for (let from = 0; ; from += ACTIVITY_PAGE_SIZE) {

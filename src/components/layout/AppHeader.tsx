@@ -43,15 +43,15 @@ export default function AppHeader() {
   }, [userId]);
 
   return (
-    <header className="sticky top-0 z-40 mx-2 mt-2 rounded-xl border-b border-bordure bg-surface p-1.5 shadow-xs sm:mx-auto sm:w-[90%]">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 rounded-xl border-[0.12rem] border-dashed border-bordure px-2">
+    <header className="sticky top-0 z-40 mx-2 mt-2 rounded-bonbon border-[3px] border-texte bg-surface p-1 shadow-sticker-petit sm:mx-auto sm:w-[90%]">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3">
         <Link
           href={ROUTES.dashboard}
           aria-label="My PiggyBank, retour à l'accueil"
           className="flex min-h-12 shrink-0 items-center gap-2 rounded-xl p-1 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
-          <span className="text-2xl" aria-hidden="true">🐷</span>
-          <span className="whitespace-nowrap text-lg font-bold tracking-tight text-texte sm:text-xl">My PiggyBank</span>
+          <span className="inline-block -rotate-6 text-3xl" aria-hidden="true">🐷</span>
+          <span className="whitespace-nowrap font-titre text-xl font-extrabold text-texte sm:text-2xl">My PiggyBank</span>
         </Link>
 
         <nav aria-label="Navigation principale" className="hidden md:block">

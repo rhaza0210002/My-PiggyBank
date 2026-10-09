@@ -3,11 +3,11 @@ import type { CSSProperties } from 'react';
 import type { MonthProgress, MonthStatus } from '@/utils/gamification';
 
 const STATUS_STYLE: Record<MonthStatus, { icon: string; text: string; className: string }> = {
-  complete: { icon: '✓', text: 'Bouclé', className: 'border-bordure bg-ok-fond text-ok' },
-  'in-progress': { icon: '●', text: 'En cours', className: 'border-accent-fort bg-accent-doux text-depasse' },
-  'catch-up': { icon: '↺', text: 'À rattraper', className: 'border-bordure bg-attention-fond text-attention' },
-  empty: { icon: '–', text: 'Vide', className: 'border-bordure bg-surface text-texte-doux' },
-  future: { icon: '', text: 'À venir', className: 'border-dashed border-bordure bg-transparent text-texte-doux' },
+  complete: { icon: '✓', text: 'Bouclé', className: 'border-texte bg-accent text-sur-accent' },
+  'in-progress': { icon: '●', text: 'En cours', className: 'border-texte bg-corail text-sur-corail shadow-bonbon' },
+  'catch-up': { icon: '↺', text: 'À rattraper', className: 'border-texte bg-attention-fond text-attention' },
+  empty: { icon: '–', text: 'Vide', className: 'border-bordure-forte bg-surface text-texte-doux' },
+  future: { icon: '', text: 'À venir', className: 'border-dashed border-bordure-forte bg-transparent text-texte-doux' },
 };
 
 interface MonthsStripProps {
@@ -26,7 +26,7 @@ export default function MonthsStrip({ months }: MonthsStripProps) {
           <li
             key={month.monthIndex}
             style={{ '--i': month.monthIndex * 0.5 } as CSSProperties}
-            className={`rise flex min-h-12 flex-col items-center justify-center rounded-xl border-2 px-1 py-1 text-center ${style.className}`}
+            className={`rise flex min-h-12 flex-col items-center justify-center rounded-2xl border-[3px] px-1 py-1 text-center ${style.className}`}
           >
             <span className="text-xs font-bold leading-tight" aria-hidden="true">
               {MONTH_SHORT_LABELS[month.monthIndex]}

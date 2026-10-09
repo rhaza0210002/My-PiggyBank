@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import AppHeader from '@/components/layout/AppHeader';
 import BottomNav from '@/components/layout/BottomNav';
+import DemoBanner from '@/components/layout/DemoBanner';
 import Footer from '@/components/layout/Footer';
 import SkipLink from '@/components/layout/SkipLink';
 
@@ -19,6 +20,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         d'onglets sur mobile). La page garde exactement la hauteur de l'écran, le pied de page est juste en dessous.
       */}
       <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto outline-none">
+        <DemoBanner />
         <div className="min-h-full pb-2 md:h-full">{children}</div>
         <Footer variant="compact" />
       </main>

@@ -4,7 +4,9 @@ import { useMemo, useState } from 'react';
 import SectionStack from '@/components/ui/SectionStack';
 import { TABLE_STYLES } from '@/constants/tableStyles';
 import { saveImportedTransactionLabels } from '@/services/libelleTransactService';
+import { startDemo } from '@/services/demoStore';
 import { saveImportedTransactions } from '@/services/transactionService';
+import { toStoredDemo } from '@/utils/demoStatement';
 import MonthlyBudgetComparison from '@/components/features/tables/MonthlyBudgetComparison';
 import {
   groupTransactionsByCategory,
@@ -14,8 +16,10 @@ import type { BankTransaction } from '@/services/csvParser';
 
 interface CsvTransactionsTableProps {
   transactions: BankTransaction[];
-  /** Relevé d'exemple : on peut tout regarder, mais rien ne peut être enregistré. */
+  /** Relevé d'exemple : « Enregistrer » le range sur l'appareil seulement (mode exemple), jamais dans le compte. */
   isDemo?: boolean;
+  /** Appelé quand l'exemple vient d'être rangé sur l'appareil : la suite (Pointer) peut s'ouvrir. */
+  onDemoSaved?: () => void;
 }
 
 const categoryBackgrounds = [
@@ -109,7 +113,7 @@ function CategoryRows({
   );
 }
 
-export default function CsvTransactionsTable({ transactions, isDemo = false }: CsvTransactionsTableProps) {
+export default function CsvTransactionsTable({ transactions, isDemo = false, onDemoSaved }: CsvTransactionsTableProps) {
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const [isSavingLabels, setIsSavingLabels] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -172,6 +176,18 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
     setIsSavingTransactions(true);
     setTransactionsMessage(null);
     setTransactionsError(null);
+
+    if (isDemo) {
+      const saved = startDemo(toStoredDemo(transactions));
+      if (saved) {
+        setTransactionsMessage(`${transactions.length} transactions d’exemple enregistrées sur cet appareil.`);
+        onDemoSaved?.();
+      } else {
+        setTransactionsError('Ton navigateur bloque le stockage local : l’exemple n’est pas disponible ici.');
+      }
+      setIsSavingTransactions(false);
+      return;
+    }
 
     try {
       const result = await saveImportedTransactions(transactions);
@@ -241,14 +257,14 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
           </div>
           {isDemo && (
             <p className="rounded-lg border border-bordure bg-surface/60 p-3 text-sm font-semibold text-texte-doux" role="status">
-              🧪 Exemple : rien n’est enregistré. Importe ton vrai relevé pour retrouver tes opérations.
+              🧪 Exemple : ces opérations restent sur cet appareil. Enregistre-les pour les retrouver dans Pointer.
             </p>
           )}
           <div className="flex flex-wrap justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={handleSaveTransactions}
-              disabled={isSavingTransactions || isDemo}
+              disabled={isSavingTransactions}
               className="rounded-carte border-[3px] border-bordure bg-accent px-6 py-3 font-black text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-focus disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingTransactions ? 'Enregistrement...' : `Enregistrer les ${transactions.length} transactions`}
@@ -261,6 +277,11 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
             >
               {isSavingLabels ? 'Enregistrement...' : 'Enregistrer les libellés reconnus'}
             </button>
+            {isDemo && (
+              <p className="w-full text-right text-sm text-texte-doux">
+                Désactivé en exemple : il écrirait des règles dans ton vrai compte.
+              </p>
+            )}
           </div>
           {transactionsMessage && (
             <p className="text-sm font-semibold text-ok" role="status">

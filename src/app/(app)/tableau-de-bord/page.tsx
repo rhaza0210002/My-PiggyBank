@@ -19,9 +19,9 @@ import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { getStartSteps } from '@/utils/startSteps';
 import { pickTip } from '@/utils/tips';
 
-const PANEL = 'items-center text-center rounded-3xl border border-bordure bg-surface p-3 shadow-sm sm:p-4';
+const PANEL = 'rounded-carte border-[3px] border-texte p-4 shadow-sticker sm:p-5';
 const PRIMARY_LINK =
-  'inline-flex min-h-12 items-center justify-center rounded-carte border-[3px] border-bordure bg-accent px-5 py-2 text-center font-bold text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus motion-reduce:transition-none';
+  'inline-flex min-h-12 items-center justify-center self-start rounded-bonbon border-[3px] border-texte bg-corail px-6 py-2 text-center font-titre text-lg font-extrabold text-sur-corail shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus motion-reduce:transition-none';
 
 export default function DashboardPage() {
   const balance = useBalanceVisibility();
@@ -82,12 +82,12 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col gap-2 overflow-y-auto px-3 py-2 sm:px-5">
-      <div className="flex shrink-0 flex-col items-center gap-0.5 px-1 text-center">
-        <h1 className="flex items-center gap-2 text-[clamp(1.35rem,2.2vw,1.9rem)] font-black tracking-[-0.04em] text-texte">
-          <span aria-hidden="true" className="inline-block">🐷</span>
-          Salut{pseudo ? ` ${pseudo}` : ''} !
+      <div className="flex shrink-0 flex-col gap-1 px-2 py-1">
+        <h1 className="flex items-center gap-3 text-[clamp(1.75rem,3.4vw,2.75rem)] font-extrabold leading-none tracking-[-0.01em] text-texte">
+          <span aria-hidden="true" className="inline-block -rotate-6 text-[1.3em]">🐷</span>
+          <span className="bg-[linear-gradient(transparent_62%,var(--color-piece)_62%)] px-1">Salut{pseudo ? ` ${pseudo}` : ''} !</span>
         </h1>
-        <p className="text-sm text-texte-doux">Un petit pas à la fois : chaque pointage compte, rien ne se perd.</p>
+        <p className="text-base font-semibold text-texte-doux">Un petit pas à la fois : chaque pointage compte, rien ne se perd.</p>
       </div>
 
       {progressError && (
@@ -104,8 +104,8 @@ export default function DashboardPage() {
 
       <div className="grid shrink-0 gap-2 md:grid-cols-12">
         {/* Action du moment : toujours en premier, une seule chose à faire. */}
-        <section aria-labelledby="month-title" style={{ '--i': 0 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-5`}>
-          <h2 id="month-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
+        <section aria-labelledby="month-title" style={{ '--i': 0 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-3 bg-accent-doux md:col-span-5`}>
+          <h2 id="month-title" className="text-2xl font-extrabold leading-none text-texte">
             {monthName}
           </h2>
 
@@ -154,13 +154,13 @@ export default function DashboardPage() {
           </p>
         </section>
 
-        <section aria-labelledby="level-title" style={{ '--i': 1 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-4`}>
-          <h2 id="level-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
+        <section aria-labelledby="level-title" style={{ '--i': 1 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-3 bg-corail-clair md:col-span-4`}>
+          <h2 id="level-title" className="text-2xl font-extrabold leading-none text-texte">
             Ma progression
           </h2>
           {level && progress ? (
             <>
-              <p className="text-lg font-bold text-texte">
+              <p className="font-titre text-2xl font-extrabold leading-tight text-texte">
                 Niveau {level.level} · {level.title}
               </p>
               <Gauge
@@ -169,10 +169,10 @@ export default function DashboardPage() {
                 label="Progression vers le niveau suivant"
                 valueText={`${level.xpIntoLevel} points sur ${level.xpForNext}`}
               />
-              <p className="text-xs text-texte-doux">
+              <p className="text-xs font-semibold text-texte">
                 {level.xp} points au total · encore {level.xpForNext - level.xpIntoLevel} pour le niveau {level.level + 1}
               </p>
-              <p className="text-xs font-semibold text-texte-doux">
+              <p className="text-xs font-semibold text-texte">
                 <span aria-hidden="true">📅 </span>
                 {progress.activeDaysLast7 > 0
                   ? `${progress.activeDaysLast7} jour${progress.activeDaysLast7 > 1 ? 's' : ''} actif${progress.activeDaysLast7 > 1 ? 's' : ''} ces 7 derniers jours`
@@ -185,25 +185,25 @@ export default function DashboardPage() {
           )}
         </section>
 
-        <section aria-labelledby="tip-title" style={{ '--i': 2 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-2 md:col-span-3`}>
-          <h2 id="tip-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
+        <section aria-labelledby="tip-title" style={{ '--i': 2 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-3 bg-piece md:col-span-3`}>
+          <h2 id="tip-title" className="text-2xl font-extrabold leading-none text-texte">
             Astuce du jour
           </h2>
-          <p className="font-bold text-texte">{tip.title}</p>
-          <p className="text-sm text-texte">{tip.text}</p>
+          <p className="font-titre text-xl font-extrabold leading-tight text-texte">{tip.title}</p>
+          <p className="rounded-2xl rounded-bl-sm border-[3px] border-texte bg-surface p-3 text-sm font-semibold text-texte">{tip.text}</p>
           <button
             type="button"
             onClick={() => setTipOffset((offset) => offset + 1)}
-            className="mt-auto min-h-11 self-center rounded-xl border border-bordure-forte bg-surface/70 px-3 text-sm font-bold text-texte hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            className="mt-auto min-h-11 self-start rounded-bonbon border-[3px] border-texte bg-surface px-4 font-titre text-base font-extrabold text-texte shadow-bonbon hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Une autre astuce
           </button>
         </section>
       </div>
 
-      <section aria-labelledby="months-title" style={{ '--i': 3 } as CSSProperties} className={`${PANEL} rise shrink-0`}>
-        <div className="mb-2 flex flex-col items-center gap-0.5 text-center">
-          <h2 id="months-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
+      <section aria-labelledby="months-title" style={{ '--i': 3 } as CSSProperties} className={`${PANEL} rise shrink-0 bg-surface`}>
+        <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+          <h2 id="months-title" className="text-2xl font-extrabold leading-none text-texte">
             Mon année {today.getFullYear()}
           </h2>
           {progress && (

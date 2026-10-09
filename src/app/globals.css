@@ -7,6 +7,7 @@
  */
 @theme {
   --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-titre: var(--font-baloo), var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
 
   --color-fond: #f2fbea;
   --color-surface: #ffffff;
@@ -38,8 +39,11 @@
   --radius-carte: 1.5rem;
   --radius-bonbon: 9999px;
 
-  --shadow-bonbon: 0 3px 0 color-mix(in srgb, var(--color-accent-fort) 70%, transparent);
-  --shadow-corail: 0 3px 0 #b5533a;
+  /* Style « autocollant » : contour d'encre franc et ombre pleine décalée, jamais d'ombre floue. */
+  --shadow-bonbon: 0 4px 0 var(--color-texte);
+  --shadow-corail: 0 0 0 2.5px var(--color-texte), 0 4px 0 2.5px var(--color-texte);
+  --shadow-sticker: 4px 5px 0 var(--color-texte);
+  --shadow-sticker-petit: 2px 3px 0 var(--color-texte);
   --shadow-doux: 0 8px 24px color-mix(in srgb, var(--color-texte) 12%, transparent);
 }
 
@@ -69,10 +73,15 @@
 body {
   /* Petits pois discrets : un fond doux, jamais bruyant. */
   background-color: var(--color-fond);
-  background-image: radial-gradient(color-mix(in srgb, var(--color-surface) 35%, transparent) 1.5px, transparent 1.6px);
-  background-size: 22px 22px;
+  background-image: radial-gradient(var(--color-surface) 2.5px, transparent 2.6px);
+  background-size: 26px 26px;
   color: var(--color-texte);
   font-family: var(--font-sans);
+}
+
+/* Titres : police ronde (Luciole quand elle est choisie, voir plus bas). */
+h1, h2, h3 {
+  font-family: var(--font-titre);
 }
 
 /* Focus clavier toujours visible (contraste 3:1 minimum sur tous les fonds de l'application). */
@@ -214,6 +223,7 @@ html[data-bouton='masque'] [data-fleur] {
 
 html[data-police='luciole'] {
   --font-sans: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
+  --font-titre: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Le zoom est un pourcentage du réglage du navigateur (rem) : on ne l'écrase jamais. */
