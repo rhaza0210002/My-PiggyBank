@@ -65,6 +65,16 @@
   color: var(--color-sur-corail);
 }
 
+/* Carte vivante : un léger zoom au survol, et retour en douceur quand la souris sort. */
+@utility carte-vivante {
+  transition: scale 0.2s ease-out;
+  @media (hover: hover) {
+    &:hover {
+      scale: 1.02;
+    }
+  }
+}
+
 :root {
   --duree-pointage: 0.5s;
   --duree-niveau: 0.5s;
@@ -92,6 +102,8 @@ h1, h2, h3 {
 
 /* Respecte le réglage « réduire les animations » du système. */
 @media (prefers-reduced-motion: reduce) {
+  .carte-vivante:hover { scale: none; }
+
   *,
   *::before,
   *::after {
@@ -251,6 +263,8 @@ html[data-contraste='fort'] {
 html[data-contraste='fort'] [data-penche] {
   rotate: none;
 }
+
+html[data-calme='oui'] .carte-vivante:hover { scale: none; }
 
 html[data-calme='oui'] *,
 html[data-calme='oui'] *::before,
