@@ -1,5 +1,7 @@
 import type { BankTransaction } from '@/services/csvParser';
+import type { StoredTransaction } from '@/services/transactionService';
 import type { LibelleTransact } from '@/services/transactionCategoryService';
+import { toIsoDate } from '@/utils/csvParsing';
 import { normalizeMatchText } from '@/utils/labelMatching';
 
 interface DemoLine {
@@ -53,5 +55,25 @@ export function buildDemoTransactions(
       categoryKey: rule?.key ?? null,
       type: line.amount >= 0 ? 'VIREMENT_ENTRANT' : 'VIREMENT_SORTANT',
     } satisfies BankTransaction;
+  });
+}
+
+/** Les opérations d'exemple sous la forme où le service les range (jamais pointées au départ). */
+export function toStoredDemo(transactions: BankTransaction[]): StoredTransaction[] {
+  return transactions.flatMap((transaction, index) => {
+    const bookedOn = toIsoDate(transaction.date);
+    if (!bookedOn) return [];
+    return [
+      {
+        id: `demo-${index}`,
+        booked_on: bookedOn,
+        label: transaction.rawDetail.trim(),
+        amount: transaction.amount,
+        category_id: transaction.categoryId,
+        category_key: transaction.categoryKey,
+        type: transaction.type,
+        reconciled_at: null,
+      },
+    ];
   });
 }
