@@ -207,7 +207,7 @@ export default function MonthlyBudgetComparison({
             <select
               value={monthIndex}
               onChange={(event) => setInternalMonthIndex(Number(event.target.value))}
-              className="rounded-lg border-2 border-bordure-forte bg-surface px-3 py-2"
+              className="rounded-lg border-[1.5px] border-bordure-forte bg-surface px-3 py-2"
             >
               {MONTHS.map((month, index) => (
                 <option key={month.key} value={index}>{month.label}</option>
@@ -224,7 +224,7 @@ export default function MonthlyBudgetComparison({
       {isLoading ? (
         <p className="py-6 text-center text-sm font-semibold text-texte-doux">Chargement du budget…</p>
       ) : error ? (
-        <p className="rounded-lg border-2 border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse" role="alert">
+        <p className="rounded-lg border-[1.5px] border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse" role="alert">
           {error}
         </p>
       ) : (
@@ -241,7 +241,7 @@ export default function MonthlyBudgetComparison({
             return (
               <section
                 key={group.id}
-                className={`overflow-hidden rounded-xl border-2 ${palette.border} ${palette.section}`}
+                className={`overflow-hidden rounded-xl border-[1.5px] ${palette.border} ${palette.section}`}
                 aria-label={`Comparaison pour ${group.title}`}
               >
                 <h4 className={`px-4 py-3 font-black text-texte ${palette.header}`}>
@@ -255,7 +255,7 @@ export default function MonthlyBudgetComparison({
                   ) : group.rows.map((row) => {
                     const difference = getDifference(group.isIncome, row.budget, row.actual);
                     return (
-                      <article key={row.categoryId} className={`min-w-0 rounded-lg border-2 ${palette.border} ${palette.table} p-3`}>
+                      <article key={row.categoryId} className={`min-w-0 rounded-lg border-[1.5px] ${palette.border} ${palette.table} p-3`}>
                         <h5 className="mb-2 break-words text-sm font-bold text-texte">
                           {row.label}
                         </h5>
@@ -278,7 +278,7 @@ export default function MonthlyBudgetComparison({
                       </article>
                     );
                   })}
-                  <article className={`rounded-lg border-2 ${palette.border} ${palette.header} p-3`}>
+                  <article className={`rounded-lg border-[1.5px] ${palette.border} ${palette.header} p-3`}>
                     <h5 className="mb-2 break-words text-sm font-black text-texte">
                       Sous-total {group.title}
                     </h5>
@@ -346,7 +346,7 @@ export default function MonthlyBudgetComparison({
             );
           })}
 
-          <div className={`rounded-xl border-2 p-3 md:hidden ${shownDifference > 0 ? 'border-bordure bg-ok-fond' : shownDifference < 0 ? 'border-accent bg-surface-douce' : 'border-bordure-forte bg-surface-douce'}`}>
+          <div className={`rounded-xl border-[1.5px] p-3 md:hidden ${shownDifference > 0 ? 'border-bordure bg-ok-fond' : shownDifference < 0 ? 'border-accent bg-surface-douce' : 'border-bordure-forte bg-surface-douce'}`}>
             <div className="mb-2 flex items-center justify-between gap-2">
               <h4 className="text-sm font-black text-texte">Solde général (revenus − dépenses)</h4>
               <BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} subject="le solde général" />
@@ -369,7 +369,7 @@ export default function MonthlyBudgetComparison({
             </dl>
           </div>
 
-          <div className={`hidden overflow-x-auto rounded-xl border-2 md:block ${shownDifference > 0 ? 'border-bordure bg-ok-fond' : shownDifference < 0 ? 'border-accent bg-surface-douce' : 'border-bordure-forte bg-surface-douce'}`}>
+          <div className={`hidden overflow-x-auto rounded-xl border-[1.5px] md:block ${shownDifference > 0 ? 'border-bordure bg-ok-fond' : shownDifference < 0 ? 'border-accent bg-surface-douce' : 'border-bordure-forte bg-surface-douce'}`}>
             <table className="w-full min-w-[620px] border-collapse text-left" aria-label="Solde général de la comparaison">
               <tbody>
                 <tr className={`font-black ${shownDifference > 0 ? 'bg-ok-fond' : shownDifference < 0 ? 'bg-surface-douce' : 'bg-surface-douce'}`}>

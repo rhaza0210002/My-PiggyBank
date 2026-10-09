@@ -21,9 +21,9 @@ import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { getStartSteps } from '@/utils/startSteps';
 import { pickTip } from '@/utils/tips';
 
-const PANEL = 'rounded-carte border-[3px] border-texte p-4 shadow-sticker sm:p-5';
+const PANEL = 'rounded-carte border-2 border-texte p-4 shadow-sticker sm:p-5';
 const PRIMARY_LINK =
-  'inline-flex min-h-12 items-center justify-center self-start rounded-bonbon border-[3px] border-texte bg-corail px-6 py-2 text-center font-titre text-lg font-extrabold text-sur-corail shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus motion-reduce:transition-none';
+  'inline-flex min-h-12 items-center justify-center self-start rounded-bonbon border-2 border-texte bg-corail px-6 py-2 text-center font-titre text-lg font-extrabold text-sur-corail shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus motion-reduce:transition-none';
 
 export default function DashboardPage() {
   const balance = useBalanceVisibility();
@@ -93,7 +93,7 @@ export default function DashboardPage() {
       </div>
 
       {progressError && (
-        <p role="alert" className="shrink-0 rounded-lg border-2 border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+        <p role="alert" className="shrink-0 rounded-lg border-[1.5px] border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
           {progressError}
         </p>
       )}
@@ -191,12 +191,12 @@ export default function DashboardPage() {
             Astuce du jour
           </h2>
           <p className="font-titre text-xl font-extrabold leading-tight text-texte">{tip.title}</p>
-          <p className="rounded-2xl rounded-bl-sm border-[3px] border-texte bg-surface p-3 text-sm font-semibold text-texte">{tip.text}</p>
+          <p className="rounded-2xl rounded-bl-sm border-2 border-texte bg-surface p-3 text-sm font-semibold text-texte">{tip.text}</p>
           <div className="mt-auto flex items-end justify-between gap-2">
             <button
               type="button"
               onClick={() => setTipOffset((offset) => offset + 1)}
-              className="mt-auto min-h-11 self-start rounded-bonbon border-[3px] border-texte bg-surface px-4 font-titre text-base font-extrabold text-texte shadow-bonbon hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+              className="mt-auto min-h-11 self-start rounded-bonbon border-2 border-texte bg-surface px-4 font-titre text-base font-extrabold text-texte shadow-bonbon hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               Une autre astuce
             </button>

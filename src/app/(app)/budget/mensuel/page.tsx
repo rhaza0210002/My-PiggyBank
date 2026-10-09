@@ -93,7 +93,7 @@ export default function MonthBudgetPage() {
   const isPastMonth = currentMonthIndex < currentCalendarMonth;
 
   const monthControls = (
-    <div className="flex items-center gap-1 rounded-xl border-2 border-bordure bg-surface/70 p-1">
+    <div className="flex items-center gap-1 rounded-xl border-[1.5px] border-bordure bg-surface/70 p-1">
       <button
         type="button"
         onClick={handlePrevMonth}
@@ -108,7 +108,7 @@ export default function MonthBudgetPage() {
         id="month-selector"
         value={currentMonthIndex}
         onChange={(e) => setCurrentMonthIndex(Number(e.target.value))}
-        className="min-h-11 rounded-lg border-2 border-bordure-forte bg-surface px-2 text-sm font-bold text-texte"
+        className="min-h-11 rounded-lg border-[1.5px] border-bordure-forte bg-surface px-2 text-sm font-bold text-texte"
       >
         {MONTHS.map((m, idx) => (
           <option key={m.key} value={idx} disabled={idx < currentCalendarMonth}>
@@ -133,7 +133,7 @@ export default function MonthBudgetPage() {
       type="button"
       onClick={handleSaveBudget}
       disabled={isSavingBudget || isPastMonth || dataGroups.length === 0}
-      className="min-h-11 rounded-xl border-2 border-bordure bg-ok-fond px-4 text-sm font-bold text-ok shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60"
+      className="min-h-11 rounded-xl border-[1.5px] border-bordure bg-ok-fond px-4 text-sm font-bold text-ok shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60"
     >
       {isSavingBudget ? 'Enregistrement...' : 'Valider budget'}
     </button>

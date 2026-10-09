@@ -63,7 +63,7 @@ function CategoryRows({
             className="flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-1 text-left text-xs font-bold text-texte transition hover:bg-surface/40"
           >
             {group.categoryId ? (
-              <span className="rounded-full border-2 border-bordure bg-surface/75 px-2.5 py-1 shadow-sm">
+              <span className="rounded-full border-[1.5px] border-bordure bg-surface/75 px-2.5 py-1 shadow-sm">
                 {group.categoryLabel}
               </span>
             ) : (
@@ -82,7 +82,7 @@ function CategoryRows({
       {isExpanded && (
         <tr>
           <td colSpan={3} className="bg-surface p-3">
-            <div className="overflow-hidden rounded-xl border-2 border-bordure/60 bg-surface/40">
+            <div className="overflow-hidden rounded-xl border-[1.5px] border-bordure/60 bg-surface/40">
               <table className="w-full min-w-0 border-collapse text-left text-[11px] sm:text-sm">
                 <thead>
                   <tr className="bg-surface-douce text-texte">
@@ -215,7 +215,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
   if (transactions.length === 0) return null;
 
   return (
-    <section className="space-y-4 rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-3 shadow-bonbon sm:p-4">
+    <section className="space-y-4 rounded-carte border-2 border-dashed border-bordure bg-surface-douce p-3 shadow-bonbon sm:p-4">
       <SectionStack
         label="Parties de l'import"
         background="surface-douce"
@@ -230,11 +230,11 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
             {categorizedCount} catégorisée{categorizedCount !== 1 ? 's' : ''} sur {transactions.length}
           </p>
           {categorizedCount === 0 && unmatchedExamples.length > 0 && (
-            <p className="rounded-lg border-2 border-bordure bg-surface/50 p-3 text-sm text-texte-doux" role="alert">
+            <p className="rounded-lg border-[1.5px] border-bordure bg-surface/50 p-3 text-sm text-texte-doux" role="alert">
               Aucun détail ne correspond aux labels de <code>libelle_transacts</code>. Exemples lus : {unmatchedExamples.join(' | ')}
             </p>
           )}
-          <div role="region" aria-label="Transactions importées" tabIndex={0} className="max-w-full overflow-x-auto rounded-xl border-2 border-bordure/50 shadow-inner">
+          <div role="region" aria-label="Transactions importées" tabIndex={0} className="max-w-full overflow-x-auto rounded-xl border-[1.5px] border-bordure/50 shadow-inner">
             <table className="w-full min-w-0 border-collapse text-left" aria-label="Synthèse par catégorie des transactions importées du CSV">
               <thead>
                 <tr className="bg-surface-douce text-texte">
@@ -256,7 +256,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
             </table>
           </div>
           {isDemo && (
-            <p className="rounded-lg border-2 border-bordure bg-surface/60 p-3 text-sm font-semibold text-texte-doux" role="status">
+            <p className="rounded-lg border-[1.5px] border-bordure bg-surface/60 p-3 text-sm font-semibold text-texte-doux" role="status">
               🧪 Exemple : ces opérations restent sur cet appareil. Enregistre-les pour les retrouver dans Pointer.
             </p>
           )}
@@ -265,7 +265,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
               type="button"
               onClick={handleSaveTransactions}
               disabled={isSavingTransactions}
-              className="rounded-carte border-[3px] border-bordure bg-accent px-6 py-3 font-black text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-focus disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-carte border-2 border-bordure bg-accent px-6 py-3 font-black text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-focus disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingTransactions ? 'Enregistrement...' : `Enregistrer les ${transactions.length} transactions`}
             </button>
@@ -273,7 +273,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
               type="button"
               onClick={handleSaveLabels}
               disabled={isSavingLabels || isDemo || importedLabels.length === 0}
-              className="rounded-carte border-[3px] border-bordure bg-ok-fond px-6 py-3 font-black text-ok shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-ok disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-carte border-2 border-bordure bg-ok-fond px-6 py-3 font-black text-ok shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-ok disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingLabels ? 'Enregistrement...' : 'Enregistrer les libellés reconnus'}
             </button>

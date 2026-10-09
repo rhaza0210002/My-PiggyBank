@@ -22,7 +22,7 @@ export default function BalanceCard({ monthName, isShown, onToggle, amountText, 
     <section
       aria-labelledby={titleId}
       style={style}
-      className={`flex flex-col gap-2 rounded-carte border-[3px] border-texte bg-cochon p-4 shadow-sticker sm:p-5 ${className}`}
+      className={`flex flex-col gap-2 rounded-carte border-2 border-texte bg-cochon p-4 shadow-sticker sm:p-5 ${className}`}
     >
       <div className="flex items-center justify-between gap-3">
         <h2 id={titleId} className="text-2xl font-extrabold leading-none text-texte">

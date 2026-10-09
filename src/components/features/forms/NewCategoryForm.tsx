@@ -57,7 +57,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
   return (
     <section
       aria-labelledby={`${formId}-title`}
-      className="rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-3 shadow-bonbon sm:p-4"
+      className="rounded-carte border-2 border-dashed border-bordure bg-surface-douce p-3 shadow-bonbon sm:p-4"
     >
       <h2 id={`${formId}-title`} className="px-2 text-[1.2rem] font-black text-texte">
         Nouvelle catégorie
@@ -75,7 +75,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
             id={`${formId}-group`}
             value={selectedGroupId}
             onChange={(event) => setGroupId(event.target.value)}
-            className="min-h-11 rounded-xl border-2 border-bordure-forte bg-surface px-3 text-sm font-semibold text-texte"
+            className="min-h-11 rounded-xl border-[1.5px] border-bordure-forte bg-surface px-3 text-sm font-semibold text-texte"
           >
             {groups.map((group) => (
               <option key={group.id} value={group.id}>
@@ -100,7 +100,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
             aria-invalid={error !== null}
             aria-describedby={error ? `${formId}-error` : undefined}
             placeholder="Ex : Transport"
-            className="min-h-11 rounded-xl border-2 border-bordure-forte bg-surface px-3 text-sm font-semibold text-texte placeholder:text-texte-doux"
+            className="min-h-11 rounded-xl border-[1.5px] border-bordure-forte bg-surface px-3 text-sm font-semibold text-texte placeholder:text-texte-doux"
           />
         </div>
 

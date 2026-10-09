@@ -58,7 +58,7 @@ export default function RegisterPage() {
   if (needsConfirmation) {
     return (
       <div className="relative flex w-full flex-1 items-center justify-center bg-fond px-4 py-8 text-texte">
-        <div role="status" className="w-full max-w-[440px] space-y-3 rounded-carte border-[3px] border-dashed border-bordure bg-surface p-6 text-center">
+        <div role="status" className="w-full max-w-[440px] space-y-3 rounded-carte border-2 border-dashed border-bordure bg-surface p-6 text-center">
           <h1 className="text-[1.6rem] font-black tracking-[-0.05em] text-texte">Compte créé</h1>
           <p className="text-texte">
             Vérifie ta boîte mail : un lien de confirmation vient d&apos;être envoyé à <strong>{needsConfirmation}</strong>.
@@ -71,7 +71,7 @@ export default function RegisterPage() {
           </button>
           <Link
             href={ROUTES.login}
-            className="inline-flex min-h-12 items-center rounded-carte border-[3px] border-bordure bg-accent px-6 font-bold text-sur-accent shadow-bonbon"
+            className="inline-flex min-h-12 items-center rounded-carte border-2 border-bordure bg-accent px-6 font-bold text-sur-accent shadow-bonbon"
           >
             Aller à la connexion
           </Link>

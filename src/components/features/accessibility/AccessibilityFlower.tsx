@@ -112,7 +112,7 @@ export default function AccessibilityFlower() {
             tabIndex={open ? 0 : -1}
             onClick={() => (isZoom ? changeZoom(petal.step) : toggle(petal.key, petal.label))}
             style={open ? { transform: `translate(${x}px, ${y}px)` } : undefined}
-            className={`absolute right-0.5 bottom-0.5 z-10 flex size-13 items-center justify-center rounded-full border-[3px] border-accent-fort text-base font-black text-texte shadow-bonbon transition-[transform,opacity,translate,scale] duration-300 ease-out hover:-translate-y-0.5 hover:scale-110 after:pointer-events-none after:absolute after:left-1/2 after:bottom-[calc(100%+8px)] after:-translate-x-1/2 after:rounded-xl after:bg-texte after:px-2.5 after:py-1.5 after:text-sm after:font-bold after:whitespace-nowrap after:text-surface after:opacity-0 after:content-[attr(data-tip)] hover:z-30 hover:after:opacity-100 focus-visible:z-30 focus-visible:after:opacity-100 disabled:opacity-50 ${
+            className={`absolute right-0.5 bottom-0.5 z-10 flex size-13 items-center justify-center rounded-full border-2 border-accent-fort text-base font-black text-texte shadow-bonbon transition-[transform,opacity,translate,scale] duration-300 ease-out hover:-translate-y-0.5 hover:scale-110 after:pointer-events-none after:absolute after:left-1/2 after:bottom-[calc(100%+8px)] after:-translate-x-1/2 after:rounded-xl after:bg-texte after:px-2.5 after:py-1.5 after:text-sm after:font-bold after:whitespace-nowrap after:text-surface after:opacity-0 after:content-[attr(data-tip)] hover:z-30 hover:after:opacity-100 focus-visible:z-30 focus-visible:after:opacity-100 disabled:opacity-50 ${
               pressed ? 'petale-actif ring-4 ring-accent-fort' : 'petale enabled:hover:petale-actif'
             } ${open ? 'opacity-100' : 'invisible scale-50 opacity-0'}`}
           >
@@ -126,7 +126,7 @@ export default function AccessibilityFlower() {
         aria-label="Retirer le bouton accessibilité"
         tabIndex={open ? 0 : -1}
         onClick={() => setConfirming(true)}
-        className={`absolute right-[4.5rem] bottom-1.5 z-10 flex size-11 items-center justify-center rounded-full border-2 border-bordure-forte bg-surface text-lg font-black text-texte shadow-doux transition-[opacity,translate] duration-300 hover:-translate-y-0.5 ${
+        className={`absolute right-[4.5rem] bottom-1.5 z-10 flex size-11 items-center justify-center rounded-full border-[1.5px] border-bordure-forte bg-surface text-lg font-black text-texte shadow-doux transition-[opacity,translate] duration-300 hover:-translate-y-0.5 ${
           open ? 'opacity-100' : 'invisible opacity-0'
         }`}
       >
@@ -149,7 +149,7 @@ export default function AccessibilityFlower() {
           role="dialog"
           aria-labelledby="retirer-bouton-titre"
           aria-describedby="retirer-bouton-aide"
-          className="absolute right-0 bottom-20 w-72 max-w-[calc(100vw-2rem)] rounded-carte border-2 border-bordure bg-surface p-4 shadow-doux"
+          className="absolute right-0 bottom-20 w-72 max-w-[calc(100vw-2rem)] rounded-carte border-[1.5px] border-bordure bg-surface p-4 shadow-doux"
         >
           <h2 id="retirer-bouton-titre" className="text-base font-black text-texte">
             Retirer le bouton accessibilité ?
@@ -165,7 +165,7 @@ export default function AccessibilityFlower() {
                 setConfirming(false);
                 setOpen(false);
               }}
-              className="min-h-11 flex-1 rounded-full border-2 border-depasse bg-depasse-fond px-3 text-sm font-black text-depasse"
+              className="min-h-11 flex-1 rounded-full border-[1.5px] border-depasse bg-depasse-fond px-3 text-sm font-black text-depasse"
             >
               Retirer
             </button>
@@ -173,7 +173,7 @@ export default function AccessibilityFlower() {
               ref={keepRef}
               type="button"
               onClick={() => setConfirming(false)}
-              className="onglet-actif min-h-11 flex-1 rounded-full border-2 border-transparent px-3 text-sm font-black"
+              className="onglet-actif min-h-11 flex-1 rounded-full border-[1.5px] border-transparent px-3 text-sm font-black"
             >
               Garder
             </button>

@@ -81,7 +81,7 @@ export function MonthRecapView({
   return (
     <section
       aria-labelledby="recap-title"
-      className="shrink-0 rotate-[0.4deg] rounded-carte border-[3px] border-texte bg-attention-fond p-4 shadow-sticker sm:p-5"
+      className="shrink-0 rotate-[0.4deg] rounded-carte border-2 border-texte bg-attention-fond p-4 shadow-sticker sm:p-5"
     >
       <h2
         id="recap-title"
@@ -108,7 +108,7 @@ export function MonthRecapView({
       {isOpen && (
         <ul
           id={listId}
-          className="mt-2 space-y-1.5 text-sm font-semibold text-texte [&>li]:border-b-[3px] [&>li]:border-dotted [&>li]:border-corail [&>li]:pb-1.5 [&>li:last-child]:border-0"
+          className="mt-2 space-y-1.5 text-sm font-semibold text-texte [&>li]:border-b-2 [&>li]:border-dotted [&>li]:border-corail [&>li]:pb-1.5 [&>li:last-child]:border-0"
         >
           <li>
             <strong>{recap.operations}</strong> opération

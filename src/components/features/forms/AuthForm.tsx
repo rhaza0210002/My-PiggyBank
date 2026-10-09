@@ -26,7 +26,7 @@ interface AuthFormProps {
 
 const MIN_PASSWORD_LENGTH = 8;
 const INPUT_CLASS =
-  'w-full min-h-12 rounded-carte border-2 border-bordure-forte bg-surface px-4 py-3 text-texte placeholder-texte-doux shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[invalid=true]:border-depasse';
+  'w-full min-h-12 rounded-carte border-[1.5px] border-bordure-forte bg-surface px-4 py-3 text-texte placeholder-texte-doux shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[invalid=true]:border-depasse';
 const LABEL_CLASS = 'block px-1 text-sm font-bold text-texte';
 const HINT_CLASS = 'px-1 text-xs text-texte-doux';
 
@@ -104,8 +104,8 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
   const passwordType = showPassword ? 'text' : 'password';
 
   return (
-    <div className="relative w-full max-w-[440px] rounded-carte border-[3px] border-texte bg-surface p-2 shadow-sticker sm:p-5">
-      <div className="space-y-6 rounded-carte border-[3px] border-dashed border-bordure p-5 sm:p-6">
+    <div className="relative w-full max-w-[440px] rounded-carte border-2 border-texte bg-surface p-2 shadow-sticker sm:p-5">
+      <div className="space-y-6 rounded-carte border-2 border-dashed border-bordure p-5 sm:p-6">
 
         <div className="space-y-2 text-center">
           <Pig className="mx-auto mb-2 size-16" />
@@ -125,7 +125,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             ref={errorRef}
             role="alert"
             tabIndex={-1}
-            className="rounded-xl border-2 border-depasse bg-depasse-fond p-3 text-center text-sm font-bold text-depasse outline-none focus-visible:outline-3 focus-visible:outline-focus"
+            className="rounded-xl border-[1.5px] border-depasse bg-depasse-fond p-3 text-center text-sm font-bold text-depasse outline-none focus-visible:outline-3 focus-visible:outline-focus"
           >
             {error}
           </div>
@@ -216,7 +216,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
           </label>
 
           {isRegister && (
-            <div className="rounded-xl border-2 border-bordure bg-surface p-3">
+            <div className="rounded-xl border-[1.5px] border-bordure bg-surface p-3">
               <label className="flex min-h-11 cursor-pointer items-start gap-3 text-sm font-semibold text-texte">
                 <input
                   type="checkbox"
@@ -260,7 +260,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
               type="button"
               onClick={handleGoogle}
               disabled={isLoading}
-              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-carte border-2 border-bordure-forte bg-surface py-3 font-bold text-sur-accent transition-colors hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-70"
+              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-carte border-[1.5px] border-bordure-forte bg-surface py-3 font-bold text-sur-accent transition-colors hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-70"
             >
               <GoogleLogo />
               {isRegister ? 'S’inscrire avec Google' : 'Continuer avec Google'}

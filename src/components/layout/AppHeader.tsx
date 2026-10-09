@@ -44,7 +44,7 @@ export default function AppHeader() {
   }, [userId]);
 
   return (
-    <header className="sticky top-0 z-40 mx-2 mt-2 rounded-bonbon border-[3px] border-texte bg-surface p-1 shadow-sticker-petit sm:mx-auto sm:w-[90%]">
+    <header className="sticky top-0 z-40 mx-2 mt-2 rounded-bonbon border-2 border-texte bg-surface p-1 shadow-sticker-petit sm:mx-auto sm:w-[90%]">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3">
         <Link
           href={ROUTES.dashboard}

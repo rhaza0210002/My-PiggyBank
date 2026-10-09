@@ -6,7 +6,7 @@ import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
 
 export const metadata: Metadata = { title: 'Politique de confidentialité' };
 
-const CELL = 'border-2 border-bordure px-2 py-1.5 align-top text-left text-sm';
+const CELL = 'border-[1.5px] border-bordure px-2 py-1.5 align-top text-left text-sm';
 
 export default function ConfidentialitePage() {
   return (

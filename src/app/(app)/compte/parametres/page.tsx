@@ -10,7 +10,7 @@ import {
   type UserSettings,
 } from '@/services/userSettingsService';
 
-const CARD = 'rounded-carte border-2 border-bordure bg-surface p-6 shadow-sm';
+const CARD = 'rounded-carte border-[1.5px] border-bordure bg-surface p-6 shadow-sm';
 
 const OPTIONS: Array<{ key: keyof UserSettings; label: string; description: string }> = [
   {
@@ -79,7 +79,7 @@ export default function SettingsPage() {
         <h2 id="notif-prefs-title" className="text-lg font-bold text-texte">Notifications</h2>
 
         {error && (
-          <p role="alert" className="mt-3 rounded-lg border-2 border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+          <p role="alert" className="mt-3 rounded-lg border-[1.5px] border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
             {error}
           </p>
         )}
