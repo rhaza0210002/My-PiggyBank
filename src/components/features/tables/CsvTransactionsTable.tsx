@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import SectionStack from '@/components/ui/SectionStack';
 import { TABLE_STYLES } from '@/constants/tableStyles';
 import { saveImportedTransactionLabels } from '@/services/libelleTransactService';
-import { startDemo } from '@/services/demoStore';
+import { startDemo, isDemoActive } from '@/services/demoStore';
 import { saveImportedTransactions } from '@/services/transactionService';
 import { toStoredDemo } from '@/utils/demoStatement';
 import MonthlyBudgetComparison from '@/components/features/tables/MonthlyBudgetComparison';
@@ -178,6 +178,11 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
     setTransactionsError(null);
 
     if (isDemo) {
+      // Un exemple déjà en cours garde des pointages : on ne les efface pas sans le dire.
+      if (isDemoActive() && !window.confirm('Ton exemple en cours et ses pointages repartiront de zéro. Continuer ?')) {
+        setIsSavingTransactions(false);
+        return;
+      }
       const saved = startDemo(toStoredDemo(transactions));
       if (saved) {
         setTransactionsMessage(`${transactions.length} transactions d’exemple enregistrées sur cet appareil.`);
@@ -257,7 +262,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
           </div>
           {isDemo && (
             <p className="rounded-lg border-[1.5px] border-bordure bg-surface/60 p-3 text-sm font-semibold text-texte-doux" role="status">
-              🧪 Exemple : ces opérations restent sur cet appareil. Enregistre-les pour les retrouver dans Pointer.
+              <span aria-hidden="true">🧪 </span>Exemple : ces opérations restent sur cet appareil. Enregistre-les pour les retrouver dans Pointer.
             </p>
           )}
           <div className="flex flex-wrap justify-end gap-3 pt-2">
