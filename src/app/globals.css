@@ -207,6 +207,11 @@ a[class*='shadow-bonbon']:active {
  * Réglages d'accessibilité (bouton ♿) : chaque option pose un attribut sur <html>, voir accessibilityPrefs.ts.
  * Les couleurs ne changent que par les rôles : rien n'est écrit en dur ici.
  */
+/* Bouton retiré par la personne : se remet depuis Compte → Paramètres. */
+html[data-bouton='masque'] [data-fleur] {
+  display: none;
+}
+
 html[data-police='luciole'] {
   --font-sans: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
 }

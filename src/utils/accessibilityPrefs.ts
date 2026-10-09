@@ -8,6 +8,8 @@ export interface AccessibilityPrefs {
   calme: boolean;
   /** Lettres, mots et lignes plus espacés. */
   espace: boolean;
+  /** Bouton accessibilité retiré de l'écran (on le remet depuis Compte → Paramètres). */
+  boutonMasque: boolean;
   /** Zoom du texte en pourcents (100 = réglage du navigateur), par pas de ZOOM_STEP. */
   zoom: number;
 }
@@ -25,7 +27,7 @@ const isZoomStep = (value: unknown): value is number =>
 
 export const STORAGE_KEY = 'piggy-accessibilite';
 
-export const DEFAULT_PREFS: AccessibilityPrefs = { police: false, contraste: false, calme: false, espace: false, zoom: ZOOM_MIN };
+export const DEFAULT_PREFS: AccessibilityPrefs = { police: false, contraste: false, calme: false, espace: false, boutonMasque: false, zoom: ZOOM_MIN };
 
 /** Attribut posé sur <html> quand l'option est active : le CSS (globals.css) fait le reste. */
 export const ACCESSIBILITY_ATTRIBUTES: Record<AccessibilityToggleKey, { name: string; value: string }> = {
@@ -33,6 +35,7 @@ export const ACCESSIBILITY_ATTRIBUTES: Record<AccessibilityToggleKey, { name: st
   contraste: { name: 'data-contraste', value: 'fort' },
   calme: { name: 'data-calme', value: 'oui' },
   espace: { name: 'data-espace', value: 'large' },
+  boutonMasque: { name: 'data-bouton', value: 'masque' },
 };
 
 export const ZOOM_ATTRIBUTE = 'data-zoom';
@@ -65,6 +68,41 @@ export function applyPrefs(root: AttributeTarget, prefs: AccessibilityPrefs): vo
   });
   if (prefs.zoom > ZOOM_MIN) root.setAttribute(ZOOM_ATTRIBUTE, String(prefs.zoom));
   else root.removeAttribute(ZOOM_ATTRIBUTE);
+}
+
+interface StorageLike {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+
+const browserStorage = (): StorageLike | null => {
+  try {
+    return typeof window === 'undefined' ? null : window.localStorage;
+  } catch {
+    return null;
+  }
+};
+
+export function loadPrefs(storage: StorageLike | null = browserStorage()): AccessibilityPrefs {
+  try {
+    return parsePrefs(storage?.getItem(STORAGE_KEY) ?? null);
+  } catch {
+    return { ...DEFAULT_PREFS };
+  }
+}
+
+/** Applique les réglages à la page, puis les garde sur l'appareil (si le stockage est refusé, ils valent pour cette visite). */
+export function savePrefs(
+  prefs: AccessibilityPrefs,
+  root: AttributeTarget = document.documentElement,
+  storage: StorageLike | null = browserStorage(),
+): void {
+  applyPrefs(root, prefs);
+  try {
+    storage?.setItem(STORAGE_KEY, JSON.stringify(prefs));
+  } catch {
+    // Navigation privée ou stockage plein : rien à faire de plus.
+  }
 }
 
 /** Script lu avant l'affichage : évite que la page change de police ou de taille une fois chargée. */

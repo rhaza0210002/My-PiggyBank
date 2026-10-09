@@ -8,6 +8,8 @@ import {
   ZOOM_MIN,
   ZOOM_STEP,
   clampZoom,
+  loadPrefs,
+  savePrefs,
   DEFAULT_PREFS,
   STORAGE_KEY,
   applyPrefs,
@@ -67,6 +69,13 @@ describe('applyPrefs', () => {
     expect(root.attributes.has(ZOOM_ATTRIBUTE)).toBe(false);
   });
 
+  it('masque le bouton accessibilité avec data-bouton, sans toucher aux autres réglages', () => {
+    const root = fakeRoot();
+    applyPrefs(root, { ...DEFAULT_PREFS, police: true, boutonMasque: true });
+    expect(root.attributes.get('data-bouton')).toBe('masque');
+    expect(root.attributes.get('data-police')).toBe('luciole');
+  });
+
   it('borne le zoom', () => {
     expect(clampZoom(ZOOM_MIN - ZOOM_STEP)).toBe(ZOOM_MIN);
     expect(clampZoom(ZOOM_MAX + ZOOM_STEP)).toBe(ZOOM_MAX);
@@ -98,5 +107,28 @@ describe('feuille de style', () => {
   it('garde Nunito par défaut et Luciole sur demande', () => {
     expect(css).toMatch(/--font-sans:\s*var\(--font-nunito\)/);
     expect(css).toMatch(/html\[data-police='luciole'\][^}]*--font-sans:\s*var\(--font-luciole\)/);
+  });
+});
+
+describe('loadPrefs / savePrefs', () => {
+  const store = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => void store.set(key, value),
+  };
+
+  it('relit ce qui a été enregistré, et applique les attributs', () => {
+    const root = fakeRoot();
+    savePrefs({ ...DEFAULT_PREFS, zoom: 140, boutonMasque: true }, root, storage);
+    expect(loadPrefs(storage)).toEqual({ ...DEFAULT_PREFS, zoom: 140, boutonMasque: true });
+    expect(root.attributes.get('data-bouton')).toBe('masque');
+    expect(root.attributes.get('data-zoom')).toBe('140');
+  });
+
+  it('applique quand même les réglages si le stockage est refusé', () => {
+    const root = fakeRoot();
+    const refusing = { getItem: () => null, setItem: () => { throw new Error('quota'); } };
+    expect(() => savePrefs({ ...DEFAULT_PREFS, police: true }, root, refusing)).not.toThrow();
+    expect(root.attributes.get('data-police')).toBe('luciole');
   });
 });

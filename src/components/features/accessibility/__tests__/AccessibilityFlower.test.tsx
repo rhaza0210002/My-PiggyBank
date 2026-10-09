@@ -23,7 +23,12 @@ describe('AccessibilityFlower', () => {
     expect(html).not.toMatch(/aria-label="Agrandir le texte[^>]*disabled=""/);
   });
 
+  it('peut être retiré : repère data-fleur et croix nommée, hors du clavier tant que la fleur est fermée', () => {
+    expect(html).toContain('data-fleur');
+    expect(html).toMatch(/aria-label="Retirer le bouton accessibilité"[^>]*tabindex="-1"/);
+  });
+
   it('garde les pétales hors du clavier tant que la fleur est fermée', () => {
-    expect(html.match(/tabindex="-1"/g)).toHaveLength(6);
+    expect(html.match(/tabindex="-1"/g)).toHaveLength(7);
   });
 });
