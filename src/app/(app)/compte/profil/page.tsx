@@ -125,7 +125,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <ScreenCard title="Ton espace personnel" icon="🧸">
+    <ScreenCard title="Ton espace personnel" icon="account">
       <div className="grid gap-3 md:grid-cols-2">
 
       <section aria-labelledby="identity-title" className={CARD}>

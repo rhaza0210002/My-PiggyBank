@@ -152,7 +152,7 @@ export default function DepenseReellePage() {
   );
 
   return (
-    <ScreenCard flow title="Bilan du mois" icon="📊" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
+    <ScreenCard flow title="Bilan du mois" icon="chart" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
       <div className="flex flex-col gap-2 md:h-full md:min-h-0">
         {isLoading && (
           <p className="py-8 text-center text-sm font-semibold text-texte-doux" role="status">

@@ -20,6 +20,7 @@ import { getUserProfile } from '@/services/userService';
 import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { getStartSteps } from '@/utils/startSteps';
 import { pickTip } from '@/utils/tips';
+import Icon from '@/components/ui/Icon';
 
 const PANEL = 'rounded-carte border-2 border-texte p-4 shadow-sticker sm:p-5';
 const PRIMARY_LINK =
@@ -174,7 +175,7 @@ export default function DashboardPage() {
                 {level.xp} points au total · encore {level.xpForNext - level.xpIntoLevel} pour le niveau {level.level + 1}
               </p>
               <p className="text-xs font-semibold text-texte">
-                <span aria-hidden="true">📅 </span>
+                <Icon name="calendar" className="mr-1 inline size-4 align-[-3px]" />
                 {progress.activeDaysLast7 > 0
                   ? `${progress.activeDaysLast7} jour${progress.activeDaysLast7 > 1 ? 's' : ''} actif${progress.activeDaysLast7 > 1 ? 's' : ''} ces 7 derniers jours`
                   : 'Aucune pression : reprends quand tu veux, rien ne se perd.'}

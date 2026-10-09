@@ -13,6 +13,7 @@ import {
   type CategoryTransactionGroup,
 } from '@/utils/csvTransactionGrouping';
 import type { BankTransaction } from '@/services/csvParser';
+import Icon from '@/components/ui/Icon';
 
 interface CsvTransactionsTableProps {
   transactions: BankTransaction[];
@@ -262,7 +263,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
           </div>
           {isDemo && (
             <p className="rounded-lg border-[1.5px] border-bordure bg-surface/60 p-3 text-sm font-semibold text-texte-doux" role="status">
-              <span aria-hidden="true">🧪 </span>Exemple : ces opérations restent sur cet appareil. Enregistre-les pour les retrouver dans Pointer.
+              <Icon name="flask" className="mr-1 inline size-4 align-[-2px]" />Exemple : ces opérations restent sur cet appareil. Enregistre-les pour les retrouver dans Pointer.
             </p>
           )}
           <div className="flex flex-wrap justify-end gap-3 pt-2">

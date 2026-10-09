@@ -15,7 +15,7 @@ export default function BilanBank() {
   const { dataGroups, isLoaded } = useBudget();
 
   return (
-    <ScreenCard flow title="Budget annuel" icon="📅" subtitle="Vue des 12 mois, un bloc à la fois.">
+    <ScreenCard flow title="Budget annuel" icon="calendar" subtitle="Vue des 12 mois, un bloc à la fois.">
       {!isLoaded ? (
         <p role="status" className="py-6 text-center font-semibold">Chargement...</p>
       ) : dataGroups.length === 0 ? (

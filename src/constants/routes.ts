@@ -1,3 +1,5 @@
+import type { IconName } from '@/components/ui/Icon';
+
 /**
  * Plan des chemins de l'application. Source unique pour le menu, les redirections, le proxy et les liens.
  *
@@ -64,8 +66,8 @@ export interface NavPage {
 export interface NavSection {
   id: 'home' | 'budget' | 'operations' | 'account';
   label: string;
-  /** Emoji décoratif : le libellé texte reste toujours visible à côté. */
-  icon: string;
+  /** Icône décorative du jeu d'icônes : le libellé texte reste toujours visible à côté. */
+  icon: IconName;
   href: string;
   /** Sous-pages de la section ; vide quand la section n'a qu'une page. */
   pages: readonly NavPage[];
@@ -73,11 +75,11 @@ export interface NavSection {
 
 /** Quatre sections au maximum : lisible dans une barre mobile sans menu caché. */
 export const NAV_SECTIONS: readonly NavSection[] = [
-  { id: 'home', label: 'Accueil', icon: '🏠', href: ROUTES.dashboard, pages: [] },
+  { id: 'home', label: 'Accueil', icon: 'home', href: ROUTES.dashboard, pages: [] },
   {
     id: 'budget',
     label: 'Budget',
-    icon: '📊',
+    icon: 'budget',
     href: ROUTES.budgetMonthly,
     pages: [
       { label: 'Mensuel', href: ROUTES.budgetMonthly },
@@ -87,7 +89,7 @@ export const NAV_SECTIONS: readonly NavSection[] = [
   {
     id: 'operations',
     label: 'Opérations',
-    icon: '🪙',
+    icon: 'operations',
     href: ROUTES.reconciliation,
     pages: [
       { label: 'Import', href: ROUTES.import },
@@ -98,7 +100,7 @@ export const NAV_SECTIONS: readonly NavSection[] = [
   {
     id: 'account',
     label: 'Compte',
-    icon: '👤',
+    icon: 'account',
     href: ROUTES.profile,
     pages: [
       { label: 'Profil', href: ROUTES.profile },
