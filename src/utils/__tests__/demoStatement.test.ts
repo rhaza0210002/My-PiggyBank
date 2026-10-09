@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildDemoTransactions, toStoredDemo } from '@/utils/demoStatement';
+import { buildDemoTransactions, shouldConfirmReplaceDemo, toStoredDemo } from '@/utils/demoStatement';
 
 const NOW = new Date(2026, 9, 8);
 
@@ -45,5 +45,13 @@ describe('toStoredDemo', () => {
     const rows = buildDemoTransactions([], new Date(2026, 9, 9));
     rows[1] = { ...rows[1], date: '31/02/2026' };
     expect(toStoredDemo(rows).map((row) => row.id)).not.toContain('demo-1');
+  });
+});
+
+describe('shouldConfirmReplaceDemo', () => {
+  it('demande confirmation seulement pour un vrai fichier pendant un exemple actif', () => {
+    expect(shouldConfirmReplaceDemo(true, false)).toBe(true);
+    expect(shouldConfirmReplaceDemo(true, true)).toBe(false);
+    expect(shouldConfirmReplaceDemo(false, false)).toBe(false);
   });
 });

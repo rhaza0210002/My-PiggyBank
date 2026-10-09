@@ -77,3 +77,7 @@ export function toStoredDemo(transactions: BankTransaction[]): StoredTransaction
     ];
   });
 }
+
+/** Importer un vrai fichier pendant un exemple actif efface l'exemple : on demande d'abord. */
+export const shouldConfirmReplaceDemo = (demoActive: boolean, isDemoPreview: boolean): boolean =>
+  demoActive && !isDemoPreview;
