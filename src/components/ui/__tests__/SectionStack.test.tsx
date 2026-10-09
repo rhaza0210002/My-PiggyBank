@@ -65,7 +65,11 @@ describe('SectionStack : bloc court (formulaire)', () => {
 
   it('prend la hauteur de son contenu, sans grand vide en dessous', () => {
     expect(short.slice(0, short.indexOf('</section>'))).not.toContain('min-h-[calc(100cqh');
-    expect(short.slice(0, short.indexOf('</section>'))).not.toContain('min-h-40');
+  });
+
+  it('garde une place d’attente tant qu’il n’est pas monté (sinon il ne serait jamais « atteint »)', () => {
+    const block = short.slice(0, short.indexOf('</section>'));
+    expect(block).toContain('min-h-40');
   });
 
   it('reste une étape du défilement accroché', () => {
