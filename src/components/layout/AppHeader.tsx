@@ -53,7 +53,7 @@ export default function AppHeader() {
           className="flex min-h-12 shrink-0 items-center gap-2 rounded-xl p-1 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           <Pig className="size-10 -rotate-6" />
-          <span className="whitespace-nowrap font-titre text-xl font-extrabold text-texte sm:text-2xl">My PiggyBank</span>
+          <span className="whitespace-nowrap font-titre text-xl font-extrabold text-texte sm:text-2xl md:max-lg:hidden">My PiggyBank</span>
         </Link>
 
         <nav aria-label="Navigation principale" className="hidden md:block">
