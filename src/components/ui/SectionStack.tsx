@@ -16,6 +16,17 @@ interface SectionStackProps {
   label: string;
   /** Fond de la rangée de puces collante (doit être celui du conteneur pour ne pas former de bande). */
   background?: 'surface' | 'surface-douce';
+  /**
+   * Sur ordinateur, la zone a une hauteur fixe (le cadre de l'écran) : chaque bloc devient une carte de cette
+   * hauteur, avec accroche douce. À laisser éteint quand la zone s'étire avec son contenu (import de relevé).
+   */
+  fillZone?: boolean;
+}
+
+/** Le premier bloc est toujours monté : sur l'import, les blocs n'arrivent qu'après le choix d'un fichier. */
+export function withFirstRevealed(previous: ReadonlySet<string>, sections: StackSection[]): ReadonlySet<string> {
+  const first = sections[0]?.id;
+  return first && !previous.has(first) ? new Set([...previous, first]) : previous;
 }
 
 const prefersReducedMotion = () =>
@@ -74,13 +85,15 @@ function animateScroll(parent: HTMLElement, getTargetTop: () => number, onDone: 
  */
 const BACKGROUND_CLASSES = { surface: 'bg-surface', 'surface-douce': 'bg-surface-douce' } as const;
 
-export default function SectionStack({ sections, label, background = 'surface-douce' }: SectionStackProps) {
+export default function SectionStack({ sections, label, background = 'surface-douce', fillZone = false }: SectionStackProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
   const cancelScrollRef = useRef<(() => void) | null>(null);
   const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [revealed, setRevealed] = useState<ReadonlySet<string>>(() => new Set(sections.slice(0, 1).map((s) => s.id)));
+  // Calculé à l'affichage : le premier bloc est visible dès qu'il existe, sans attendre l'observateur.
+  const shownSections = withFirstRevealed(revealed, sections);
   const [activeId, setActiveId] = useState<string | undefined>(sections[0]?.id);
 
   useEffect(() => {
@@ -100,7 +113,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
         setRevealed((previous) => new Set([...previous, ...visible]));
       },
       // Bureau : une carte remplit la zone, elle n'apparaît (et ses animations ne partent) qu'une fois bien entrée.
-      { root, rootMargin: root ? '0px 0px -45% 0px' : '0px 0px -10% 0px', threshold: root ? 0 : 0.05 },
+      { root, rootMargin: root ? '0px 0px -30% 0px' : '0px 0px -10% 0px', threshold: root ? 0 : 0.05 },
     );
 
     const activeObserver = new IntersectionObserver(
@@ -212,7 +225,9 @@ export default function SectionStack({ sections, label, background = 'surface-do
 
       <div
         ref={scrollerRef}
-        className="min-h-0 flex-1 space-y-4 md:snap-y md:snap-proximity md:overflow-y-auto md:[container-type:size] md:[scroll-padding-top:var(--nav-h)]"
+        className={`min-h-0 flex-1 space-y-4 md:overflow-y-auto ${
+          fillZone ? 'md:snap-y md:snap-proximity md:[container-type:size] md:[scroll-padding-top:var(--nav-h)]' : ''
+        }`}
       >
         <nav
           ref={navRef}
@@ -239,7 +254,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
         </nav>
 
         {sections.map((section) => {
-          const isRevealed = revealed.has(section.id);
+          const isRevealed = shownSections.has(section.id);
           return (
             <section
               key={section.id}
@@ -250,7 +265,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
               data-section-id={section.id}
               aria-labelledby={`section-${section.id}-title`}
               tabIndex={-1}
-              className="scroll-mt-1 outline-none md:min-h-[calc(100cqh-var(--nav-h))] md:snap-start"
+              className={`scroll-mt-1 outline-none ${fillZone ? 'md:min-h-[calc(100cqh-var(--nav-h))] md:snap-start' : ''}`}
             >
               <h2
                 id={`section-${section.id}-title`}

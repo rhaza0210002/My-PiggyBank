@@ -22,6 +22,7 @@ export default function BilanBank() {
         <p className="py-6 text-center font-semibold">Aucun groupe de budget trouvé.</p>
       ) : (
         <SectionStack
+          fillZone
           label="Parties du budget annuel"
           sections={[
             ...dataGroups.map((group) => ({
