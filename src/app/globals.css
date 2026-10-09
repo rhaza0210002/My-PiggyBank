@@ -6,7 +6,7 @@
  * Un test (theme.test.ts) lit ce bloc et vérifie les contrastes de chaque paire texte/fond.
  */
 @theme {
-  --font-sans: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
 
   --color-fond: #f2fbea;
   --color-surface: #ffffff;
@@ -189,4 +189,39 @@ a[class*='shadow-bonbon']:active {
   .tirelire-pig,
   .tirelire-pig .tirelire-oeil { animation: none; }
   .tirelire-niveau { transition: none; }
+}
+
+
+/*
+ * Réglages d'accessibilité (bouton ♿) : chaque option pose un attribut sur <html>, voir accessibilityPrefs.ts.
+ * Les couleurs ne changent que par les rôles : rien n'est écrit en dur ici.
+ */
+html[data-police='luciole'] {
+  --font-sans: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
+}
+
+html[data-taille='grand'] {
+  font-size: 118.75%;
+}
+
+html[data-espace='large'] body {
+  letter-spacing: 0.06em;
+  word-spacing: 0.12em;
+  line-height: 1.7;
+}
+
+html[data-contraste='fort'] {
+  --color-fond: var(--color-surface);
+  --color-surface-douce: var(--color-surface);
+  --color-accent-doux: var(--color-surface);
+  --color-texte-doux: var(--color-texte);
+  --color-bordure: var(--color-bordure-forte);
+}
+
+html[data-calme='oui'] *,
+html[data-calme='oui'] *::before,
+html[data-calme='oui'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
 }

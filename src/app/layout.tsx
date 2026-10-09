@@ -1,9 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import localFont from "next/font/local";
+import { Nunito } from "next/font/google";
+import AccessibilityFlower from "@/components/features/accessibility/AccessibilityFlower";
+import { noFlashScript } from "@/utils/accessibilityPrefs";
 import "./globals.css";
 
-// Luciole : police conçue avec des personnes malvoyantes (licence CC BY 4.0, voir la page Accessibilité).
+const nunito = Nunito({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-nunito",
+});
+
+// Luciole, proposée par le bouton accessibilité : police conçue avec des personnes malvoyantes (licence CC BY 4.0, voir la page Accessibilité).
 const luciole = localFont({
   src: [
     { path: "./fonts/Luciole-Regular.woff2", weight: "400", style: "normal" },
@@ -24,9 +33,13 @@ export const viewport: Viewport = { themeColor: "#8fd36f" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" className={`${luciole.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className={`${luciole.className} min-h-full flex flex-col bg-fond text-texte`}>
+    <html lang="fr" className={`${nunito.variable} ${luciole.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: noFlashScript() }} />
+      </head>
+      <body className="min-h-full flex flex-col bg-fond text-texte">
         {children}
+        <AccessibilityFlower />
       </body>
     </html>
   );
