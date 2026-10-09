@@ -22,7 +22,7 @@ import { getStartSteps } from '@/utils/startSteps';
 import { pickTip } from '@/utils/tips';
 import Icon from '@/components/ui/Icon';
 
-const PANEL = 'rounded-carte border-2 border-texte p-4 shadow-sticker sm:p-5';
+const PANEL = 'carte-vivante rounded-carte border-2 border-texte p-4 shadow-sticker sm:p-5';
 const PRIMARY_LINK =
   'inline-flex min-h-12 items-center justify-center self-start rounded-bonbon border-2 border-texte bg-corail px-6 py-2 text-center font-titre text-lg font-extrabold text-sur-corail shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus motion-reduce:transition-none';
 

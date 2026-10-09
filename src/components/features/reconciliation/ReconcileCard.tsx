@@ -60,7 +60,7 @@ export default function ReconcileCard({
   return (
     <article
       aria-labelledby="reconcile-title"
-      className="space-y-2.5 rounded-carte border-2 border-bordure bg-surface p-3 shadow-bonbon motion-safe:animate-[pop_0.35s_ease-out_1] sm:p-4"
+      className="carte-vivante space-y-2.5 rounded-carte border-2 border-bordure bg-surface p-3 shadow-bonbon motion-safe:animate-[pop_0.35s_ease-out_1] sm:p-4"
     >
       <div className="flex flex-col items-center gap-1 text-center">
         <div className="min-w-0">
