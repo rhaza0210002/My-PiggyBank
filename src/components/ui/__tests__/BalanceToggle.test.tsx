@@ -22,3 +22,10 @@ describe('solde masqué', () => {
     expect(shown).toContain('aria-pressed="true"');
   });
 });
+
+describe('bouton du solde : cochon', () => {
+  it('montre un cochon endormi quand le solde est caché, éveillé quand il est visible', () => {
+    expect(renderToStaticMarkup(<BalanceToggle isShown={false} onToggle={() => {}} />)).toContain('data-mood="endormi"');
+    expect(renderToStaticMarkup(<BalanceToggle isShown onToggle={() => {}} />)).toContain('data-mood="content"');
+  });
+});

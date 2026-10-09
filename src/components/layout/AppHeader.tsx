@@ -8,6 +8,7 @@ import { NAV_SECTIONS, ROUTES, getActiveSection } from '@/constants/routes';
 import { NAV_LINK_BASE } from '@/components/layout/navLinkClasses';
 import { supabase } from '@/lib/supabaseClient';
 import { getUserProfile } from '@/services/userService';
+import Pig from '@/components/ui/Pig';
 
 export default function AppHeader() {
   const pathname = usePathname();
@@ -50,7 +51,7 @@ export default function AppHeader() {
           aria-label="My PiggyBank, retour à l'accueil"
           className="flex min-h-12 shrink-0 items-center gap-2 rounded-xl p-1 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
-          <span className="inline-block -rotate-6 text-3xl" aria-hidden="true">🐷</span>
+          <Pig className="size-10 -rotate-6" />
           <span className="whitespace-nowrap font-titre text-xl font-extrabold text-texte sm:text-2xl">My PiggyBank</span>
         </Link>
 

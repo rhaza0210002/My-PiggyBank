@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Pig from '@/components/ui/Pig';
 
 /** Remplace un montant tant que le solde est caché : même largeur approximative, aucune valeur dans le DOM. */
 export const MASKED_AMOUNT = '•••• €';
@@ -34,7 +35,7 @@ export default function BalanceToggle({ isShown, onToggle, subject = 'le solde d
       className={`inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-bordure bg-surface text-lg shadow-bonbon transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus ${className}`}
     >
       <span key={String(isShown)} aria-hidden="true" className="motion-safe:animate-[pop_0.3s_ease-out_1]">
-        {isShown ? '👀' : '🐷'}
+        <Pig mood={isShown ? 'content' : 'endormi'} className="size-7" />
       </span>
     </button>
   );
