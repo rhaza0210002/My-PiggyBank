@@ -220,6 +220,7 @@ export default function DepenseReellePage() {
               )}
 
               <SectionStack
+                fillZone
                 label="Parties des dépenses du mois"
                 sections={[
                   {

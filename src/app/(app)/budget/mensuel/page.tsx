@@ -162,6 +162,7 @@ export default function MonthBudgetPage() {
             <p className="shrink-0 text-sm font-semibold text-depasse" role="alert">{budgetSaveError}</p>
           )}
           <SectionStack
+            fillZone
             label="Parties du budget du mois"
             sections={[
               ...dataGroups.map((group) => ({

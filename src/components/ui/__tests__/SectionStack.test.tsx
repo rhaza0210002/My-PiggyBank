@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import SectionStack from '@/components/ui/SectionStack';
+import SectionStack, { withFirstRevealed } from '@/components/ui/SectionStack';
 
 const sections = [
   { id: 'un', label: 'Décaissement', content: <p>Premier tableau</p> },
@@ -8,7 +8,7 @@ const sections = [
 ];
 
 describe('SectionStack : cartes qui se suivent sur ordinateur', () => {
-  const html = renderToStaticMarkup(<SectionStack sections={sections} label="Parties du budget" />);
+  const html = renderToStaticMarkup(<SectionStack sections={sections} label="Parties du budget" fillZone />);
 
   it('accroche doucement le défilement sur chaque carte (proximity, jamais mandatory)', () => {
     expect(html).toContain('md:snap-y');
@@ -34,5 +34,27 @@ describe('SectionStack : cartes qui se suivent sur ordinateur', () => {
   it('ne monte que le premier tableau tant qu’on n’y est pas arrivé', () => {
     expect(html).toContain('Premier tableau');
     expect(html).not.toContain('Second tableau');
+  });
+});
+
+describe('SectionStack sans zone de hauteur fixe (import de relevé)', () => {
+  const html = renderToStaticMarkup(<SectionStack sections={sections} label="Parties de l’import" />);
+
+  it('ne contraint pas la hauteur : pas de conteneur de taille, pas d’accroche ni de carte plein cadre', () => {
+    expect(html).not.toContain('container-type');
+    expect(html).not.toContain('snap-');
+    expect(html).not.toContain('100cqh');
+  });
+});
+
+describe('withFirstRevealed', () => {
+  it('révèle toujours le premier bloc, même quand les blocs arrivent après le premier affichage', () => {
+    const later = withFirstRevealed(new Set(), sections);
+    expect([...later]).toEqual(['un']);
+  });
+
+  it('garde ce qui est déjà révélé et ne change rien quand il n’y a aucun bloc', () => {
+    expect([...withFirstRevealed(new Set(['deux']), sections)].sort()).toEqual(['deux', 'un']);
+    expect([...withFirstRevealed(new Set(), [])]).toEqual([]);
   });
 });
