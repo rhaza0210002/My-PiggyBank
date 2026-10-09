@@ -7,7 +7,7 @@ import StartChecklist from '@/components/features/gamification/StartChecklist';
 import MonthRecapCard from '@/components/features/gamification/MonthRecapCard';
 import MonthsStrip from '@/components/features/gamification/MonthsStrip';
 import BalanceToggle, { revealAmount, useBalanceVisibility } from '@/components/ui/BalanceToggle';
-import ProgressBar from '@/components/ui/ProgressBar';
+import Gauge from '@/components/ui/Gauge';
 import { ROUTES } from '@/constants/routes';
 import { MONTHS } from '@/constants/tableStyles';
 import { useGamification } from '@/hooks/useGamification';
@@ -121,7 +121,7 @@ export default function DashboardPage() {
               <p className="text-lg font-bold text-ok">
                 <span aria-hidden="true">🎉 </span>Mois bouclé, bravo !
               </p>
-              <ProgressBar value={month.done} max={month.total} label={`Opérations de ${monthName} pointées`} valueText={`${month.done} sur ${month.total}`} />
+              <Gauge value={month.done} max={month.total} label={`Opérations de ${monthName} pointées`} valueText={`${month.done} sur ${month.total}`} />
               <Link href={ROUTES.actualExpenses} className={PRIMARY_LINK}>Voir mes dépenses</Link>
             </>
           ) : (
@@ -129,7 +129,7 @@ export default function DashboardPage() {
               <p className="text-lg font-bold text-texte">
                 {pending} opération{pending > 1 ? 's' : ''} à pointer
               </p>
-              <ProgressBar
+              <Gauge
                 value={month.done}
                 max={month.total}
                 label={`Opérations de ${monthName} pointées`}
@@ -163,7 +163,7 @@ export default function DashboardPage() {
               <p className="text-lg font-bold text-texte">
                 Niveau {level.level} · {level.title}
               </p>
-              <ProgressBar
+              <Gauge
                 value={level.xpIntoLevel}
                 max={level.xpForNext}
                 label="Progression vers le niveau suivant"

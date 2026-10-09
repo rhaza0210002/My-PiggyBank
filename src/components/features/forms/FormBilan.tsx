@@ -1,5 +1,6 @@
 "use client";
 
+import Button from '@/components/ui/Button';
 import React, { useState, FormEvent } from 'react';
 import type { DataGroup } from '@/types/budget';
 
@@ -133,13 +134,9 @@ export default function FormBilan({
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={readOnly || groups.length === 0 || isSubmitting}
-        className="rounded-xl border-2 border-bordure bg-accent px-5 py-2.5 text-sm font-bold text-sur-accent shadow-bonbon transition-transform active:translate-y-[2px] active:shadow-none"
-      >
+      <Button type="submit" disabled={readOnly || groups.length === 0 || isSubmitting}>
         {isSubmitting ? 'Ajout en cours...' : 'Ajouter la ligne'}
-      </button>
+      </Button>
       {submitError && (
         <p className="w-full text-sm font-semibold text-red-700" role="alert">
           {submitError}

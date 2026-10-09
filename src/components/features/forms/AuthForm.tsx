@@ -1,5 +1,6 @@
 "use client";
 
+import Button from '@/components/ui/Button';
 import GoogleLogo from '@/components/features/forms/GoogleLogo';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -244,13 +245,9 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="mt-2 min-h-12 w-full rounded-carte border-[3px] border-bordure bg-accent py-3.5 text-center text-[1rem] font-bold text-sur-accent shadow-bonbon transition-all hover:translate-y-[2px] hover:shadow-bonbon active:translate-y-[4px] active:shadow-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-70"
-          >
+          <Button type="submit" disabled={isLoading} className="mt-2 min-h-12 w-full">
             {isLoading ? "Chargement…" : isRegister ? "S'inscrire" : "Se connecter"}
-          </button>
+          </Button>
         </form>
 
         {onGoogle && (

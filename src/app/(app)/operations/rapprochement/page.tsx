@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import ReconcileCard from '@/components/features/reconciliation/ReconcileCard';
 import NewCategoryForm from '@/components/features/forms/NewCategoryForm';
-import ProgressBar from '@/components/ui/ProgressBar';
+import Gauge from '@/components/ui/Gauge';
 import ScreenCard from '@/components/ui/ScreenCard';
 import { useGamification } from '@/hooks/useGamification';
 import { suggestCategory, type LabeledCategory } from '@/utils/categorySuggestion';
@@ -225,7 +225,7 @@ export default function RapprochementPage() {
               {month.done} / {month.total} pointées
             </p>
             <div className="min-w-0 flex-1">
-              <ProgressBar value={month.done} max={month.total} label="Opérations du mois pointées" valueText={`${month.done} sur ${month.total}`} />
+              <Gauge value={month.done} max={month.total} label="Opérations du mois pointées" valueText={`${month.done} sur ${month.total}`} />
             </div>
             {progress && (
               <p className="hidden shrink-0 text-xs font-semibold text-texte-doux sm:block">
