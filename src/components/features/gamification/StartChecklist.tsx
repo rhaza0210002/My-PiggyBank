@@ -25,7 +25,7 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
             <li
               key={step.id}
               aria-current={isNext ? 'step' : undefined}
-              className={`carte-vivante flex flex-col items-center gap-1 rounded-2xl border-[1.5px] p-3 ${
+              className={`carte-vivante grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 rounded-2xl border-[1.5px] p-2.5 text-left md:flex md:flex-col md:p-3 md:text-center ${
                 step.done
                   ? 'border-bordure bg-ok-fond'
                   : isNext
@@ -41,25 +41,28 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
               >
                 {step.done ? '✓' : index + 1}
               </span>
+              {/* Mobile : une ligne par pas (pastille, texte, bouton) ; à partir de la tablette, trois colonnes. */}
+              <div className="min-w-0">
               <p className="font-bold text-texte">
                 {step.title}
                 {step.done && <span className="sr-only"> : fait</span>}
               </p>
               {!step.done && <p className="text-xs text-texte-doux">{step.hint}</p>}
               {step.done && step.edit.note && <p className="text-xs text-texte-doux">{step.edit.note}</p>}
+              </div>
               {isNext ? (
                 <Link
                   href={step.href}
-                  className="mt-1 inline-flex min-h-11 items-center rounded-carte border-2 border-bordure bg-accent px-5 font-black text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                  className="inline-flex min-h-11 items-center rounded-carte md:mt-1 border-2 border-bordure bg-accent px-3 font-black md:px-5 text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 >
                   C’est parti
                 </Link>
               ) : step.done ? (
-                <Link href={step.href} aria-label={step.edit.ariaLabel} className="mt-1 inline-flex min-h-11 items-center rounded-carte border-2 border-texte bg-surface px-5 font-black text-texte shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus">
+                <Link href={step.href} aria-label={step.edit.ariaLabel} className="inline-flex min-h-11 items-center rounded-carte md:mt-1 border-2 border-texte bg-surface px-3 font-black md:px-5 text-texte shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus">
                   {step.edit.label}
                 </Link>
               ) : (
-                <Link href={step.href} className="mt-1 inline-flex min-h-11 items-center rounded-carte border-2 border-texte bg-surface px-5 font-black text-texte shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus">
+                <Link href={step.href} className="inline-flex min-h-11 items-center rounded-carte md:mt-1 border-2 border-texte bg-surface px-3 font-black md:px-5 text-texte shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus">
                   {step.action}
                 </Link>
               )}
