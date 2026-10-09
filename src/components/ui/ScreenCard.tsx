@@ -24,7 +24,7 @@ export default function ScreenCard({ title, subtitle, actions, children, flow = 
             {icon && (
               <span
                 aria-hidden="true"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-white/70 bg-accent-doux text-xl shadow-bonbon motion-safe:animate-[float_3s_ease-in-out_infinite]"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-surface/70 bg-accent-doux text-xl shadow-bonbon"
               >
                 {icon}
               </span>

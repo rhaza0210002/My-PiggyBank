@@ -76,7 +76,7 @@ export default function MyDataPage() {
           {exportMessage && (
             <p
               role={exportMessage.tone === 'error' ? 'alert' : 'status'}
-              className={`mt-3 text-sm font-semibold ${exportMessage.tone === 'error' ? 'text-red-700' : 'text-green-800'}`}
+              className={`mt-3 text-sm font-semibold ${exportMessage.tone === 'error' ? 'text-depasse' : 'text-ok'}`}
             >
               {exportMessage.text}
             </p>
@@ -106,13 +106,13 @@ export default function MyDataPage() {
                 onChange={(event) => setConfirmation(event.target.value)}
                 autoComplete="off"
                 autoFocus
-                className="min-h-11 w-full rounded-xl border-2 border-bordure-forte bg-white px-3 text-texte"
+                className="min-h-11 w-full rounded-xl border-2 border-bordure-forte bg-surface px-3 text-texte"
               />
               <div className="flex flex-wrap gap-2">
                 <button
                   type="submit"
                   disabled={isDeleting || confirmation.trim().toUpperCase() !== CONFIRMATION_WORD}
-                  className="min-h-11 rounded-2xl border-2 border-accent-fort bg-depasse px-4 text-sm font-bold text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
+                  className="min-h-11 rounded-2xl border-2 border-accent-fort bg-depasse px-4 text-sm font-bold text-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
                 >
                   {isDeleting ? 'Suppression…' : 'Supprimer définitivement'}
                 </button>
@@ -129,7 +129,7 @@ export default function MyDataPage() {
                 </button>
               </div>
               {deleteError && (
-                <p role="alert" className="text-sm font-semibold text-red-700">{deleteError}</p>
+                <p role="alert" className="text-sm font-semibold text-depasse">{deleteError}</p>
               )}
             </form>
           )}

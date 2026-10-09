@@ -279,13 +279,13 @@ export default function RapprochementPage() {
         )}
 
         {loadError && (
-          <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
+          <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
             {loadError}
           </p>
         )}
 
         {actionError && (
-          <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
+          <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
             {actionError}
           </p>
         )}
@@ -320,7 +320,7 @@ export default function RapprochementPage() {
                   reconcile(readyIds);
                 }}
                 disabled={readyIds.some((id) => busyIds.has(id))}
-                className="min-h-11 w-full rounded-xl border border-bordure-forte bg-white/70 px-4 text-sm font-bold text-texte transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
+                className="min-h-11 w-full rounded-xl border border-bordure-forte bg-surface/70 px-4 text-sm font-bold text-texte transition hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
               >
                 Pointer d’un coup les {readyIds.length} déjà catégorisées
               </button>
@@ -341,7 +341,7 @@ export default function RapprochementPage() {
               </Link>
               <Link
                 href={ROUTES.import}
-                className="inline-flex min-h-12 items-center justify-center rounded-carte border-2 border-bordure-forte bg-white/70 px-5 py-2 font-bold text-texte"
+                className="inline-flex min-h-12 items-center justify-center rounded-carte border-2 border-bordure-forte bg-surface/70 px-5 py-2 font-bold text-texte"
               >
                 Importer un autre relevé
               </Link>

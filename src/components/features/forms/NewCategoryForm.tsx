@@ -75,7 +75,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
             id={`${formId}-group`}
             value={selectedGroupId}
             onChange={(event) => setGroupId(event.target.value)}
-            className="min-h-11 rounded-xl border-2 border-bordure-forte bg-white px-3 text-sm font-semibold text-texte"
+            className="min-h-11 rounded-xl border-2 border-bordure-forte bg-surface px-3 text-sm font-semibold text-texte"
           >
             {groups.map((group) => (
               <option key={group.id} value={group.id}>
@@ -100,7 +100,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
             aria-invalid={error !== null}
             aria-describedby={error ? `${formId}-error` : undefined}
             placeholder="Ex : Transport"
-            className="min-h-11 rounded-xl border-2 border-bordure-forte bg-white px-3 text-sm font-semibold text-texte placeholder:text-texte-doux"
+            className="min-h-11 rounded-xl border-2 border-bordure-forte bg-surface px-3 text-sm font-semibold text-texte placeholder:text-texte-doux"
           />
         </div>
 

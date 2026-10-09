@@ -46,7 +46,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
   };
 
   return (
-    <section aria-label="Archiver le mois" className="rounded-2xl border-2 border-dashed border-bordure bg-white/50 p-3 text-center">
+    <section aria-label="Archiver le mois" className="rounded-2xl border-2 border-dashed border-bordure bg-surface/50 p-3 text-center">
       {!isConfirming ? (
         <>
           <p className="text-sm font-semibold text-texte">
@@ -82,7 +82,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
               type="button"
               onClick={() => setIsConfirming(false)}
               disabled={isBusy}
-              className="min-h-11 rounded-xl border-2 border-bordure bg-white px-4 text-sm font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+              className="min-h-11 rounded-xl border-2 border-bordure bg-surface px-4 text-sm font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               Annuler
             </button>

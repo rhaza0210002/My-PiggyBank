@@ -84,14 +84,14 @@ export default function DashboardPage() {
     <div className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col gap-2 overflow-y-auto px-3 py-2 sm:px-5">
       <div className="flex shrink-0 flex-col items-center gap-0.5 px-1 text-center">
         <h1 className="flex items-center gap-2 text-[clamp(1.35rem,2.2vw,1.9rem)] font-black tracking-[-0.04em] text-texte">
-          <span aria-hidden="true" className="inline-block motion-safe:animate-[wiggle_2.4s_ease-in-out_infinite]">🐷</span>
+          <span aria-hidden="true" className="inline-block">🐷</span>
           Salut{pseudo ? ` ${pseudo}` : ''} !
         </h1>
         <p className="text-sm text-texte-doux">Un petit pas à la fois : chaque pointage compte, rien ne se perd.</p>
       </div>
 
       {progressError && (
-        <p role="alert" className="shrink-0 rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
+        <p role="alert" className="shrink-0 rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
           {progressError}
         </p>
       )}
@@ -194,7 +194,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => setTipOffset((offset) => offset + 1)}
-            className="mt-auto min-h-11 self-center rounded-xl border border-bordure-forte bg-white/70 px-3 text-sm font-bold text-texte hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            className="mt-auto min-h-11 self-center rounded-xl border border-bordure-forte bg-surface/70 px-3 text-sm font-bold text-texte hover:bg-surface focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Une autre astuce
           </button>

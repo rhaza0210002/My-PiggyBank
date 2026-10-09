@@ -21,7 +21,7 @@ export default function Field({ label, hint, error, children }: FieldProps) {
 
   return (
     <div className="space-y-1">
-      <label htmlFor={id} className="block text-sm font-bold text-texte">
+      <label htmlFor={id} className="block text-base font-bold text-texte">
         {label}
       </label>
       {children({ id, 'aria-describedby': describedBy })}

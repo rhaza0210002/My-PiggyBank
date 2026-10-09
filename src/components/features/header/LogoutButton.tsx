@@ -46,7 +46,7 @@ export default function LogoutButton({ variant = 'text', className = '' }: Logou
                 </span>
             </button>
             {error && (
-                <p role="alert" className="mt-2 text-sm font-semibold text-red-700">{error}</p>
+                <p role="alert" className="mt-2 text-sm font-semibold text-depasse">{error}</p>
             )}
         </div>
     );

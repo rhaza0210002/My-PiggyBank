@@ -41,7 +41,7 @@ export default function NotificationsPage() {
       </div>
 
       {error && (
-        <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-800">
+        <p role="alert" className="rounded-lg border border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
           {error}
         </p>
       )}

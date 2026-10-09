@@ -47,7 +47,7 @@ export default function PushReminderToggle() {
   const canToggle = status === 'on' || status === 'off';
 
   return (
-    <div className="mt-4 rounded-2xl border border-bordure bg-white/60 p-4">
+    <div className="mt-4 rounded-2xl border border-bordure bg-surface/60 p-4">
       <h3 className="text-sm font-bold text-texte">
         <span aria-hidden="true">🔔 </span>Rappels sur cet appareil
       </h3>
@@ -55,7 +55,7 @@ export default function PushReminderToggle() {
         {status ? MESSAGES[status] : 'Vérification…'}
       </p>
       {error && (
-        <p role="alert" className="mt-2 text-sm font-semibold text-red-800">{error}</p>
+        <p role="alert" className="mt-2 text-sm font-semibold text-depasse">{error}</p>
       )}
       {canToggle && (
         <button

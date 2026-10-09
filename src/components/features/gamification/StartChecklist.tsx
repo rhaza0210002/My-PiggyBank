@@ -30,14 +30,14 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
                 step.done
                   ? 'border-bordure bg-ok-fond'
                   : isNext
-                    ? 'border-accent-fort bg-white'
-                    : 'border-bordure bg-white/60'
+                    ? 'border-accent-fort bg-surface'
+                    : 'border-bordure bg-surface/60'
               }`}
             >
               <span
                 aria-hidden="true"
                 className={`flex size-8 items-center justify-center rounded-full text-sm font-black ${
-                  step.done ? 'bg-ok text-white' : 'bg-accent-fort text-white'
+                  step.done ? 'bg-ok text-surface' : 'bg-accent-fort text-surface'
                 }`}
               >
                 {step.done ? '✓' : index + 1}

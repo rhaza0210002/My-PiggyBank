@@ -28,7 +28,7 @@ export default function OperationsSteps() {
               >
                 <span
                   aria-hidden="true"
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-fort text-xs font-black text-white"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-fort text-xs font-black text-surface"
                 >
                   {index + 1}
                 </span>
