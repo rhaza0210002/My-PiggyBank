@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { findScrollParent } from '@/utils/scroll';
 
 export interface StackSection {
   id: string;
@@ -31,15 +32,6 @@ export function withFirstRevealed(previous: ReadonlySet<string>, sections: Stack
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/** Premier ancêtre qui défile réellement (jamais le cadre de l'écran, qui est en overflow: hidden). */
-function findScrollParent(element: HTMLElement): HTMLElement | null {
-  for (let parent = element.parentElement; parent; parent = parent.parentElement) {
-    const { overflowY } = window.getComputedStyle(parent);
-    if ((overflowY === 'auto' || overflowY === 'scroll') && parent.scrollHeight > parent.clientHeight) return parent;
-  }
-  return null;
-}
 
 const SCROLL_DURATION_MS = 650;
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);

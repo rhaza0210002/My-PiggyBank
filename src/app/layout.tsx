@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashScript() }} />
       </head>
-      <body className="min-h-full flex flex-col bg-fond text-texte">
+      <body className="min-h-full flex flex-col bg-fond text-texte" suppressHydrationWarning>
         {children}
         <AccessibilityFlower />
       </body>
