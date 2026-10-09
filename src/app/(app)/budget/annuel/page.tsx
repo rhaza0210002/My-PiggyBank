@@ -10,6 +10,8 @@ import ScreenCard from '@/components/ui/ScreenCard';
 import SectionStack from '@/components/ui/SectionStack';
 import { useBudget } from '@/hooks/useBudget';
 import type { DataGroup } from '@/types/budget';
+import { ROUTES } from '@/constants/routes';
+import EmptyState from '@/components/ui/EmptyState';
 
 export default function BilanBank() {
   const { dataGroups, isLoaded } = useBudget();
@@ -19,7 +21,11 @@ export default function BilanBank() {
       {!isLoaded ? (
         <p role="status" className="py-6 text-center font-semibold">Chargement...</p>
       ) : dataGroups.length === 0 ? (
-        <p className="py-6 text-center font-semibold">Aucun groupe de budget trouvé.</p>
+        <EmptyState
+          title="Pas encore de budget"
+          text="Quelques montants suffisent pour commencer."
+          action={{ href: ROUTES.budgetMonthly, label: 'Prévoir mon budget' }}
+        />
       ) : (
         <SectionStack
           fillZone
@@ -79,8 +85,8 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
           <tbody>
             {group.rows.length === 0 ? (
               <tr>
-                <td colSpan={MONTHS.length + 1} className="py-6 text-center text-[1.1rem] italic text-texte-doux">
-                  Aucune donnée enregistrée pour le moment.
+                <td colSpan={MONTHS.length + 1}>
+                  <EmptyState compact title="Rien d’enregistré pour l’instant" />
                 </td>
               </tr>
             ) : (

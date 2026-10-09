@@ -13,6 +13,7 @@ import {
 } from '@/services/transactionCategoryService';
 import { formatCurrency } from '@/utils/budgetCalculations';
 import { getDifference, isIncomeGroup } from '@/utils/budgetComparison';
+import EmptyState from '@/components/ui/EmptyState';
 
 /** Montant réel cumulé d'une catégorie, quelle que soit l'origine des transactions. */
 export interface ComparisonGroup {
@@ -249,9 +250,7 @@ export default function MonthlyBudgetComparison({
                 </h4>
                 <div className="space-y-2 p-2 md:hidden">
                   {group.rows.length === 0 ? (
-                    <p className="rounded-lg bg-surface/55 p-3 text-center text-sm italic text-texte-doux">
-                      Aucune donnée pour {MONTHS[monthIndex].label}.
-                    </p>
+                    <EmptyState compact title={`Rien pour ${MONTHS[monthIndex].label.toLowerCase()}`} />
                   ) : group.rows.map((row) => {
                     const difference = getDifference(group.isIncome, row.budget, row.actual);
                     return (
@@ -314,8 +313,8 @@ export default function MonthlyBudgetComparison({
                     <tbody>
                       {group.rows.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="py-5 text-center text-sm italic text-texte-doux">
-                            Aucune donnée pour ce groupe en {MONTHS[monthIndex].label}.
+                          <td colSpan={4}>
+                            <EmptyState compact title={`Rien dans ce groupe en ${MONTHS[monthIndex].label.toLowerCase()}`} />
                           </td>
                         </tr>
                       ) : group.rows.map((row, index) => {
