@@ -3,11 +3,11 @@ import type { ButtonHTMLAttributes } from 'react';
 export type ButtonVariant = 'principal' | 'secondaire' | 'lien' | 'doux';
 
 const BASE =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-bonbon px-5 text-base font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60';
+  'inline-flex min-h-11 items-center justify-center gap-2 rounded-bonbon px-5 font-titre text-lg font-extrabold transition-colors disabled:cursor-not-allowed disabled:opacity-60';
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  principal: 'bg-accent text-sur-accent shadow-bonbon hover:bg-accent-doux',
-  secondaire: 'border-2 border-bordure-forte bg-surface text-texte hover:bg-surface-douce',
+  principal: 'border-[3px] border-texte bg-corail text-sur-corail shadow-bonbon hover:bg-corail-clair',
+  secondaire: 'border-[3px] border-texte bg-surface text-texte shadow-bonbon hover:bg-surface-douce',
   lien: 'px-2 text-accent-fort underline underline-offset-2 hover:text-texte',
   doux: 'bg-depasse-fond text-depasse hover:bg-accent-doux',
 };

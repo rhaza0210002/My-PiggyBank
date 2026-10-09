@@ -6,7 +6,7 @@ import { getArchivedMonthActuals, getArchivedMonths } from '@/services/archiveSe
 import { archivedActivityRows, archivedToTransactions } from '@/utils/archive';
 import { fingerprint, sanitizeBankLabel } from '@/utils/bankPrivacy';
 import { prepareTransactionsForStorage } from '@/utils/transactionDedupe';
-import { isDemoActive, readDemoTransactions, updateDemoTransactions } from '@/services/demoStore';
+import { isDemoActive, isDemoId, readDemoTransactions, updateDemoTransactions } from '@/services/demoStore';
 
 export type StoredTransaction = Pick<
   TransactionRow,
@@ -42,9 +42,19 @@ const newestFirst = (rows: StoredTransaction[]) =>
 
 const demoRows = () => newestFirst(readDemoTransactions());
 
+const DEMO_CHANGED = "L'exemple a changé dans un autre onglet : recharge la page.";
+
 function patchDemo(ids: string[], patch: Partial<StoredTransaction>): void {
   const targets = new Set(ids);
-  updateDemoTransactions((rows) => rows.map((row) => (targets.has(row.id) ? { ...row, ...patch } : row)));
+  const known = new Set(readDemoTransactions().map((row) => row.id));
+  if (ids.some((id) => !known.has(id)) || !updateDemoTransactions((rows) => rows.map((row) => (targets.has(row.id) ? { ...row, ...patch } : row)))) {
+    throw new Error(DEMO_CHANGED);
+  }
+}
+
+/** Hors exemple, des identifiants d'exemple ne doivent jamais partir vers la base. */
+function rejectDemoIds(ids: string[]): void {
+  if (ids.some(isDemoId)) throw new Error(DEMO_CHANGED);
 }
 
 
@@ -130,6 +140,7 @@ export async function countTransactionsToReconcile(): Promise<number> {
 /** Rattache une opération à une catégorie (donc à la ligne de budget de cette catégorie et de son mois). */
 export async function updateTransactionCategory(id: string, categoryId: string | null): Promise<void> {
   if (isDemoActive()) return patchDemo([id], { category_id: categoryId, category_key: null });
+  rejectDemoIds([id]);
   const { error } = await supabase
     .from('transactions')
     .update({ category_id: categoryId, category_key: null })
@@ -141,6 +152,7 @@ export async function updateTransactionCategory(id: string, categoryId: string |
 /** Pointe des opérations : elles ne sont plus à rapprocher. */
 export async function markTransactionsReconciled(ids: string[]): Promise<void> {
   if (isDemoActive()) return patchDemo(ids, { reconciled_at: new Date().toISOString() });
+  rejectDemoIds(ids);
   if (ids.length === 0) return;
 
   const { error } = await supabase
@@ -154,6 +166,7 @@ export async function markTransactionsReconciled(ids: string[]): Promise<void> {
 /** Annule un pointage fait par erreur : les opérations reviennent dans celles à rapprocher. */
 export async function unreconcileTransactions(ids: string[]): Promise<void> {
   if (isDemoActive()) return patchDemo(ids, { reconciled_at: null });
+  rejectDemoIds(ids);
   if (ids.length === 0) return;
 
   const { error } = await supabase

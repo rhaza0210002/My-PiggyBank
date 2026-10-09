@@ -1,4 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr';
+import { endDemo } from '@/services/demoStore';
 import { invalidateCache } from '@/utils/memoryCache';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -13,5 +14,8 @@ export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 
 // Une autre session ne doit jamais voir les données gardées en mémoire par la précédente.
 supabase.auth.onAuthStateChange((event) => {
-  if (event === 'SIGNED_OUT') invalidateCache();
+  if (event === 'SIGNED_OUT') {
+    invalidateCache();
+    endDemo();
+  }
 });

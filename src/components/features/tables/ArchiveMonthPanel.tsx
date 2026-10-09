@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { archiveMonth } from '@/services/archiveService';
+import { isDemoActive } from '@/services/demoStore';
 import { getArchiveBlocker, isArchivedList, type ArchivableTransaction } from '@/utils/archive';
 
 interface ArchiveMonthPanelProps {
@@ -29,7 +30,8 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
   }
 
   const blocker = getArchiveBlocker(transactions);
-  if (blocker) return null;
+  // Les lignes de l'exemple sont fictives : on ne propose pas d'archiver le vrai mois.
+  if (blocker || isDemoActive()) return null;
 
   const confirm = async () => {
     setIsBusy(true);

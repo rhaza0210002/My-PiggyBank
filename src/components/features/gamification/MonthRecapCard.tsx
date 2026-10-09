@@ -43,12 +43,12 @@ export default function MonthRecapCard({ year, monthIndex, isAmountShown }: Mont
   return (
     <section
       aria-labelledby="recap-title"
-      className="shrink-0 rounded-3xl border border-bordure bg-surface p-3 text-center shadow-sm sm:p-4"
+      className="shrink-0 rotate-[0.4deg] rounded-carte border-[3px] border-texte bg-attention-fond p-4 shadow-sticker sm:p-5"
     >
-      <h2 id="recap-title" className="text-sm font-bold uppercase tracking-[0.15em] text-accent-fort">
+      <h2 id="recap-title" className="text-2xl font-extrabold leading-none text-texte">
         <span aria-hidden="true">🎉 </span>Ton bilan {ofMonth}
       </h2>
-      <ul className="mt-2 space-y-1 text-sm text-texte">
+      <ul className="mt-3 space-y-1.5 text-sm font-semibold text-texte [&>li]:border-b-[3px] [&>li]:border-dotted [&>li]:border-corail [&>li]:pb-1.5 [&>li:last-child]:border-0">
         <li>
           <strong>{recap.operations}</strong> opération{recap.operations > 1 ? 's' : ''} pointée{recap.operations > 1 ? 's' : ''}, bravo.
         </li>
@@ -63,7 +63,7 @@ export default function MonthRecapCard({ year, monthIndex, isAmountShown }: Mont
           </li>
         )}
         {recap.overBudget.length > 0 && (
-          <li className="text-texte-doux">
+          <li className="text-attention">
             À regarder doucement : {recap.overBudget.map((item) => item.label).join(', ')}. Un budget se réajuste, rien de grave.
           </li>
         )}

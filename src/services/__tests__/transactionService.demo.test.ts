@@ -118,4 +118,15 @@ describe('transactionService hors mode exemple', () => {
     expect(await getRecentTransactions(5)).toEqual([]);
     expect(from).toHaveBeenCalledWith('transactions');
   });
+
+  it('échoue clairement quand des identifiants ne sont plus dans l’exemple (au lieu de faire semblant)', async () => {
+    await expect(markTransactionsReconciled(['uuid-reel'])).rejects.toThrow(/exemple/i);
+    await expect(updateTransactionCategory('uuid-reel', null)).rejects.toThrow(/exemple/i);
+  });
+
+  it('échoue quand l’exemple a disparu entre-temps (autre onglet)', async () => {
+    endDemo();
+    await expect(unreconcileTransactions(['demo-0'])).rejects.toThrow(/exemple/i);
+    expect(from).toHaveBeenCalledTimes(0);
+  });
 });

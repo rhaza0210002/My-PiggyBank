@@ -44,6 +44,9 @@ function read(): StoredShape | null {
   }
 }
 
+/** Les identifiants de l'exemple ne désignent jamais de vraies lignes. */
+export const isDemoId = (id: string): boolean => id.startsWith('demo-');
+
 function notify(): void {
   try {
     window.dispatchEvent(new Event(DEMO_EVENT));
@@ -71,9 +74,10 @@ export const readDemoTransactions = (): StoredTransaction[] => read()?.transacti
 /** Renvoie false quand le stockage est refusé (navigation privée stricte) : l'exemple n'est alors pas disponible. */
 export const startDemo = (transactions: StoredTransaction[]): boolean => write(transactions);
 
-export function updateDemoTransactions(mutator: (rows: StoredTransaction[]) => StoredTransaction[]): void {
+/** Renvoie false quand l'exemple n'existe plus (autre onglet) ou que l'écriture est refusée : rien n'a été modifié. */
+export function updateDemoTransactions(mutator: (rows: StoredTransaction[]) => StoredTransaction[]): boolean {
   const current = read();
-  if (current) write(mutator(current.transactions));
+  return current ? write(mutator(current.transactions)) : false;
 }
 
 export function endDemo(): void {

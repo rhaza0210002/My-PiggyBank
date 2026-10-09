@@ -1,3 +1,4 @@
+import { isDemoActive } from '@/services/demoStore';
 import { supabase } from '@/lib/supabaseClient';
 import { invalidateCache } from '@/utils/memoryCache';
 import type { ArchivedMonth, MonthlyActual } from '@/utils/archive';
@@ -47,6 +48,8 @@ export async function getArchivedMonthActuals(
 
 /** Archive un mois pointé : garde les totaux par catégorie et efface le détail des opérations (atomique, côté base). */
 export async function archiveMonth(year: number, monthIndex: number): Promise<number> {
+  // L'exemple affiche des lignes fictives : archiver depuis là toucherait le vrai mois.
+  if (isDemoActive()) throw new Error('Indisponible en mode exemple.');
   const { data, error } = await supabase.rpc('archive_month', { p_year: year, p_month_index: monthIndex });
   if (error) throw toServiceError(error, 'Archivage impossible');
   invalidateCache();

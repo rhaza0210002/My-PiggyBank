@@ -7,9 +7,9 @@ describe('Button', () => {
     expect(renderToStaticMarkup(<Button variant={variant}>Pointer</Button>)).toContain('min-h-11');
   });
 
-  it('est principal par défaut, avec un fond accent et une ombre bonbon', () => {
+  it('est principal par défaut, avec un fond corail et une ombre bonbon', () => {
     const html = renderToStaticMarkup(<Button>Pointer</Button>);
-    expect(html).toContain('bg-accent');
+    expect(html).toContain('bg-corail');
     expect(html).toContain('shadow-bonbon');
   });
 

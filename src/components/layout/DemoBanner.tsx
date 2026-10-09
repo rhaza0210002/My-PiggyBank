@@ -2,13 +2,21 @@
 
 import { useSyncExternalStore } from 'react';
 import { ROUTES } from '@/constants/routes';
-import { DEMO_EVENT, endDemo, isDemoActive } from '@/services/demoStore';
+import { DEMO_EVENT, DEMO_STORAGE_KEY, endDemo, isDemoActive } from '@/services/demoStore';
 
 export const DEMO_BANNER_TEXT = 'Mode exemple : ces opérations sont fictives et restent sur cet appareil.';
 
 function subscribe(onChange: () => void) {
+  // L'événement prévient cet onglet, « storage » les autres onglets.
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === null || event.key === DEMO_STORAGE_KEY) onChange();
+  };
   window.addEventListener(DEMO_EVENT, onChange);
-  return () => window.removeEventListener(DEMO_EVENT, onChange);
+  window.addEventListener('storage', onStorage);
+  return () => {
+    window.removeEventListener(DEMO_EVENT, onChange);
+    window.removeEventListener('storage', onStorage);
+  };
 }
 
 /** Rappelle, sur toutes les pages, que les opérations affichées sont un exemple local, avec une sortie claire. */

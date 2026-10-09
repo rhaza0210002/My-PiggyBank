@@ -18,10 +18,10 @@ export default function Gauge({ value, max, label, valueText }: GaugeProps) {
       aria-valuemax={max}
       aria-valuenow={Math.min(value, max)}
       aria-valuetext={valueText}
-      className="h-3 w-full overflow-hidden rounded-bonbon border border-bordure bg-surface-douce"
+      className="h-4 w-full overflow-hidden rounded-bonbon border-[3px] border-texte bg-surface"
     >
       <div
-        className="grow h-full rounded-bonbon bg-accent transition-[width] duration-700 ease-out motion-reduce:transition-none"
+        className="grow h-full rounded-bonbon border-r-[3px] border-texte bg-[repeating-linear-gradient(-45deg,var(--color-accent)_0_10px,var(--color-accent-doux)_10px_20px)] transition-[width] duration-700 ease-out motion-reduce:transition-none"
         style={{ width: `${percent}%` }}
       />
     </div>
