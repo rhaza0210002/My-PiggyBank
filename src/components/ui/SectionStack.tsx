@@ -99,7 +99,8 @@ export default function SectionStack({ sections, label, background = 'surface-do
         if (visible.length === 0) return;
         setRevealed((previous) => new Set([...previous, ...visible]));
       },
-      { root, rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+      // Bureau : une carte remplit la zone, elle n'apparaît (et ses animations ne partent) qu'une fois bien entrée.
+      { root, rootMargin: root ? '0px 0px -45% 0px' : '0px 0px -10% 0px', threshold: root ? 0 : 0.05 },
     );
 
     const activeObserver = new IntersectionObserver(
