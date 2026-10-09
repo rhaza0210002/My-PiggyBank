@@ -40,10 +40,10 @@
   --radius-bonbon: 9999px;
 
   /* Style « autocollant » : contour d'encre franc et ombre pleine décalée, jamais d'ombre floue. */
-  --shadow-bonbon: 0 4px 0 var(--color-texte);
-  --shadow-corail: 0 0 0 2.5px var(--color-texte), 0 4px 0 2.5px var(--color-texte);
-  --shadow-sticker: 4px 5px 0 var(--color-texte);
-  --shadow-sticker-petit: 2px 3px 0 var(--color-texte);
+  --shadow-bonbon: 0 2px 0 var(--color-texte);
+  --shadow-corail: 0 0 0 2.5px var(--color-texte), 0 2px 0 2.5px var(--color-texte);
+  --shadow-sticker: 2px 3px 0 var(--color-texte);
+  --shadow-sticker-petit: 1px 2px 0 var(--color-texte);
   --shadow-doux: 0 8px 24px color-mix(in srgb, var(--color-texte) 12%, transparent);
 }
 
