@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "PiggyBank", statusBarStyle: "default" },
 };
 
-export const viewport: Viewport = { themeColor: "#e59a86" };
+export const viewport: Viewport = { themeColor: "#8fd36f" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
