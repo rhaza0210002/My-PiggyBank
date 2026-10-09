@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Tirelire from '@/components/features/gamification/Tirelire';
 import ReconcileCard from '@/components/features/reconciliation/ReconcileCard';
 import NewCategoryForm from '@/components/features/forms/NewCategoryForm';
 import Gauge from '@/components/ui/Gauge';
@@ -48,6 +49,8 @@ export default function RapprochementPage() {
   const wasMonthComplete = useRef<boolean | null>(null);
   const previousLevel = useRef<number | null>(null);
   const [noticeCount, setNoticeCount] = useState(0);
+  // +1 à chaque pointage (c'est lui qui fait tomber la pièce) ; retombe à 0 à une annulation pour effacer « +1 pièce ».
+  const [pointingTick, setPointingTick] = useState(0);
   const [lastPointed, setLastPointed] = useState<StoredTransaction[] | null>(null);
   const [celebration, setCelebration] = useState<string | null>(null);
 
@@ -149,6 +152,7 @@ export default function RapprochementPage() {
         setCelebration(null);
         setLastPointed(pointed);
         setNoticeCount((count) => count + 1);
+        setPointingTick((tick) => tick + 1);
         refreshProgress();
       },
     );
@@ -171,6 +175,7 @@ export default function RapprochementPage() {
           },
         );
         setLastPointed(null);
+        setPointingTick(0);
         setCelebration(null);
         setNotice(`Pointage annulé : ${ids.length} opération${ids.length > 1 ? 's' : ''} de retour dans la liste.`);
         setNoticeCount((count) => count + 1);
@@ -219,6 +224,8 @@ export default function RapprochementPage() {
       subtitle="Une opération à la fois : choisis la catégorie, puis pointe."
     >
       <div className="mx-auto max-w-2xl space-y-3">
+        <Tirelire pointed={progress?.pointedToday ?? 0} tick={pointingTick} />
+
         {month && month.total > 0 && (
           <div className="flex items-center gap-3 rounded-2xl border border-bordure bg-surface px-3 py-1.5">
             <p className="shrink-0 text-sm font-bold text-texte">
