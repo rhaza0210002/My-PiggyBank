@@ -182,6 +182,7 @@ export default function MonthBudgetPage() {
               {
                 id: 'add',
                 label: 'Ajouter une ligne',
+                fit: true,
                 content: (
                   <FormBilan
                     groups={dataGroups}

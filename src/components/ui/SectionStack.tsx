@@ -9,6 +9,8 @@ export interface StackSection {
   content: ReactNode;
   /** Le contenu porte déjà son propre titre visible : le titre du bloc reste lu par les lecteurs d'écran seulement. */
   hideTitle?: boolean;
+  /** Bloc court (un formulaire) : il garde la hauteur de son contenu au lieu de remplir la zone. */
+  fit?: boolean;
 }
 
 interface SectionStackProps {
@@ -257,7 +259,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
               data-section-id={section.id}
               aria-labelledby={`section-${section.id}-title`}
               tabIndex={-1}
-              className={`scroll-mt-1 outline-none ${fillZone ? 'md:min-h-[calc(100cqh-var(--nav-h))] md:snap-start' : ''}`}
+              className={`scroll-mt-1 outline-none ${fillZone ? `md:snap-start ${section.fit ? '' : 'md:min-h-[calc(100cqh-var(--nav-h))]'}` : ''}`}
             >
               <h2
                 id={`section-${section.id}-title`}
@@ -266,7 +268,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
                 {section.label}
               </h2>
               <div
-                className={`min-h-40 transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none ${
+                className={`${section.fit ? '' : 'min-h-40'} transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none ${
                   isRevealed ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 motion-reduce:translate-y-0'
                 }`}
               >
