@@ -85,7 +85,8 @@ export async function loginUser({ email, password }: Omit<AuthCredentials, 'pseu
 export async function signInWithGoogle(): Promise<void> {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: callbackUrl() },
+    // select_account : Google affiche toujours le choix du compte, même si un seul est connecté.
+    options: { redirectTo: callbackUrl(), queryParams: { prompt: 'select_account' } },
   });
 
   if (error) {

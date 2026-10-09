@@ -3,6 +3,7 @@
 import React, { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AuthForm from '@/components/features/forms/AuthForm';
+import { isGoogleAuthEnabled } from '@/constants/features';
 import { ROUTES } from '@/constants/routes';
 import { loginUser, resendConfirmationEmail, signInWithGoogle } from '@/services/authService';
 
@@ -58,7 +59,7 @@ function LoginScreen() {
   return (
     <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden bg-fond px-4 py-8 text-texte">
       <div className="w-full max-w-[440px]">
-        <AuthForm mode="login" onSubmit={handleLoginSubmit} onGoogle={handleGoogle} isLoading={isLoading} serverError={errorMessage} />
+        <AuthForm mode="login" onSubmit={handleLoginSubmit} onGoogle={isGoogleAuthEnabled() ? handleGoogle : undefined} isLoading={isLoading} serverError={errorMessage} />
         {unconfirmedEmail && (
           <p className="mt-2 text-center">
             {resent ? (
