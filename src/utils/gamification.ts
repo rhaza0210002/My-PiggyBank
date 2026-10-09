@@ -49,6 +49,8 @@ export interface Gamification {
   levelInfo: LevelInfo;
   /** Jours où au moins une opération a été pointée, sur les 7 derniers jours (aujourd'hui compris). */
   activeDaysLast7: number;
+  /** Opérations pointées aujourd'hui (jour local) : le niveau de la tirelire. */
+  pointedToday: number;
   badges: Badge[];
 }
 
@@ -114,6 +116,12 @@ export function countActiveDays(rows: readonly ActivityRow[], now: Date): number
   });
 
   return active.size;
+}
+
+/** Opérations pointées pendant le jour local de `day` (alimente la tirelire du jour). */
+export function countPointedOn(rows: readonly ActivityRow[], day: Date): number {
+  const wanted = localDayKey(day);
+  return rows.filter((row) => row.reconciled_at !== null && localDayKey(new Date(row.reconciled_at)) === wanted).length;
 }
 
 export function computeGamification(rows: readonly ActivityRow[], now: Date): Gamification {
@@ -182,6 +190,7 @@ export function computeGamification(rows: readonly ActivityRow[], now: Date): Ga
     xp,
     levelInfo: getLevelInfo(xp),
     activeDaysLast7: countActiveDays(rows, now),
+    pointedToday: countPointedOn(rows, now),
     badges: [
       badge('first-operation', 'Premier pas', 'Pointer une première opération', reconciledOperations >= 1),
       badge('ten-operations', 'Dix pointages', 'Pointer 10 opérations', reconciledOperations >= 10),
