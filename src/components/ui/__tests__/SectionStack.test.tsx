@@ -57,4 +57,19 @@ describe('withFirstRevealed', () => {
     expect([...withFirstRevealed(new Set(['deux']), sections)].sort()).toEqual(['deux', 'un']);
     expect([...withFirstRevealed(new Set(), [])]).toEqual([]);
   });
+
+describe('SectionStack : bloc court (formulaire)', () => {
+  const withShort = [...sections, { id: 'ajout', label: 'Ajouter une ligne', content: <form />, fit: true }];
+  const html = renderToStaticMarkup(<SectionStack sections={withShort} label="Parties du budget" fillZone />);
+  const short = html.slice(html.indexOf('id="section-ajout"'));
+
+  it('prend la hauteur de son contenu, sans grand vide en dessous', () => {
+    expect(short.slice(0, short.indexOf('</section>'))).not.toContain('min-h-[calc(100cqh');
+    expect(short.slice(0, short.indexOf('</section>'))).not.toContain('min-h-40');
+  });
+
+  it('reste une étape du défilement accroché', () => {
+    expect(short.slice(0, 300)).toContain('md:snap-start');
+  });
+});
 });
