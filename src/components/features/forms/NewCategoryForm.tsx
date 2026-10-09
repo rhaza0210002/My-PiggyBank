@@ -1,5 +1,6 @@
 "use client";
 
+import Button from '@/components/ui/Button';
 import { useId, useState, type FormEvent } from 'react';
 import {
   createCategory,
@@ -103,13 +104,9 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting || label.trim() === ''}
-          className="min-h-11 rounded-xl border-2 border-bordure bg-accent px-5 text-sm font-bold text-sur-accent shadow-bonbon transition-transform hover:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
-        >
+        <Button type="submit" disabled={isSubmitting || label.trim() === ''}>
           {isSubmitting ? 'Création…' : 'Créer la catégorie'}
-        </button>
+        </Button>
       </form>
 
       {error && (

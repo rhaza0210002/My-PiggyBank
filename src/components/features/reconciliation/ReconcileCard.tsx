@@ -1,5 +1,6 @@
 "use client";
 
+import Button from '@/components/ui/Button';
 import { useEffect, useRef, useState } from 'react';
 import LabelRuleForm from '@/components/features/forms/LabelRuleForm';
 import { MONTHS } from '@/constants/tableStyles';
@@ -147,14 +148,13 @@ export default function ReconcileCard({
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <button
-          type="button"
+        <Button
           onClick={onReconcile}
           disabled={isBusy || !transaction.category_id}
-          className="min-h-14 flex-1 rounded-carte border-[3px] border-bordure bg-accent px-5 text-lg font-black text-sur-accent shadow-bonbon transition-all hover:translate-y-[2px] hover:shadow-bonbon focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none"
+          className="min-h-14 flex-1 text-lg"
         >
           {transaction.category_id ? 'Pointer ✓' : 'Choisis une catégorie'}
-        </button>
+        </Button>
         {canSkip && (
           <button
             type="button"
