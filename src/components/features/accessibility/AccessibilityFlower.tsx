@@ -115,7 +115,7 @@ export default function AccessibilityFlower() {
             onClick={() => (isZoom ? changeZoom(petal.step) : toggle(petal.key, petal.label))}
             style={open ? { transform: `translate(${x}px, ${y}px)` } : undefined}
             className={`absolute right-0.5 bottom-0.5 z-10 flex size-13 items-center justify-center rounded-full border-[3px] border-accent-fort text-base font-black text-texte shadow-bonbon transition-[transform,opacity] duration-300 ease-out after:pointer-events-none after:absolute after:left-1/2 after:bottom-[calc(100%+8px)] after:-translate-x-1/2 after:rounded-xl after:bg-texte after:px-2.5 after:py-1.5 after:text-sm after:font-bold after:whitespace-nowrap after:text-surface after:opacity-0 after:content-[attr(data-tip)] hover:z-30 hover:after:opacity-100 focus-visible:z-30 focus-visible:after:opacity-100 disabled:opacity-50 ${
-              pressed ? 'onglet-actif border-transparent' : 'bg-accent-doux'
+              pressed ? 'petale-actif ring-4 ring-texte' : 'petale enabled:hover:petale-actif'
             } ${open ? 'opacity-100' : 'invisible scale-50 opacity-0'}`}
           >
             <span aria-hidden="true">{petal.symbol}</span>
@@ -129,7 +129,7 @@ export default function AccessibilityFlower() {
         aria-label="Accessibilité"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
-        className={`relative z-20 flex size-14 items-center justify-center rounded-full border-[3px] border-texte bg-surface text-3xl shadow-doux transition-transform duration-300 ${open ? 'rotate-90' : ''}`}
+        className={`relative z-20 flex size-14 items-center justify-center rounded-full border-[3px] border-texte onglet-actif text-3xl shadow-doux transition-transform duration-300 ${open ? 'rotate-90' : ''}`}
       >
         <span aria-hidden="true">♿</span>
       </button>

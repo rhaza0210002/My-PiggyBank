@@ -50,6 +50,17 @@
   box-shadow: var(--shadow-corail);
 }
 
+/* Fleur d'accessibilité : pétales vert→jaune, et corail→jaune au survol ou une fois activés. */
+@utility petale {
+  background-image: linear-gradient(135deg, var(--color-accent), var(--color-piece));
+  color: var(--color-sur-corail);
+}
+
+@utility petale-actif {
+  background-image: linear-gradient(135deg, var(--color-corail-clair), var(--color-piece));
+  color: var(--color-sur-corail);
+}
+
 :root {
   --duree-pointage: 0.5s;
   --duree-niveau: 0.5s;
