@@ -84,7 +84,7 @@ export default function DashboardPage() {
     <div className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col gap-2 overflow-y-auto px-3 py-2 sm:px-5">
       <div className="flex shrink-0 flex-col items-center gap-0.5 px-1 text-center">
         <h1 className="flex items-center gap-2 text-[clamp(1.35rem,2.2vw,1.9rem)] font-black tracking-[-0.04em] text-texte">
-          <span aria-hidden="true" className="inline-block motion-safe:animate-[wiggle_2.4s_ease-in-out_infinite]">🐷</span>
+          <span aria-hidden="true" className="inline-block">🐷</span>
           Salut{pseudo ? ` ${pseudo}` : ''} !
         </h1>
         <p className="text-sm text-texte-doux">Un petit pas à la fois : chaque pointage compte, rien ne se perd.</p>

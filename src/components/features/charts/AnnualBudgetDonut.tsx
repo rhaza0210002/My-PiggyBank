@@ -198,7 +198,7 @@ export default function BudgetDonut({
   return (
     <section
       ref={sectionRef}
-      className="overflow-hidden rounded-carte border-[3px] border-[#d8b6a5] bg-gradient-to-br from-[#fbf2e9] to-[#f2e3d7] p-5 shadow-bonbon sm:p-7"
+      className="overflow-hidden rounded-carte border-[3px] border-bordure bg-gradient-to-br from-surface to-surface-douce p-5 shadow-bonbon sm:p-7"
       aria-labelledby="budget-chart-title"
     >
       <h2 id="budget-chart-title" className="chart-heading mb-6 text-xl font-black text-[#5d4d44]">

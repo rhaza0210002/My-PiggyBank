@@ -20,7 +20,7 @@ export default function Tirelire({ pointed, goal = DAILY_GOAL, tick }: TirelireP
   const clipId = useId();
   const level = tirelireLevel(pointed, goal);
   const count = `${pointed} sur ${goal}`;
-  const message = tick > 0 ? (level >= 1 ? 'Tirelire pleine pour aujourd’hui, bravo !' : '+1 pièce') : '';
+  const message = tick > 0 ? (level >= 1 ? 'Tirelire pleine pour aujourd’hui, bravo !' : `+1 pièce, ${count}`) : '';
 
   return (
     <div className="flex items-center justify-center gap-4">

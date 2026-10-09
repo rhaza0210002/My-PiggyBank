@@ -207,7 +207,7 @@ export default function MonthlyBudgetComparison({
             <select
               value={monthIndex}
               onChange={(event) => setInternalMonthIndex(Number(event.target.value))}
-              className="rounded-lg border border-bordure bg-surface px-3 py-2"
+              className="rounded-lg border border-bordure-forte bg-surface px-3 py-2"
             >
               {MONTHS.map((month, index) => (
                 <option key={month.key} value={index}>{month.label}</option>

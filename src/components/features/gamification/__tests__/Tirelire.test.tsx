@@ -44,3 +44,12 @@ describe('Tirelire', () => {
     expect(renderToStaticMarkup(<Tirelire pointed={3} tick={1} />)).not.toMatch(/#[0-9a-fA-F]{3,8}|rgba?\(/);
   });
 });
+
+describe('Tirelire : annonce répétée', () => {
+  it('inclut le compteur dans le message pour que deux pointages de suite soient annoncés', () => {
+    const first = renderToStaticMarkup(<Tirelire pointed={3} tick={1} />);
+    const second = renderToStaticMarkup(<Tirelire pointed={4} tick={2} />);
+    expect(first).toContain('+1 pièce, 3 sur 10');
+    expect(second).toContain('+1 pièce, 4 sur 10');
+  });
+});

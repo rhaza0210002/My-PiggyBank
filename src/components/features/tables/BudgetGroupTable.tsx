@@ -117,7 +117,7 @@ export default function BudgetGroupTable({
                           onChange={(event) => setDraftAmount(event.target.value)}
                           onKeyDown={(event) => handleEditorKeyDown(event, row.category)}
                           aria-label={`Modifier le montant de ${row.category}`}
-                          className="w-28 rounded-md border border-bordure bg-surface px-2 py-1 text-right text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
+                          className="w-28 rounded-md border border-bordure-forte bg-surface px-2 py-1 text-right text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
                         />
                         <button
                           type="button"

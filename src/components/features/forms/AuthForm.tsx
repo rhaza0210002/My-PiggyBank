@@ -107,7 +107,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
       <div className="space-y-6 rounded-carte border-[3px] border-dashed border-bordure p-5 shadow-doux sm:p-6">
 
         <div className="space-y-2 text-center">
-          <div className="mb-2 inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-surface shadow-md motion-safe:animate-bounce" aria-hidden="true">
+          <div className="mb-2 inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-surface shadow-md" aria-hidden="true">
             🐷
           </div>
           <h1 className="text-[1.8rem] font-black tracking-[-0.05em] text-texte">
