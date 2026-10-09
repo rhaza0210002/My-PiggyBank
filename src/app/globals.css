@@ -1,26 +1,61 @@
 @import "tailwindcss";
 
+/*
+ * Réglages centraux du style : l'UNIQUE endroit où vivent couleurs, arrondis et ombres.
+ * Les composants utilisent des rôles (bg-surface, text-texte-doux, rounded-carte…), jamais une valeur en dur.
+ * Un test (theme.test.ts) lit ce bloc et vérifie les contrastes de chaque paire texte/fond.
+ */
 @theme {
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+
+  --color-fond: #ebcfc6;
+  --color-surface: #fff8f2;
+  --color-surface-douce: #f2e6d8;
+  --color-bordure: #d8b6a5;
+  --color-bordure-forte: #a3452a;
+  --color-texte: #5b473d;
+  --color-texte-doux: #6b574c;
+  --color-accent: #e59a86;
+  --color-sur-accent: #3d2a21;
+  --color-accent-fort: #963f26;
+  --color-accent-doux: #f8d5cb;
+  --color-ok: #1f4d25;
+  --color-ok-fond: #eaf4e6;
+  --color-attention: #5a3d10;
+  --color-attention-fond: #fff1da;
+  --color-depasse: #7a2f1a;
+  --color-depasse-fond: #f8d5cb;
+  --color-piece: #d6a85c;
+  --color-piece-bord: #d6a85c;
+  --color-cochon: #f8d5cb;
+  --color-cochon-bord: #d8b6a5;
+  --color-focus: #5b473d;
+
+  --radius-petit: 0.75rem;
+  --radius-carte: 1.5rem;
+  --radius-bonbon: 9999px;
+
+  --shadow-bonbon: 0 3px 0 rgba(0, 0, 0, 0.22);
+  --shadow-doux: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 :root {
-  --background: #ebcfc6;
-  --foreground: #5b473d;
+  --duree-pointage: 0.5s;
+  --duree-niveau: 0.5s;
 }
 
 body {
   /* Petits pois discrets : un fond doux, jamais bruyant. */
-  background-color: var(--background);
+  background-color: var(--color-fond);
   background-image: radial-gradient(rgba(255, 255, 255, 0.35) 1.5px, transparent 1.6px);
   background-size: 22px 22px;
-  color: var(--foreground);
+  color: var(--color-texte);
   font-family: var(--font-sans);
 }
 
 /* Focus clavier toujours visible (contraste 3:1 minimum sur tous les fonds de l'application). */
 :focus-visible {
-  outline: 3px solid #5b473d;
+  outline: 3px solid var(--color-focus);
   outline-offset: 2px;
 }
 
