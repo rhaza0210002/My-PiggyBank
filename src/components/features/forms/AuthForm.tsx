@@ -10,7 +10,6 @@ import Pig from '@/components/ui/Pig';
 interface AuthFormData {
   email: string;
   password: string;
-  confirmPassword?: string;
   pseudo?: string;
 }
 
@@ -25,15 +24,18 @@ interface AuthFormProps {
 }
 
 const MIN_PASSWORD_LENGTH = 8;
+
+/** Seule règle du mot de passe, affichée et vérifiée en direct pendant la saisie. */
+export const passwordRuleMet = (password: string): boolean => password.length >= MIN_PASSWORD_LENGTH;
 const INPUT_CLASS =
   'w-full min-h-12 rounded-carte border-[1.5px] border-bordure-forte bg-surface px-4 py-3 text-texte placeholder-texte-doux shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[invalid=true]:border-depasse';
 const LABEL_CLASS = 'block px-1 text-sm font-bold text-texte';
 const HINT_CLASS = 'px-1 text-xs text-texte-doux';
+const HINT_OK_CLASS = 'px-1 text-xs font-bold text-ok';
 
 export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, serverError = null }: AuthFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [pseudo, setPseudo] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -60,11 +62,8 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
     if (isRegister && !pseudo.trim()) return fail('pseudo', 'Renseigne un pseudo.');
     if (!emailRegex.test(email)) return fail('email', 'Entre une adresse e-mail valide, par exemple toi@exemple.com.');
     if (!password) return fail('password', 'Entre ton mot de passe.');
-    if (isRegister && password.length < MIN_PASSWORD_LENGTH) {
+    if (isRegister && !passwordRuleMet(password)) {
       return fail('password', `Choisis un mot de passe d'au moins ${MIN_PASSWORD_LENGTH} caractères.`);
-    }
-    if (isRegister && password !== confirmPassword) {
-      return fail('confirmPassword', 'Les deux mots de passe ne sont pas identiques.');
     }
 
     if (isRegister && !acceptedTerms) {
@@ -82,7 +81,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
     onSubmit({
       email: email.trim(),
       password,
-      ...(isRegister ? { pseudo: pseudo.trim(), confirmPassword } : {}),
+      ...(isRegister ? { pseudo: pseudo.trim() } : {}),
     });
   };
 
@@ -177,8 +176,20 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
               className={INPUT_CLASS}
               {...fieldProps('password')}
             />
+            {/* Une seule saisie : on montre le mot de passe pour le vérifier, plutôt que de le faire taper deux fois. */}
+            <label className="flex min-h-11 cursor-pointer items-center gap-3 px-1 text-sm font-semibold text-texte">
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={(event) => setShowPassword(event.target.checked)}
+                className="h-5 w-5 accent-accent-fort"
+              />
+              {isRegister ? 'Afficher le mot de passe pour le vérifier' : 'Afficher le mot de passe'}
+            </label>
             {isRegister ? (
-              <p className={HINT_CLASS}>Au moins {MIN_PASSWORD_LENGTH} caractères.</p>
+              <p aria-live="polite" className={passwordRuleMet(password) ? HINT_OK_CLASS : HINT_CLASS}>
+                {passwordRuleMet(password) ? '✓ ' : ''}Au moins {MIN_PASSWORD_LENGTH} caractères
+              </p>
             ) : (
               <Link
                 href={ROUTES.forgotPassword}
@@ -189,31 +200,6 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             )}
           </div>
 
-          {isRegister && (
-            <div className="space-y-1">
-              <label htmlFor="auth-confirm-password" className={LABEL_CLASS}>Confirmer le mot de passe</label>
-              <input
-                id="auth-confirm-password"
-                type={passwordType}
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-                autoComplete="new-password"
-                required
-                className={INPUT_CLASS}
-                {...fieldProps('confirmPassword')}
-              />
-            </div>
-          )}
-
-          <label className="flex min-h-11 cursor-pointer items-center gap-3 px-1 text-sm font-semibold text-texte">
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={(event) => setShowPassword(event.target.checked)}
-              className="h-5 w-5 accent-accent-fort"
-            />
-            Afficher le mot de passe
-          </label>
 
           {isRegister && (
             <div className="rounded-xl border-[1.5px] border-bordure bg-surface p-3">
@@ -265,6 +251,11 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
               <GoogleLogo />
               {isRegister ? 'S’inscrire avec Google' : 'Continuer avec Google'}
             </button>
+            {!isRegister && (
+              <p className="px-1 text-center text-sm font-semibold text-texte">
+                Inscrit·e avec Google ? Utilise le bouton Google : ton compte n’a pas de mot de passe ici.
+              </p>
+            )}
             {!isRegister && (
               <p className={`${HINT_CLASS} text-center`}>
                 Si tu n’as pas encore de compte, il sera créé : tu acceptes alors les{' '}
