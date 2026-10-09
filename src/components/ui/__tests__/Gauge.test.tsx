@@ -20,4 +20,10 @@ describe('Gauge', () => {
   it('plafonne à 100 % quand la valeur dépasse le maximum', () => {
     expect(renderToStaticMarkup(<Gauge value={25} max={10} label="Trop" />)).toContain('width:100%');
   });
+
+  it('se remplit d’une couleur unie : pas de rayures, qui créent une illusion d’optique gênante', () => {
+    const html = renderToStaticMarkup(<Gauge value={5} max={10} label="Unie" />);
+    expect(html).not.toContain('repeating-');
+    expect(html).toContain('bg-accent');
+  });
 });
