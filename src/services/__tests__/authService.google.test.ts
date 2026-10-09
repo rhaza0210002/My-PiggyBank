@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const signInWithOAuth = vi.fn(async (..._args: unknown[]) => ({ error: null }));
+const signInWithOAuth = vi.fn<(...args: unknown[]) => Promise<{ error: null }>>(async () => ({ error: null }));
 vi.mock('@/lib/supabaseClient', () => ({ supabase: { auth: { signInWithOAuth: (...args: unknown[]) => signInWithOAuth(...args) } } }));
 
 import { signInWithGoogle } from '@/services/authService';
