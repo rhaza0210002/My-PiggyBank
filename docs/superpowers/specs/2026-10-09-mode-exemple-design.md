@@ -36,7 +36,7 @@ Hors périmètre : import CSV souple, clôture de mois et tableaux figés, saisi
 
 2. **`src/services/transactionService.ts`** (modifié)
    - Chaque fonction de lecture ou d'écriture des opérations commence par `if (isDemoActive())` et travaille sur `demoStore`. Fonctions concernées : `getRecentTransactions`, `getTransactionsToReconcile`, `countTransactionsToReconcile`, `updateTransactionCategory`, `markTransactionsReconciled`, `unreconcileTransactions`, `getPointedLabelHistory`, `getUncategorizedTransactions`, `countUncategorizedTransactions`, `getTransactionsForMonth`, `getMonthTotals`.
-   - `saveImportedTransactions`, appelé pendant l'aperçu d'un exemple (clic sur « Enregistrer les 8 transactions »), range les opérations dans le stock local au lieu de Supabase et active le mode exemple ; importer ensuite un vrai relevé appelle d'abord `endDemo()` (après confirmation).
+   - `saveImportedTransactions` n'est pas appelé pour un exemple : le bouton « Enregistrer les 8 transactions » appelle directement `startDemo` (stock local, mode exemple actif) ; importer ensuite un vrai relevé appelle d'abord `endDemo()` (après confirmation).
    - `getReconciliationActivity` (alimente badges et pièces) renvoie une liste vide en mode exemple.
    - Les identifiants d'exemple sont de la forme `demo-<n>` ; le stock reproduit la forme `StoredTransaction` (dont `reconciled_at`).
 
