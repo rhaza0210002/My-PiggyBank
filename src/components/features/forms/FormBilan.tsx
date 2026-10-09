@@ -69,7 +69,7 @@ export default function FormBilan({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-wrap items-end gap-4 rounded-[1.5rem] border-[2px] border-[#d7b59d] bg-[#f5eadf] p-4 shadow-sm"
+      className="flex flex-wrap items-end gap-4 rounded-carte border-[2px] border-[#d7b59d] bg-[#f5eadf] p-4 shadow-sm"
       aria-label="Formulaire d'ajout de transaction"
     >
       <div className="flex flex-1 min-w-[150px] flex-col gap-1">
@@ -136,7 +136,7 @@ export default function FormBilan({
       <button
         type="submit"
         disabled={readOnly || groups.length === 0 || isSubmitting}
-        className="rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-5 py-2.5 text-sm font-bold text-[#3d2a21] shadow-[0_3px_0_rgba(171,98,77,0.85)] transition-transform active:translate-y-[2px] active:shadow-none"
+        className="rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-5 py-2.5 text-sm font-bold text-[#3d2a21] shadow-bonbon transition-transform active:translate-y-[2px] active:shadow-none"
       >
         {isSubmitting ? 'Ajout en cours...' : 'Ajouter la ligne'}
       </button>

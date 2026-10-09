@@ -199,7 +199,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
   if (transactions.length === 0) return null;
 
   return (
-    <section className="space-y-4 rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4">
+    <section className="space-y-4 rounded-carte border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-bonbon sm:p-4">
       <SectionStack
         label="Parties de l'import"
         background="#f5eadf"
@@ -249,7 +249,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
               type="button"
               onClick={handleSaveTransactions}
               disabled={isSavingTransactions || isDemo}
-              className="rounded-[1.5rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-3 font-black text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#5b473d] disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-6 py-3 font-black text-[#3d2a21] shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#5b473d] disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingTransactions ? 'Enregistrement...' : `Enregistrer les ${transactions.length} transactions`}
             </button>
@@ -257,7 +257,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false }: C
               type="button"
               onClick={handleSaveLabels}
               disabled={isSavingLabels || isDemo || importedLabels.length === 0}
-              className="rounded-[1.5rem] border-[3px] border-[#82b89f] bg-[#8cd3b3] px-6 py-3 font-black text-[#2e4d3d] shadow-[0_4px_0_rgba(92,143,115,0.85)] transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#2e4d3d] disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-carte border-[3px] border-[#82b89f] bg-[#8cd3b3] px-6 py-3 font-black text-[#2e4d3d] shadow-bonbon transition-transform hover:translate-y-[2px] focus:outline-none focus:ring-2 focus:ring-[#2e4d3d] disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSavingLabels ? 'Enregistrement...' : 'Enregistrer les libellés reconnus'}
             </button>

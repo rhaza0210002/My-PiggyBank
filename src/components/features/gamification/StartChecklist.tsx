@@ -50,7 +50,7 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
               {isNext && (
                 <Link
                   href={step.href}
-                  className="mt-1 inline-flex min-h-11 items-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 font-black text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+                  className="mt-1 inline-flex min-h-11 items-center rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 font-black text-[#3d2a21] shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
                 >
                   C’est parti
                 </Link>

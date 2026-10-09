@@ -71,7 +71,7 @@ export default function BudgetGroupTable({
   };
 
   return (
-    <section className={`rounded-[1.5rem] sm:rounded-[2rem] border-[3px] border-dashed ${palette.border} ${palette.section} p-3 sm:p-4 shadow-[0_3px_0_rgba(140,103,86,0.12)]`}>
+    <section className={`rounded-carte sm:rounded-carte border-[3px] border-dashed ${palette.border} ${palette.section} p-3 sm:p-4 shadow-bonbon`}>
       <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
         {group.title} — {monthLabel}
       </h2>

@@ -88,7 +88,7 @@ export default function CsvUploaderPage() {
       subtitle="Dépose le fichier CSV de ta banque : les opérations reconnues sont rangées pour toi."
     >
       <div className="mx-auto max-w-3xl space-y-4">
-        <div className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-4 text-center sm:p-6">
+        <div className="rounded-carte border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-4 text-center sm:p-6">
           <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl p-2 focus-within:ring-2 focus-within:ring-[#5b473d]">
             <span className="rounded-full bg-[#e59a86] p-3 text-2xl text-white shadow-md" aria-hidden="true">
               📂

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getNotifications, type AppNotification } from '@/services/notificationService';
 import { getUserSettings } from '@/services/userSettingsService';
 
-const CARD = 'rounded-[2rem] border border-[#e5c4b4] bg-[#fff8f2] p-6 shadow-sm';
+const CARD = 'rounded-carte border border-[#e5c4b4] bg-[#fff8f2] p-6 shadow-sm';
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<AppNotification[] | null>(null);

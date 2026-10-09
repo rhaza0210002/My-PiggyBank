@@ -55,7 +55,7 @@ function BudgetAnnualGroupTable({ group }: { group: DataGroup }) {
   const palette = getBudgetGroupPalette(group.key, group.title);
 
   return (
-    <div className={`rounded-[2rem] border-[3px] border-dashed ${palette.border} ${palette.section} p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)]`}>
+    <div className={`rounded-carte border-[3px] border-dashed ${palette.border} ${palette.section} p-3 shadow-bonbon`}>
       <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
         {group.title}
       </h2>

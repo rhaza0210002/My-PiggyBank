@@ -35,8 +35,8 @@
   --radius-carte: 1.5rem;
   --radius-bonbon: 9999px;
 
-  --shadow-bonbon: 0 3px 0 rgba(0, 0, 0, 0.22);
-  --shadow-doux: 0 6px 18px rgba(0, 0, 0, 0.08);
+  --shadow-bonbon: 0 3px 0 color-mix(in srgb, var(--color-accent-fort) 70%, transparent);
+  --shadow-doux: 0 8px 24px color-mix(in srgb, var(--color-texte) 12%, transparent);
 }
 
 :root {
@@ -114,6 +114,6 @@ body {
 
 /* Appui sur un bouton : il s'enfonce un peu, comme un vrai bouton. */
 button:not(:disabled):active,
-a[class*='shadow-[0_4px_0']:active {
+a[class*='shadow-bonbon']:active {
   scale: 0.97;
 }

@@ -21,7 +21,7 @@ import { pickTip } from '@/utils/tips';
 
 const PANEL = 'items-center text-center rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-3 shadow-sm sm:p-4';
 const PRIMARY_LINK =
-  'inline-flex min-h-12 items-center justify-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 text-center font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] motion-reduce:transition-none';
+  'inline-flex min-h-12 items-center justify-center rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 text-center font-bold text-[#3d2a21] shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] motion-reduce:transition-none';
 
 export default function DashboardPage() {
   const balance = useBalanceVisibility();

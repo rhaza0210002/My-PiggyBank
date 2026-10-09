@@ -59,7 +59,7 @@ export default function ReconcileCard({
   return (
     <article
       aria-labelledby="reconcile-title"
-      className="space-y-2.5 rounded-[1.6rem] border-[3px] border-[#d7b59d] bg-[#fff8f2] p-3 shadow-[0_4px_0_rgba(140,103,86,0.14)] motion-safe:animate-[pop_0.35s_ease-out_1] sm:p-4"
+      className="space-y-2.5 rounded-carte border-[3px] border-[#d7b59d] bg-[#fff8f2] p-3 shadow-bonbon motion-safe:animate-[pop_0.35s_ease-out_1] sm:p-4"
     >
       <div className="flex flex-col items-center gap-1 text-center">
         <div className="min-w-0">
@@ -87,7 +87,7 @@ export default function ReconcileCard({
             type="button"
             disabled={isBusy}
             onClick={() => onChangeCategory(suggestion.category.id)}
-            className="min-h-12 rounded-2xl border-[3px] border-[#a3452a] bg-[#fff1ea] px-4 text-base font-black text-[#7a2f1a] shadow-[0_3px_0_rgba(171,98,77,0.5)] transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
+            className="min-h-12 rounded-2xl border-[3px] border-[#a3452a] bg-[#fff1ea] px-4 text-base font-black text-[#7a2f1a] shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
           >
             <span aria-hidden="true">✨ </span>
             {suggestion.category.label}
@@ -151,7 +151,7 @@ export default function ReconcileCard({
           type="button"
           onClick={onReconcile}
           disabled={isBusy || !transaction.category_id}
-          className="min-h-14 flex-1 rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 text-lg font-black text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-all hover:translate-y-[2px] hover:shadow-[0_2px_0_rgba(171,98,77,0.85)] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none"
+          className="min-h-14 flex-1 rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 text-lg font-black text-[#3d2a21] shadow-bonbon transition-all hover:translate-y-[2px] hover:shadow-bonbon focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none"
         >
           {transaction.category_id ? 'Pointer ✓' : 'Choisis une catégorie'}
         </button>
@@ -160,7 +160,7 @@ export default function ReconcileCard({
             type="button"
             onClick={onSkip}
             disabled={isBusy}
-            className="min-h-14 rounded-[1.25rem] border-2 border-[#b88f78] bg-white/70 px-5 font-bold text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
+            className="min-h-14 rounded-carte border-2 border-[#b88f78] bg-white/70 px-5 font-bold text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
           >
             Plus tard
           </button>

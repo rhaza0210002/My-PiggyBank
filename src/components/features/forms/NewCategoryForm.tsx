@@ -56,7 +56,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
   return (
     <section
       aria-labelledby={`${formId}-title`}
-      className="rounded-[2rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-[0_3px_0_rgba(140,103,86,0.12)] sm:p-4"
+      className="rounded-carte border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3 shadow-bonbon sm:p-4"
     >
       <h2 id={`${formId}-title`} className="px-2 text-[1.2rem] font-black text-[#5d4d44]">
         Nouvelle catégorie
@@ -106,7 +106,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
         <button
           type="submit"
           disabled={isSubmitting || label.trim() === ''}
-          className="min-h-11 rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-5 text-sm font-bold text-[#3d2a21] shadow-[0_3px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
+          className="min-h-11 rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-5 text-sm font-bold text-[#3d2a21] shadow-bonbon transition-transform hover:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? 'Création…' : 'Créer la catégorie'}
         </button>

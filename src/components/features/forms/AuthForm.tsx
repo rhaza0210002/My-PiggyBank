@@ -23,7 +23,7 @@ interface AuthFormProps {
 
 const MIN_PASSWORD_LENGTH = 8;
 const INPUT_CLASS =
-  'w-full min-h-12 rounded-[1.2rem] border-[2px] border-[#9c7560] bg-[#fcf9f6] px-4 py-3 text-[#5d4d44] placeholder-[#7d685c] shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[invalid=true]:border-red-700';
+  'w-full min-h-12 rounded-carte border-[2px] border-[#9c7560] bg-[#fcf9f6] px-4 py-3 text-[#5d4d44] placeholder-[#7d685c] shadow-inner focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[invalid=true]:border-red-700';
 const LABEL_CLASS = 'block px-1 text-sm font-bold text-[#5d4d44]';
 const HINT_CLASS = 'px-1 text-xs text-[#6b574c]';
 
@@ -101,8 +101,8 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
   const passwordType = showPassword ? 'text' : 'password';
 
   return (
-    <div className="relative w-full max-w-[440px] rounded-[2.2rem] bg-[#fff8f5] p-2 shadow-[0_10px_30px_rgba(140,103,86,0.12)] sm:p-5">
-      <div className="space-y-6 rounded-[2.2rem] border-[3px] border-dashed border-[#d8b6a5] p-5 shadow-[0_10px_30px_rgba(140,103,86,0.12)] sm:p-6">
+    <div className="relative w-full max-w-[440px] rounded-carte bg-[#fff8f5] p-2 shadow-doux sm:p-5">
+      <div className="space-y-6 rounded-carte border-[3px] border-dashed border-[#d8b6a5] p-5 shadow-doux sm:p-6">
 
         <div className="space-y-2 text-center">
           <div className="mb-2 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#e59a86] text-white shadow-md motion-safe:animate-bounce" aria-hidden="true">
@@ -246,7 +246,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
           <button
             type="submit"
             disabled={isLoading}
-            className="mt-2 min-h-12 w-full rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] py-3.5 text-center text-[1rem] font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-all hover:translate-y-[2px] hover:shadow-[0_2px_0_rgba(171,98,77,0.85)] active:translate-y-[4px] active:shadow-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-70"
+            className="mt-2 min-h-12 w-full rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] py-3.5 text-center text-[1rem] font-bold text-[#3d2a21] shadow-bonbon transition-all hover:translate-y-[2px] hover:shadow-bonbon active:translate-y-[4px] active:shadow-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-70"
           >
             {isLoading ? "Chargement…" : isRegister ? "S'inscrire" : "Se connecter"}
           </button>
@@ -263,7 +263,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
               type="button"
               onClick={handleGoogle}
               disabled={isLoading}
-              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-[1.25rem] border-[2px] border-[#9c7560] bg-white py-3 font-bold text-[#3d2a21] transition-colors hover:bg-[#fcf9f6] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-70"
+              className="flex min-h-12 w-full items-center justify-center gap-3 rounded-carte border-[2px] border-[#9c7560] bg-white py-3 font-bold text-[#3d2a21] transition-colors hover:bg-[#fcf9f6] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-70"
             >
               <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
                 <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z" />

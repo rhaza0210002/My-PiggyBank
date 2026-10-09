@@ -133,7 +133,7 @@ export default function MonthBudgetPage() {
       type="button"
       onClick={handleSaveBudget}
       disabled={isSavingBudget || isPastMonth || dataGroups.length === 0}
-      className="min-h-11 rounded-xl border-2 border-[#6e8f72] bg-[#7fa984] px-4 text-sm font-bold text-[#17301c] shadow-[0_3px_0_rgba(69,105,74,0.8)] transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:opacity-60"
+      className="min-h-11 rounded-xl border-2 border-[#6e8f72] bg-[#7fa984] px-4 text-sm font-bold text-[#17301c] shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {isSavingBudget ? 'Enregistrement...' : 'Valider budget'}
     </button>

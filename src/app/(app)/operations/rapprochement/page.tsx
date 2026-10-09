@@ -322,19 +322,19 @@ export default function RapprochementPage() {
         )}
 
         {data && !current && (
-          <div className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-6 text-center">
+          <div className="rounded-carte border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-6 text-center">
             <p className="text-xl font-black text-[#5a473d]">Tout est pointé. <span aria-hidden="true">✨</span></p>
             <p className="mt-1 text-sm text-[#6b574c]">Prochaine étape : regarder où est passé ton argent ce mois-ci.</p>
             <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
               <Link
                 href={ROUTES.actualExpenses}
-                className="inline-flex min-h-12 items-center justify-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px]"
+                className="inline-flex min-h-12 items-center justify-center rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 font-bold text-[#3d2a21] shadow-bonbon transition-transform hover:translate-y-[2px]"
               >
                 Voir mon bilan →
               </Link>
               <Link
                 href={ROUTES.import}
-                className="inline-flex min-h-12 items-center justify-center rounded-[1.25rem] border-2 border-[#b88f78] bg-white/70 px-5 py-2 font-bold text-[#5d4d44]"
+                className="inline-flex min-h-12 items-center justify-center rounded-carte border-2 border-[#b88f78] bg-white/70 px-5 py-2 font-bold text-[#5d4d44]"
               >
                 Importer un autre relevé
               </Link>

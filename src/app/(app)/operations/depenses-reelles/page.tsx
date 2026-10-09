@@ -168,7 +168,7 @@ export default function DepenseReellePage() {
 
         {data && !data.error && totals && breakdown && (
           totals.count === 0 ? (
-            <div className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-6 text-center">
+            <div className="rounded-carte border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-6 text-center">
               <p className="text-lg font-bold text-[#5a473d]">
                 Aucune transaction en {MONTHS[monthIndex].label.toLowerCase()} {year}.
               </p>
@@ -177,7 +177,7 @@ export default function DepenseReellePage() {
               </p>
               <Link
                 href={ROUTES.import}
-                className="mt-3 inline-flex min-h-12 items-center rounded-[1.25rem] border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 font-bold text-[#3d2a21] shadow-[0_4px_0_rgba(171,98,77,0.85)] transition-transform hover:translate-y-[2px]"
+                className="mt-3 inline-flex min-h-12 items-center rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 font-bold text-[#3d2a21] shadow-bonbon transition-transform hover:translate-y-[2px]"
               >
                 Aller à l&apos;import CSV
               </Link>
@@ -240,7 +240,7 @@ export default function DepenseReellePage() {
                     id: 'comparison',
                     label: 'Écarts par catégorie',
                     content: (
-                      <section className="rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3">
+                      <section className="rounded-carte border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3">
                         <MonthlyBudgetComparison
                           key={year}
                           groups={comparisonGroups}
@@ -254,7 +254,7 @@ export default function DepenseReellePage() {
                     id: 'detail',
                     label: `Opérations (${totals.count})`,
                     content: (
-                      <section aria-label="Détail des opérations" className="space-y-3 rounded-[1.5rem] border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3">
+                      <section aria-label="Détail des opérations" className="space-y-3 rounded-carte border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-3">
                         <StoredTransactionsBreakdown breakdown={breakdown} />
                       </section>
                     ),
