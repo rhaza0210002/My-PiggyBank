@@ -252,6 +252,11 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
               {isRegister ? 'S’inscrire avec Google' : 'Continuer avec Google'}
             </button>
             {!isRegister && (
+              <p className="px-1 text-center text-sm font-semibold text-texte">
+                Inscrit·e avec Google ? Utilise le bouton Google : ton compte n’a pas de mot de passe ici.
+              </p>
+            )}
+            {!isRegister && (
               <p className={`${HINT_CLASS} text-center`}>
                 Si tu n’as pas encore de compte, il sera créé : tu acceptes alors les{' '}
                 <Link href={LEGAL_ROUTES.terms} target="_blank" className="font-bold text-accent-fort underline">

@@ -31,3 +31,17 @@ describe('inscription sans double saisie', () => {
     expect(register({ onGoogle: () => {} })).toContain('S’inscrire avec Google');
   });
 });
+
+describe('connexion : comptes créés avec Google', () => {
+  const login = (props: Partial<Parameters<typeof AuthForm>[0]> = {}) =>
+    renderToStaticMarkup(<AuthForm mode="login" onSubmit={() => {}} {...props} />);
+
+  it('rappelle qu’un compte Google se reconnecte par le bouton Google, sans mot de passe', () => {
+    expect(login({ onGoogle: () => {} })).toContain('Inscrit·e avec Google ? Utilise le bouton Google : ton compte n’a pas de mot de passe ici.');
+  });
+
+  it('ne dit rien quand Google n’est pas proposé, ni sur l’inscription', () => {
+    expect(login()).not.toContain('Inscrit·e avec Google');
+    expect(register({ onGoogle: () => {} })).not.toContain('Inscrit·e avec Google');
+  });
+});
