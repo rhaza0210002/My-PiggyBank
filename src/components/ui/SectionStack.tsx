@@ -226,7 +226,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
 
       <div
         ref={scrollerRef}
-        className={`min-h-0 flex-1 space-y-4 md:overflow-y-auto ${
+        className={`min-h-0 flex-1 space-y-4 md:overflow-y-auto md:px-2 ${
           fillZone ? 'md:snap-y md:snap-proximity md:[container-type:size] md:[scroll-padding-top:var(--nav-h)]' : ''
         }`}
       >

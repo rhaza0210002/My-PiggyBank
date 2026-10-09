@@ -10,6 +10,10 @@ const sections = [
 describe('SectionStack : cartes qui se suivent sur ordinateur', () => {
   const html = renderToStaticMarkup(<SectionStack sections={sections} label="Parties du budget" fillZone />);
 
+  it('laisse de la marge sur les côtés : une carte grossie au survol n’est pas rognée', () => {
+    expect(html).toMatch(/md:overflow-y-auto[^"]*md:px-2|md:px-2[^"]*md:overflow-y-auto/);
+  });
+
   it('accroche doucement le défilement sur chaque carte (proximity, jamais mandatory)', () => {
     expect(html).toContain('md:snap-y');
     expect(html).toContain('md:snap-proximity');

@@ -223,7 +223,9 @@ export default function RapprochementPage() {
       title="Pointer" icon="target"
       subtitle="Une opération à la fois : choisis la catégorie, puis pointe."
     >
-      <div className="mx-auto max-w-2xl space-y-3">
+      {/* Ordinateur : la tirelire et l'avancement à gauche, l'opération à pointer à droite, tout tient à l'écran. */}
+      <div className="mx-auto max-w-2xl space-y-3 lg:grid lg:max-w-5xl lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start lg:gap-5 lg:space-y-0">
+        <div className="space-y-3 lg:sticky lg:top-0">
         <Tirelire pointed={progress?.pointedToday ?? 0} tick={pointingTick} />
 
         {month && month.total > 0 && (
@@ -241,7 +243,9 @@ export default function RapprochementPage() {
             )}
           </div>
         )}
+        </div>
 
+        <div className="space-y-3">
         {celebration && (
           <p role="status" className="motion-safe:animate-[pop_0.6s_ease-out_1] rounded-2xl border-[1.5px] border-bordure bg-attention-fond p-3 text-center text-base font-black text-attention">
             <span aria-hidden="true">🎉 </span>
@@ -372,6 +376,7 @@ export default function RapprochementPage() {
             </div>
           </details>
         )}
+        </div>
       </div>
     </ScreenCard>
   );
