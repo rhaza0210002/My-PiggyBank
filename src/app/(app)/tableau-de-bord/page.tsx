@@ -20,6 +20,7 @@ import { getUserProfile } from '@/services/userService';
 import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { getStartSteps } from '@/utils/startSteps';
 import { pickTip } from '@/utils/tips';
+import Icon from '@/components/ui/Icon';
 
 const PANEL = 'rounded-carte border-2 border-texte p-4 shadow-sticker sm:p-5';
 const PRIMARY_LINK =
@@ -84,7 +85,13 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col gap-2 overflow-y-auto px-3 py-2 sm:px-5">
-      <div className="flex shrink-0 flex-col gap-1 px-2 py-1">
+      <div className="relative flex shrink-0 flex-col gap-1 px-2 py-1">
+        {/* Décor d'autocollant : purement visuel, jamais sous un clic. */}
+        <span aria-hidden="true" data-deco className="pointer-events-none absolute inset-0 hidden overflow-hidden sm:block">
+          <span className="absolute right-[12%] top-1 text-3xl text-piece-bord">✦</span>
+          <span className="absolute right-[4%] top-9 text-lg text-corail">✧</span>
+          <span className="absolute right-[22%] bottom-0 size-6 rounded-full bg-corail-clair/50" />
+        </span>
         <h1 className="flex items-center gap-3 text-[clamp(1.75rem,3.4vw,2.75rem)] font-extrabold leading-none tracking-[-0.01em] text-texte">
           <Pig className="size-[1.6em] shrink-0 -rotate-6" />
           <span className="bg-[linear-gradient(transparent_62%,var(--color-piece)_62%)] px-1">Salut{pseudo ? ` ${pseudo}` : ''} !</span>
@@ -106,7 +113,7 @@ export default function DashboardPage() {
 
       <div className="grid shrink-0 gap-2 md:grid-cols-12">
         {/* Action du moment : toujours en premier, une seule chose à faire. */}
-        <section aria-labelledby="month-title" style={{ '--i': 0 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-3 bg-accent-doux md:col-span-7`}>
+        <section aria-labelledby="month-title" style={{ '--i': 0 } as CSSProperties} data-penche className={`${PANEL} rise flex -rotate-[0.6deg] flex-col gap-3 bg-accent-doux md:col-span-7`}>
           <h2 id="month-title" className="text-2xl font-extrabold leading-none text-texte">
             {monthName}
           </h2>
@@ -152,10 +159,10 @@ export default function DashboardPage() {
           detail={hasBalance ? `${euroFormatter.format(monthTotals.expenses)} dépensés` : null}
           negative={hasBalance && monthTotals.net < 0}
           style={{ '--i': 1 } as CSSProperties}
-          className="rise md:col-span-5"
+          className="rise rotate-1 md:col-span-5"
         />
 
-        <section aria-labelledby="level-title" style={{ '--i': 2 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-3 bg-corail-clair md:col-span-8`}>
+        <section aria-labelledby="level-title" style={{ '--i': 2 } as CSSProperties} data-penche className={`${PANEL} rise flex rotate-[0.5deg] flex-col gap-3 bg-corail-clair md:col-span-8`}>
           <h2 id="level-title" className="text-2xl font-extrabold leading-none text-texte">
             Ma progression
           </h2>
@@ -174,7 +181,7 @@ export default function DashboardPage() {
                 {level.xp} points au total · encore {level.xpForNext - level.xpIntoLevel} pour le niveau {level.level + 1}
               </p>
               <p className="text-xs font-semibold text-texte">
-                <span aria-hidden="true">📅 </span>
+                <Icon name="calendar" className="mr-1 inline size-4 align-[-3px]" />
                 {progress.activeDaysLast7 > 0
                   ? `${progress.activeDaysLast7} jour${progress.activeDaysLast7 > 1 ? 's' : ''} actif${progress.activeDaysLast7 > 1 ? 's' : ''} ces 7 derniers jours`
                   : 'Aucune pression : reprends quand tu veux, rien ne se perd.'}
@@ -186,7 +193,7 @@ export default function DashboardPage() {
           )}
         </section>
 
-        <section aria-labelledby="tip-title" style={{ '--i': 3 } as CSSProperties} className={`${PANEL} rise flex flex-col gap-3 bg-piece md:col-span-4`}>
+        <section aria-labelledby="tip-title" style={{ '--i': 3 } as CSSProperties} data-penche className={`${PANEL} rise flex -rotate-1 flex-col gap-3 bg-piece md:col-span-4`}>
           <h2 id="tip-title" className="text-2xl font-extrabold leading-none text-texte">
             Astuce du jour
           </h2>

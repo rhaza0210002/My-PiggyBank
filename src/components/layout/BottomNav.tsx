@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NAV_SECTIONS, getActiveSection } from '@/constants/routes';
 import { NAV_LINK_BASE } from '@/components/layout/navLinkClasses';
+import Icon from '@/components/ui/Icon';
 
 /** Barre fixe en bas de l'écran sur mobile (zone du pouce), masquée dès la tablette où l'en-tête prend le relais. */
 export default function BottomNav() {
@@ -23,7 +24,7 @@ export default function BottomNav() {
               aria-current={activeSection?.id === section.id ? 'page' : undefined}
               className={`${NAV_LINK_BASE} min-h-16 flex-col gap-0.5 rounded-none py-2 text-xs font-semibold focus-visible:outline-3 focus-visible:-outline-offset-4 focus-visible:outline-focus`}
             >
-              <span className="text-xl" aria-hidden="true">{section.icon}</span>
+              <Icon name={section.icon} className="size-6" />
               {section.label}
             </Link>
           </li>

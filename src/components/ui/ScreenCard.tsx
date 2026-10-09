@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import Icon, { type IconName } from '@/components/ui/Icon';
 
 interface ScreenCardProps {
   title: string;
@@ -7,8 +8,8 @@ interface ScreenCardProps {
   children: ReactNode;
   /** Mobile : la page s'allonge et défile avec l'écran, au lieu d'un petit cadre qui défile à l'intérieur. */
   flow?: boolean;
-  /** Petite mascotte dans une bulle, décorative. */
-  icon?: string;
+  /** Icône décorative dans une pastille, penchée comme un autocollant. */
+  icon?: IconName;
 }
 
 /**
@@ -24,9 +25,9 @@ export default function ScreenCard({ title, subtitle, actions, children, flow = 
             {icon && (
               <span
                 aria-hidden="true"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-texte bg-piece text-xl shadow-sticker-petit"
+                className="flex h-10 w-10 shrink-0 -rotate-6 items-center justify-center rounded-full border-2 border-texte bg-piece text-texte shadow-sticker-petit"
               >
-                {icon}
+                <Icon name={icon} className="size-5" />
               </span>
             )}
             <h1 className="text-[clamp(1.35rem,2.2vw,1.9rem)] font-extrabold leading-tight tracking-[-0.01em] text-texte">

@@ -27,6 +27,7 @@ import {
 } from '@/services/transactionService';
 import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { groupStoredTransactions } from '@/utils/storedTransactionGrouping';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface LoadedMonth {
   requestKey: string;
@@ -152,7 +153,7 @@ export default function DepenseReellePage() {
   );
 
   return (
-    <ScreenCard flow title="Bilan du mois" icon="📊" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
+    <ScreenCard flow title="Bilan du mois" icon="chart" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
       <div className="flex flex-col gap-2 md:h-full md:min-h-0">
         {isLoading && (
           <p className="py-8 text-center text-sm font-semibold text-texte-doux" role="status">
@@ -168,20 +169,11 @@ export default function DepenseReellePage() {
 
         {data && !data.error && totals && breakdown && (
           totals.count === 0 ? (
-            <div className="rounded-carte border-2 border-dashed border-bordure bg-surface-douce p-6 text-center">
-              <p className="text-lg font-bold text-texte">
-                Aucune transaction en {MONTHS[monthIndex].label.toLowerCase()} {year}.
-              </p>
-              <p className="mt-1 text-sm text-texte-doux">
-                Commence par importer ton relevé CSV : c’est la première étape.
-              </p>
-              <Link
-                href={ROUTES.import}
-                className="mt-3 inline-flex min-h-12 items-center rounded-carte border-2 border-bordure bg-accent px-5 py-2 font-bold text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px]"
-              >
-                Aller à l&apos;import CSV
-              </Link>
-            </div>
+            <EmptyState
+              title={`Pas encore d’opérations en ${MONTHS[monthIndex].label.toLowerCase()} ${year}`}
+              text="Importe ton relevé : on range les opérations pour toi."
+              action={{ href: ROUTES.import, label: 'Importer mon relevé' }}
+            />
           ) : (
             <>
               <dl className="grid shrink-0 grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">

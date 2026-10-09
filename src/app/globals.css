@@ -247,6 +247,11 @@ html[data-contraste='fort'] {
   --color-bordure: var(--color-bordure-forte);
 }
 
+/* Les cartes penchées (style autocollant) se redressent quand on demande plus de contraste. */
+html[data-contraste='fort'] [data-penche] {
+  rotate: none;
+}
+
 html[data-calme='oui'] *,
 html[data-calme='oui'] *::before,
 html[data-calme='oui'] *::after {

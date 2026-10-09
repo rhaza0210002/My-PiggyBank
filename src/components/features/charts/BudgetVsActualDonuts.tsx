@@ -8,6 +8,7 @@ import { playWhenVisible } from '@/utils/playWhenVisible';
 import { euroFormatter } from '@/utils/formatEuro';
 import { buildBudgetVsActualSlices, type BudgetVsActualSlice } from '@/utils/budgetVsActual';
 import { createArcPath } from '@/utils/donutGeometry';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface BudgetVsActualDonutsProps {
   year: number;
@@ -216,9 +217,10 @@ export default function BudgetVsActualDonuts({
       )}
 
       {budgetEntries && slices.length === 0 && (
-        <p className="rounded-xl border-[1.5px] border-dashed border-[#d8b6a5] bg-surface/40 p-5 text-center text-sm italic text-[#6b574c]">
-          Aucun budget ni aucune dépense catégorisée pour {monthLabel.toLowerCase()} {year}.
-        </p>
+        <EmptyState
+          title={`Rien à comparer pour ${monthLabel.toLowerCase()} ${year}`}
+          text="Prévois ton budget ou range tes opérations : la comparaison apparaîtra ici."
+        />
       )}
 
       {slices.length > 0 && (

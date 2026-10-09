@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { archiveMonth } from '@/services/archiveService';
 import { isDemoActive } from '@/services/demoStore';
 import { getArchiveBlocker, isArchivedList, type ArchivableTransaction } from '@/utils/archive';
+import Icon from '@/components/ui/Icon';
 
 interface ArchiveMonthPanelProps {
   year: number;
@@ -23,7 +24,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
   if (isArchivedList(transactions)) {
     return (
       <p className="rounded-xl border-[1.5px] border-bordure bg-ok-fond px-3 py-2 text-center text-sm font-semibold text-ok">
-        <span aria-hidden="true">🗄️ </span>
+        <Icon name="archive" className="mr-1 inline size-4 align-[-2px]" />
         Mois archivé : seuls les totaux par catégorie sont conservés. Ton budget et tes points restent intacts.
       </p>
     );
@@ -59,7 +60,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
             onClick={() => setIsConfirming(true)}
             className="mt-2 min-h-11 rounded-xl border-[1.5px] border-bordure bg-surface px-4 text-sm font-bold text-texte transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
-            <span aria-hidden="true">🗄️ </span>Archiver {monthLabel.toLowerCase()}
+            <Icon name="archive" className="mr-1 inline size-4 align-[-2px]" />Archiver {monthLabel.toLowerCase()}
           </button>
         </>
       ) : (

@@ -9,6 +9,7 @@ import { NAV_LINK_BASE } from '@/components/layout/navLinkClasses';
 import { supabase } from '@/lib/supabaseClient';
 import { getUserProfile } from '@/services/userService';
 import Pig from '@/components/ui/Pig';
+import Icon from '@/components/ui/Icon';
 
 export default function AppHeader() {
   const pathname = usePathname();
@@ -64,7 +65,7 @@ export default function AppHeader() {
                   aria-current={activeSection?.id === section.id ? 'page' : undefined}
                   className={`${NAV_LINK_BASE} min-h-12 px-2! text-sm font-semibold lg:px-3! focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus`}
                 >
-                  <span aria-hidden="true">{section.icon}</span>
+                  <Icon name={section.icon} />
                   {section.label}
                 </Link>
               </li>

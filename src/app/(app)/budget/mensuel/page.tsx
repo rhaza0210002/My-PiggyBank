@@ -142,7 +142,7 @@ export default function MonthBudgetPage() {
   return (
     <ScreenCard
       flow
-      title="Budget mensuel" icon="💰"
+      title="Budget mensuel" icon="coins"
       subtitle={isPastMonth ? 'Mois passé : lecture seule.' : `Prévois ${activeMonth.label.toLowerCase()} bloc par bloc.`}
       actions={
         <>

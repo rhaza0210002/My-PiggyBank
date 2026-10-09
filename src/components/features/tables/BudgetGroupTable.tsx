@@ -7,6 +7,7 @@ import { formatCurrency } from '@/utils/budgetCalculations';
 import { TABLE_STYLES } from '@/constants/tableStyles';
 import { getGroupHint } from '@/constants/budgetGroupHints';
 import { getBudgetGroupPalette } from '@/constants/budgetGroupPalette';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface BudgetGroupTableProps {
   group: DataGroup;
@@ -95,8 +96,8 @@ export default function BudgetGroupTable({
           <tbody>
             {group.rows.length === 0 ? (
               <tr>
-                <td colSpan={2} className="py-6 text-center text-[1rem] sm:text-[1.1rem] italic text-texte-doux">
-                  Aucune donnée pour cette période.
+                <td colSpan={2}>
+                  <EmptyState compact title="Rien de prévu ici" text="Ajoute une ligne pour ce mois." />
                 </td>
               </tr>
             ) : (

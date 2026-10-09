@@ -10,6 +10,7 @@ import { scrollIntoZone } from '@/utils/scroll';
 import { endDemo, isDemoActive } from '@/services/demoStore';
 import { buildDemoTransactions, shouldConfirmReplaceDemo } from '@/utils/demoStatement';
 import { getLibelleTransacts } from '@/services/transactionCategoryService';
+import Icon from '@/components/ui/Icon';
 
 export default function CsvUploaderPage() {
   const [transactions, setTransactions] = useState<BankTransaction[]>([]);
@@ -106,14 +107,14 @@ export default function CsvUploaderPage() {
   return (
     <ScreenCard
       flow
-      title="Importer ton relevé" icon="📥"
+      title="Importer ton relevé" icon="import"
       subtitle="Dépose le CSV de ta banque : on range les opérations pour toi, tu vérifies, c’est tout."
     >
       <div className="mx-auto max-w-3xl space-y-4">
         <div className="rounded-carte border-2 border-dashed border-bordure bg-surface-douce p-4 text-center sm:p-6">
           <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl p-2 focus-within:ring-2 focus-within:ring-focus">
-            <span className="rounded-full bg-accent p-3 text-2xl text-surface shadow-md" aria-hidden="true">
-              📂
+            <span className="rotate-[-6deg] rounded-full border-2 border-texte bg-accent p-3 text-texte shadow-sticker-petit">
+              <Icon name="folder" className="size-7" />
             </span>
             <span className="text-lg font-bold text-texte">
               {isLoadingMappings
@@ -140,7 +141,7 @@ export default function CsvUploaderPage() {
             disabled={isLoadingMappings}
             className="mt-3 rounded-full border-[1.5px] border-bordure bg-surface/70 px-4 py-2 text-sm font-bold text-texte focus:outline-none focus:ring-2 focus:ring-focus disabled:opacity-55"
           >
-            <span aria-hidden="true">🧪 </span>Essayer avec un exemple
+            <Icon name="flask" className="mr-1 inline size-4 align-[-2px]" />Essayer avec un exemple
           </button>
           {error && <p role="alert" className="mt-3 font-semibold text-depasse">{error}</p>}
         </div>

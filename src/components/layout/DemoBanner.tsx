@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from 'react';
 import { ROUTES } from '@/constants/routes';
 import { DEMO_EVENT, DEMO_STORAGE_KEY, endDemo, isDemoActive } from '@/services/demoStore';
+import Icon from '@/components/ui/Icon';
 
 export const DEMO_BANNER_TEXT = 'Mode exemple : ces opérations sont fictives et restent sur cet appareil.';
 
@@ -36,7 +37,7 @@ export default function DemoBanner() {
       className="sticky top-0 z-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-attention-fond px-4 py-2 text-center text-sm font-semibold text-attention"
     >
       <span>
-        <span aria-hidden="true">🧪 </span>
+        <Icon name="flask" className="mr-1 inline size-4 align-[-2px]" />
         {DEMO_BANNER_TEXT}
       </span>
       <button

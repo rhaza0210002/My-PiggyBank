@@ -62,7 +62,7 @@ export default function MyDataPage() {
   };
 
   return (
-    <ScreenCard title="Mes données" icon="🔐" subtitle="Tu gardes la main : récupère-les ou supprime-les, quand tu veux.">
+    <ScreenCard title="Mes données" icon="lock" subtitle="Tu gardes la main : récupère-les ou supprime-les, quand tu veux.">
       <div className="grid gap-3 md:grid-cols-2">
         <section aria-labelledby="export-title" className={CARD}>
           <h2 id="export-title" className="text-lg font-bold text-texte">Récupérer mes données</h2>
