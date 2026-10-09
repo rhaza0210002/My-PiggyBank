@@ -25,7 +25,7 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
             <li
               key={step.id}
               aria-current={isNext ? 'step' : undefined}
-              className={`flex flex-col items-center gap-1 rounded-2xl border-[1.5px] p-3 ${
+              className={`carte-vivante flex flex-col items-center gap-1 rounded-2xl border-[1.5px] p-3 ${
                 step.done
                   ? 'border-bordure bg-ok-fond'
                   : isNext

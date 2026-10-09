@@ -81,7 +81,7 @@ export function MonthRecapView({
   return (
     <section
       aria-labelledby="recap-title"
-      className="shrink-0 rotate-[0.4deg] rounded-carte border-2 border-texte bg-attention-fond p-4 shadow-sticker sm:p-5"
+      className="carte-vivante shrink-0 rotate-[0.4deg] rounded-carte border-2 border-texte bg-attention-fond p-4 shadow-sticker sm:p-5"
     >
       <h2
         id="recap-title"
