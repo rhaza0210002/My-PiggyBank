@@ -150,6 +150,18 @@ export default function SectionStack({ sections, label, background = 'surface-do
     };
   }, [sections.length]);
 
+  // Hauteur réelle de la rangée de puces (elle peut passer sur deux lignes) : une carte remplit le reste de la zone.
+  useEffect(() => {
+    const nav = navRef.current;
+    const scroller = scrollerRef.current;
+    if (!nav || !scroller || typeof ResizeObserver === 'undefined') return;
+    const update = () => scroller.style.setProperty('--nav-h', `${nav.offsetHeight}px`);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, []);
+
   // Sur mobile la rangée de puces défile : la puce de la partie lue reste visible.
   useEffect(() => {
     const nav = navRef.current;
@@ -175,7 +187,21 @@ export default function SectionStack({ sections, label, background = 'surface-do
         return element.getBoundingClientRect().top - parent.getBoundingClientRect().top + parent.scrollTop - stickyOffset;
       };
       if (prefersReducedMotion()) parent.scrollTop = getTargetTop();
-      else cancelScrollRef.current = animateScroll(parent, getTargetTop, () => (cancelScrollRef.current = null));
+      else {
+        // L'accroche reprend la main une fois arrivé : pendant l'animation elle se battrait avec elle.
+        parent.style.scrollSnapType = 'none';
+        const release = () => {
+          parent.style.scrollSnapType = '';
+        };
+        const stop = animateScroll(parent, getTargetTop, () => {
+          release();
+          cancelScrollRef.current = null;
+        });
+        cancelScrollRef.current = () => {
+          stop();
+          release();
+        };
+      }
     }
     element.focus({ preventScroll: true });
   };
@@ -183,7 +209,10 @@ export default function SectionStack({ sections, label, background = 'surface-do
   return (
     <div className="flex min-h-0 flex-1 flex-col">
 
-      <div ref={scrollerRef} className="min-h-0 flex-1 space-y-4 md:overflow-y-auto">
+      <div
+        ref={scrollerRef}
+        className="min-h-0 flex-1 space-y-4 md:snap-y md:snap-proximity md:overflow-y-auto md:[container-type:size] md:[scroll-padding-top:var(--nav-h)]"
+      >
         <nav
           ref={navRef}
           aria-label={label}
@@ -220,7 +249,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
               data-section-id={section.id}
               aria-labelledby={`section-${section.id}-title`}
               tabIndex={-1}
-              className="scroll-mt-1 outline-none"
+              className="scroll-mt-1 outline-none md:min-h-[calc(100cqh-var(--nav-h))] md:snap-start"
             >
               <h2
                 id={`section-${section.id}-title`}
