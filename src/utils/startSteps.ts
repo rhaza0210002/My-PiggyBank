@@ -6,8 +6,10 @@ export interface StartStep {
   hint: string;
   href: string;
   done: boolean;
-  /** Une fois le pas fait, il reste modifiable : libellé du lien et précision sur la portée du changement. */
-  edit?: { label: string; note: string };
+  /** Bouton d'un pas pas encore fait (quand ce n'est pas le prochain, qui affiche « C'est parti »). */
+  action: string;
+  /** Une fois le pas fait, il reste accessible : libellé du lien, nom complet pour les lecteurs d'écran, précision éventuelle. */
+  edit: { label: string; ariaLabel: string; note?: string };
 }
 
 interface StartState {
@@ -25,7 +27,12 @@ export function getStartSteps({ hasOperations, hasBudget, reconciledOperations }
       hint: 'Quelques montants suffisent pour commencer, tu pourras affiner.',
       href: ROUTES.budgetMonthly,
       done: hasBudget,
-      edit: { label: 'Modifier', note: 'Ne change que les mois suivants.' },
+      action: 'Prévoir',
+      edit: {
+        label: 'Modifier',
+        ariaLabel: 'Modifier mon budget : ne change que les mois suivants',
+        note: 'Ne change que les mois suivants.',
+      },
     },
     {
       id: 'import',
@@ -33,6 +40,8 @@ export function getStartSteps({ hasOperations, hasBudget, reconciledOperations }
       hint: 'Le fichier CSV de ta banque : les opérations sont rangées pour toi.',
       href: ROUTES.import,
       done: hasOperations,
+      action: 'Importer',
+      edit: { label: 'Nouveau relevé', ariaLabel: 'Importer un nouveau relevé' },
     },
     {
       id: 'reconcile',
@@ -40,6 +49,8 @@ export function getStartSteps({ hasOperations, hasBudget, reconciledOperations }
       hint: 'Commence par une seule, pour voir comment ça marche : chaque pointage rapporte des points.',
       href: ROUTES.reconciliation,
       done: reconciledOperations > 0,
+      action: 'Pointer',
+      edit: { label: 'Continuer', ariaLabel: 'Continuer à pointer mes opérations' },
     },
   ];
 }

@@ -25,4 +25,17 @@ describe('StartChecklist', () => {
     expect(html).toContain('Modifier');
     expect(html).toContain('C’est parti');
   });
+
+  it('donne un bouton à chaque pas : le prochain est mis en avant, les autres restent accessibles', () => {
+    const html = render({ hasOperations: false, hasBudget: false, reconciledOperations: 0 });
+    expect(html).toMatch(/<a[^>]*href="\/budget\/mensuel"[^>]*>C’est parti<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/operations\/import"[^>]*>Importer<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/operations\/rapprochement"[^>]*>Pointer<\/a>/);
+  });
+
+  it('garde un accès à l’import et au pointage une fois faits', () => {
+    const html = render({ hasOperations: true, hasBudget: true, reconciledOperations: 3 });
+    expect(html).toMatch(/<a[^>]*aria-label="Importer un nouveau relevé"[^>]*>Nouveau relevé<\/a>/);
+    expect(html).toMatch(/<a[^>]*aria-label="Continuer à pointer mes opérations"[^>]*>Continuer<\/a>/);
+  });
 });
