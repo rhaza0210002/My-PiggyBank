@@ -121,7 +121,7 @@ export default function ReconcileCard({
       <div>
         <label htmlFor="reconcile-category" className="block text-center text-sm font-bold text-texte">
           Catégorie
-          {category && <span className="ml-2 font-semibold text-ok">✓ choisie</span>}
+          {category && <span className="ml-2 font-semibold text-ok"><span aria-hidden="true">✓ </span>choisie</span>}
         </label>
         <select
           id="reconcile-category"
@@ -153,7 +153,7 @@ export default function ReconcileCard({
           disabled={isBusy || !transaction.category_id}
           className="min-h-14 flex-1 text-lg"
         >
-          {transaction.category_id ? 'Pointer ✓' : 'Choisis une catégorie'}
+          {transaction.category_id ? <>Pointer<span aria-hidden="true"> ✓</span></> : 'Choisis une catégorie'}
         </Button>
         {canSkip && (
           <button

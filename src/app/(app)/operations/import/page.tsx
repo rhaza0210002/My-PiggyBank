@@ -31,12 +31,11 @@ export default function CsvUploaderPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (shouldConfirmReplaceDemo(isDemoActive(), false)) {
-      if (!window.confirm('Ton exemple sera effacé. Continuer ?')) {
-        event.target.value = '';
-        return;
-      }
-      endDemo();
+    // L'exemple n'est effacé qu'une fois le vrai fichier lu : un fichier illisible le laisse intact.
+    const replacesDemo = shouldConfirmReplaceDemo(isDemoActive(), false);
+    if (replacesDemo && !window.confirm('Ton exemple sera effacé. Continuer ?')) {
+      event.target.value = '';
+      return;
     }
 
     setDemoSaved(false);
@@ -72,6 +71,7 @@ export default function CsvUploaderPage() {
           return;
         }
 
+        if (replacesDemo) endDemo();
         setTransactions(parsed);
       } catch (err: unknown) {
         console.error(err);
@@ -140,7 +140,7 @@ export default function CsvUploaderPage() {
             disabled={isLoadingMappings}
             className="mt-3 rounded-full border-[1.5px] border-bordure bg-surface/70 px-4 py-2 text-sm font-bold text-texte focus:outline-none focus:ring-2 focus:ring-focus disabled:opacity-55"
           >
-            🧪 Essayer avec un exemple
+            <span aria-hidden="true">🧪 </span>Essayer avec un exemple
           </button>
           {error && <p role="alert" className="mt-3 font-semibold text-depasse">{error}</p>}
         </div>

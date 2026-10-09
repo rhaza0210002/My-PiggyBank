@@ -3,7 +3,7 @@
 import React from 'react';
 import { formatCurrency } from '@/utils/budgetCalculations';
 import { BUDGET_MODES, BudgetMode } from '@/constants/budgetTypes';
-import { MONTHS, TABLE_STYLES } from '@/constants/tableStyles'; // <-- Vérifie bien cet import
+import { MONTHS, TABLE_STYLES } from '@/constants/tableStyles';
 interface BudgetTotalsSectionProps {
   dataGroups: Array<{
     key: string;
