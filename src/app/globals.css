@@ -117,3 +117,65 @@ button:not(:disabled):active,
 a[class*='shadow-bonbon']:active {
   scale: 0.97;
 }
+
+/* Tirelire : la pièce tombe dans la fente, le cochon rebondit et ferme l'œil, le niveau de pièces monte. */
+.tirelire-coin {
+  position: absolute;
+  left: 38%;
+  top: -4px;
+  z-index: 1;
+  display: flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--color-piece-bord);
+  border-radius: 9999px;
+  background: var(--color-piece);
+  color: var(--color-sur-accent);
+  font-size: 12px;
+  font-weight: 800;
+  opacity: 0;
+  animation: coin-drop var(--duree-pointage) cubic-bezier(0.4, 0, 0.8, 0.6) forwards;
+}
+
+.tirelire-pig {
+  transform-origin: 50% 90%;
+  animation: pig-bounce var(--duree-pointage) ease-out;
+}
+
+.tirelire-pig .tirelire-oeil {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pig-happy 0.9s ease-in-out;
+}
+
+.tirelire-niveau {
+  transition: transform var(--duree-niveau) ease;
+}
+
+@keyframes coin-drop {
+  0% { opacity: 1; transform: translateY(0) rotateY(0); }
+  80% { opacity: 1; transform: translateY(46px) rotateY(360deg); }
+  100% { opacity: 0; transform: translateY(54px) rotateY(540deg); }
+}
+
+@keyframes pig-bounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.07, 0.93); }
+  65% { transform: scale(0.98, 1.03); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pig-happy {
+  0%, 100% { transform: scaleY(1); }
+  20%, 70% { transform: scaleY(0.15); }
+}
+
+/* Mouvement réduit : plus de pièce animée, le niveau et le texte changent sans transition. */
+@media (prefers-reduced-motion: reduce) {
+  .tirelire-coin { display: none; }
+  .tirelire-pig,
+  .tirelire-pig .tirelire-oeil { animation: none; }
+  .tirelire-niveau { transition: none; }
+}
