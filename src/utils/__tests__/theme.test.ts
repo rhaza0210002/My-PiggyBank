@@ -66,3 +66,16 @@ describe('onglet actif en corail', () => {
     expect(css).toMatch(/@utility onglet-actif\s*\{[^}]*linear-gradient[^}]*corail-clair[^}]*corail[^}]*box-shadow/);
   });
 });
+
+describe('fleur d’accessibilité aux couleurs de l’app', () => {
+  it('a un dégradé vert→jaune au repos et corail→jaune au survol ou une fois activé', () => {
+    expect(css).toMatch(/@utility petale\s*\{[^}]*linear-gradient\([^;]*accent[^;]*piece/);
+    expect(css).toMatch(/@utility petale-actif\s*\{[^}]*linear-gradient\([^;]*corail-clair[^;]*piece/);
+  });
+
+  it('garde un texte lisible sur le vert, le jaune et le corail des pétales', () => {
+    ['accent', 'piece', 'corail-clair', 'corail'].forEach((background) => {
+      expect(contrastRatio(role('sur-corail'), role(background))).toBeGreaterThanOrEqual(4.5);
+    });
+  });
+});

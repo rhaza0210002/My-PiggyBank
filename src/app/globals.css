@@ -6,7 +6,7 @@
  * Un test (theme.test.ts) lit ce bloc et vérifie les contrastes de chaque paire texte/fond.
  */
 @theme {
-  --font-sans: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
 
   --color-fond: #f2fbea;
   --color-surface: #ffffff;
@@ -48,6 +48,17 @@
   background-image: linear-gradient(180deg, var(--color-corail-clair), var(--color-corail));
   color: var(--color-sur-corail);
   box-shadow: var(--shadow-corail);
+}
+
+/* Fleur d'accessibilité : pétales vert→jaune, et corail→jaune au survol ou une fois activés. */
+@utility petale {
+  background-image: linear-gradient(135deg, var(--color-accent), var(--color-piece));
+  color: var(--color-sur-corail);
+}
+
+@utility petale-actif {
+  background-image: linear-gradient(135deg, var(--color-corail-clair), var(--color-piece));
+  color: var(--color-sur-corail);
 }
 
 :root {
@@ -189,4 +200,47 @@ a[class*='shadow-bonbon']:active {
   .tirelire-pig,
   .tirelire-pig .tirelire-oeil { animation: none; }
   .tirelire-niveau { transition: none; }
+}
+
+
+/*
+ * Réglages d'accessibilité (bouton ♿) : chaque option pose un attribut sur <html>, voir accessibilityPrefs.ts.
+ * Les couleurs ne changent que par les rôles : rien n'est écrit en dur ici.
+ */
+/* Bouton retiré par la personne : se remet depuis Compte → Paramètres. */
+html[data-bouton='masque'] [data-fleur] {
+  display: none;
+}
+
+html[data-police='luciole'] {
+  --font-sans: var(--font-luciole), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Le zoom est un pourcentage du réglage du navigateur (rem) : on ne l'écrase jamais. */
+html[data-zoom='110'] { font-size: 110%; }
+html[data-zoom='120'] { font-size: 120%; }
+html[data-zoom='130'] { font-size: 130%; }
+html[data-zoom='140'] { font-size: 140%; }
+html[data-zoom='150'] { font-size: 150%; }
+
+html[data-espace='large'] body {
+  letter-spacing: 0.06em;
+  word-spacing: 0.12em;
+  line-height: 1.7;
+}
+
+html[data-contraste='fort'] {
+  --color-fond: var(--color-surface);
+  --color-surface-douce: var(--color-surface);
+  --color-accent-doux: var(--color-surface);
+  --color-texte-doux: var(--color-texte);
+  --color-bordure: var(--color-bordure-forte);
+}
+
+html[data-calme='oui'] *,
+html[data-calme='oui'] *::before,
+html[data-calme='oui'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
 }

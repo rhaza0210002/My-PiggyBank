@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import AccessibilityButtonSetting from '@/components/features/accessibility/AccessibilityButtonSetting';
 import PushReminderToggle from '@/components/features/forms/PushReminderToggle';
 import {
   DEFAULT_USER_SETTINGS,
@@ -108,6 +109,13 @@ export default function SettingsPage() {
         )}
 
         <PushReminderToggle />
+      </section>
+
+      <section aria-labelledby="a11y-prefs-title" className={CARD}>
+        <h2 id="a11y-prefs-title" className="text-lg font-bold text-texte">Accessibilité</h2>
+        <div className="mt-3">
+          <AccessibilityButtonSetting />
+        </div>
       </section>
     </div>
   );
