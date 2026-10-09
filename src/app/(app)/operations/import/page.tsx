@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import Link from 'next/link';
 import CsvTransactionsTable from '@/components/features/tables/CsvTransactionsTable';
 import ScreenCard from '@/components/ui/ScreenCard';
 import { ROUTES } from '@/constants/routes';
 import { SocieteGeneraleParser, type BankTransaction } from '@/services/csvParser';
+import { scrollIntoZone } from '@/utils/scroll';
 import { buildDemoTransactions } from '@/utils/demoStatement';
 import { getLibelleTransacts } from '@/services/transactionCategoryService';
 
@@ -15,6 +16,15 @@ export default function CsvUploaderPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoadingMappings, setIsLoadingMappings] = useState(false);
   const [isDemo, setIsDemo] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Sur un petit écran le résultat arrive sous la zone de dépôt, hors de vue : on y amène la personne.
+  useEffect(() => {
+    if (transactions.length === 0) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (resultsRef.current) scrollIntoZone(resultsRef.current, reduced ? 'auto' : 'smooth');
+  }, [transactions]);
+
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -85,7 +95,7 @@ export default function CsvUploaderPage() {
     <ScreenCard
       flow
       title="Importer ton relevé" icon="📥"
-      subtitle="Dépose le fichier CSV de ta banque : les opérations reconnues sont rangées pour toi."
+      subtitle="Dépose le CSV de ta banque : on range les opérations pour toi, tu vérifies, c’est tout."
     >
       <div className="mx-auto max-w-3xl space-y-4">
         <div className="rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-4 text-center sm:p-6">
@@ -101,7 +111,8 @@ export default function CsvUploaderPage() {
                   : 'Choisir mon fichier CSV'}
             </span>
             <span className="text-sm italic text-texte-doux">
-              Lu sur ton appareil : le fichier brut n’est jamais envoyé ni stocké.
+              Ton fichier est lu sur ton appareil et n’est jamais envoyé. Les opérations qu’il contient sont gardées
+              jusqu’à 30 jours après la clôture du mois, puis effacées. Tu peux les effacer toi-même à tout moment.
             </span>
             <input
               type="file"
@@ -122,7 +133,15 @@ export default function CsvUploaderPage() {
           {error && <p role="alert" className="mt-3 font-semibold text-depasse">{error}</p>}
         </div>
 
-        <CsvTransactionsTable transactions={transactions} isDemo={isDemo} />
+        <p role="status" className="sr-only">
+          {transactions.length > 0
+            ? `${isDemo ? 'Exemple chargé' : 'Fichier lu'} : ${transactions.length} opérations affichées ci-dessous.`
+            : ''}
+        </p>
+
+        <div ref={resultsRef} className="scroll-mt-2">
+          <CsvTransactionsTable transactions={transactions} isDemo={isDemo} />
+        </div>
 
         {transactions.length > 0 && !isDemo && (
           <p className="text-center text-sm text-texte-doux">
