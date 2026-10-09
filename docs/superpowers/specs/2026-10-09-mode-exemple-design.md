@@ -36,7 +36,7 @@ Hors périmètre : import CSV souple, clôture de mois et tableaux figés, saisi
 
 2. **`src/services/transactionService.ts`** (modifié)
    - Chaque fonction de lecture ou d'écriture des opérations commence par `if (isDemoActive())` et travaille sur `demoStore`. Fonctions concernées : `getRecentTransactions`, `getTransactionsToReconcile`, `countTransactionsToReconcile`, `updateTransactionCategory`, `markTransactionsReconciled`, `unreconcileTransactions`, `getPointedLabelHistory`, `getUncategorizedTransactions`, `countUncategorizedTransactions`, `getTransactionsForMonth`, `getMonthTotals`.
-   - `saveImportedTransactions` n'est jamais appelé avec l'exemple (le bouton est désactivé pendant l'aperçu) ; importer un vrai relevé appelle d'abord `endDemo()`.
+   - `saveImportedTransactions`, appelé pendant l'aperçu d'un exemple (clic sur « Enregistrer les 8 transactions »), range les opérations dans le stock local au lieu de Supabase et active le mode exemple ; importer ensuite un vrai relevé appelle d'abord `endDemo()` (après confirmation).
    - `getReconciliationActivity` (alimente badges et pièces) renvoie une liste vide en mode exemple.
    - Les identifiants d'exemple sont de la forme `demo-<n>` ; le stock reproduit la forme `StoredTransaction` (dont `reconciled_at`).
 
@@ -44,12 +44,12 @@ Hors périmètre : import CSV souple, clôture de mois et tableaux figés, saisi
 
 4. **Interface**
    - `DemoBanner` : bandeau affiché par la mise en page des écrans Opérations et Accueil quand le mode est actif. Texte : « Mode exemple : ces opérations sont fictives et restent sur cet appareil. » + bouton « Quitter l'exemple ».
-   - Page d'import : « Essayer avec un exemple » appelle `startDemo`, puis affiche l'aperçu et invite à passer au pointage.
+   - Page d'import : « Essayer avec un exemple » affiche d'abord l'aperçu, comme un vrai fichier lu (rien n'est encore stocké). « Enregistrer les 8 transactions » est actif et appelle `startDemo` ; le lien « Pointer les opérations → » apparaît alors, comme après un vrai import. « Enregistrer les libellés reconnus » reste désactivé en exemple (il écrirait des règles dans le vrai compte), avec une courte explication.
    - Import d'un vrai fichier pendant l'exemple : confirmation « Ton exemple sera effacé. Continuer ? ».
 
 ### Flux
 
-Bouton exemple → `buildDemoTransactions` → `startDemo` (écrit le stock, active le mode) → aperçu → « Pointer les opérations » lit le stock via `transactionService` → pointage met à jour le stock → Dépenses réelles et Accueil lisent le même stock → « Quitter l'exemple » appelle `endDemo` et tout revient aux vraies données.
+Bouton exemple → `buildDemoTransactions` → aperçu (rien de stocké) → « Enregistrer les 8 transactions » → `startDemo` (écrit le stock, active le mode) → « Pointer les opérations » lit le stock via `transactionService` → pointage met à jour le stock → Dépenses réelles et Accueil lisent le même stock → « Quitter l'exemple » appelle `endDemo` et tout revient aux vraies données.
 
 Catégories et lignes de budget restent les vraies (lues dans Supabase) : l'exemple se compare au vrai budget de la personne.
 
