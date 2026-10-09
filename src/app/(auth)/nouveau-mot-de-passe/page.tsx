@@ -57,7 +57,7 @@ export default function ResetPasswordPage() {
   if (!hasSession) {
     return (
       <AuthCard title="Lien expiré">
-        <p role="alert" className="text-center text-[#5d4d44]">
+        <p role="alert" className="text-center text-texte">
           Ce lien n’est plus valable (il ne fonctionne qu’une fois, pendant une heure). Demande-en un nouveau.
         </p>
         <p className="text-center">
@@ -89,7 +89,7 @@ export default function ResetPasswordPage() {
             aria-describedby={error ? 'reset-error' : undefined}
             className={AUTH_INPUT_CLASS}
           />
-          <p className="px-1 text-xs text-[#6b574c]">Au moins {MIN_PASSWORD_LENGTH} caractères.</p>
+          <p className="px-1 text-xs text-texte-doux">Au moins {MIN_PASSWORD_LENGTH} caractères.</p>
         </div>
         <div className="space-y-1">
           <label htmlFor="reset-confirmation" className={AUTH_LABEL_CLASS}>Confirmer le mot de passe</label>
@@ -103,12 +103,12 @@ export default function ResetPasswordPage() {
             className={AUTH_INPUT_CLASS}
           />
         </div>
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 px-1 text-sm font-semibold text-[#5d4d44]">
+        <label className="flex min-h-11 cursor-pointer items-center gap-3 px-1 text-sm font-semibold text-texte">
           <input
             type="checkbox"
             checked={showPassword}
             onChange={(event) => setShowPassword(event.target.checked)}
-            className="h-5 w-5 accent-[#a3452a]"
+            className="h-5 w-5 accent-accent-fort"
           />
           Afficher le mot de passe
         </label>

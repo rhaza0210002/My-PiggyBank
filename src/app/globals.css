@@ -12,7 +12,7 @@
   --color-surface: #fff8f2;
   --color-surface-douce: #f2e6d8;
   --color-bordure: #d8b6a5;
-  --color-bordure-forte: #a3452a;
+  --color-bordure-forte: #9c7560;
   --color-texte: #5b473d;
   --color-texte-doux: #6b574c;
   --color-accent: #e59a86;
@@ -47,7 +47,7 @@
 body {
   /* Petits pois discrets : un fond doux, jamais bruyant. */
   background-color: var(--color-fond);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.35) 1.5px, transparent 1.6px);
+  background-image: radial-gradient(color-mix(in srgb, var(--color-surface) 35%, transparent) 1.5px, transparent 1.6px);
   background-size: 22px 22px;
   color: var(--color-texte);
   font-family: var(--font-sans);

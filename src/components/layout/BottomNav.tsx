@@ -13,7 +13,7 @@ export default function BottomNav() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="shrink-0 border-t-2 border-[#E5C4B4] bg-[#FFF5EE] pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="shrink-0 border-t-2 border-bordure bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <ul className="mx-auto grid max-w-xl grid-cols-4">
         {NAV_SECTIONS.map((section) => (
@@ -21,7 +21,7 @@ export default function BottomNav() {
             <Link
               href={section.href}
               aria-current={activeSection?.id === section.id ? 'page' : undefined}
-              className={`${NAV_LINK_BASE} min-h-16 flex-col gap-0.5 rounded-none py-2 text-xs font-semibold focus-visible:outline-3 focus-visible:-outline-offset-4 focus-visible:outline-[#5b473d] aria-[current=page]:border-t-4 aria-[current=page]:border-[#a3452a]`}
+              className={`${NAV_LINK_BASE} min-h-16 flex-col gap-0.5 rounded-none py-2 text-xs font-semibold focus-visible:outline-3 focus-visible:-outline-offset-4 focus-visible:outline-focus aria-[current=page]:border-t-4 aria-[current=page]:border-accent-fort`}
             >
               <span className="text-xl" aria-hidden="true">{section.icon}</span>
               {section.label}

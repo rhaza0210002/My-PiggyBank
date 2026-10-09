@@ -220,15 +220,15 @@ export default function RapprochementPage() {
     >
       <div className="mx-auto max-w-2xl space-y-3">
         {month && month.total > 0 && (
-          <div className="flex items-center gap-3 rounded-2xl border border-[#e5c4b4] bg-[#fff8f2] px-3 py-1.5">
-            <p className="shrink-0 text-sm font-bold text-[#5a4d41]">
+          <div className="flex items-center gap-3 rounded-2xl border border-bordure bg-surface px-3 py-1.5">
+            <p className="shrink-0 text-sm font-bold text-texte">
               {month.done} / {month.total} pointées
             </p>
             <div className="min-w-0 flex-1">
               <ProgressBar value={month.done} max={month.total} label="Opérations du mois pointées" valueText={`${month.done} sur ${month.total}`} />
             </div>
             {progress && (
-              <p className="hidden shrink-0 text-xs font-semibold text-[#6b574c] sm:block">
+              <p className="hidden shrink-0 text-xs font-semibold text-texte-doux sm:block">
                 Niveau {progress.levelInfo.level} · {progress.xp} points
               </p>
             )}
@@ -236,7 +236,7 @@ export default function RapprochementPage() {
         )}
 
         {celebration && (
-          <p role="status" className="motion-safe:animate-[pop_0.6s_ease-out_1] rounded-2xl border-2 border-[#d6a85c] bg-[#fff1da] p-3 text-center text-base font-black text-[#5a3d10]">
+          <p role="status" className="motion-safe:animate-[pop_0.6s_ease-out_1] rounded-2xl border-2 border-bordure bg-attention-fond p-3 text-center text-base font-black text-attention">
             <span aria-hidden="true">🎉 </span>
             {celebration}
           </p>
@@ -246,7 +246,7 @@ export default function RapprochementPage() {
           <p
             key={noticeCount}
             role="status"
-            className="motion-safe:animate-[pop_0.5s_ease-out_1] rounded-2xl border-2 border-[#9fc3a1] bg-[#eaf4e6] p-2.5 text-center text-sm font-black text-[#1f4d25]"
+            className="motion-safe:animate-[pop_0.5s_ease-out_1] rounded-2xl border-2 border-bordure bg-ok-fond p-2.5 text-center text-sm font-black text-ok"
           >
             <span aria-hidden="true">✨ </span>
             {notice}
@@ -258,7 +258,7 @@ export default function RapprochementPage() {
             <button
               type="button"
               onClick={undoLastPointing}
-              className="min-h-11 rounded-xl border-2 border-[#d8b7a5] bg-[#fff8f2] px-4 text-sm font-bold text-[#5a473d] transition hover:bg-[#F8D5CB] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+              className="min-h-11 rounded-xl border-2 border-bordure bg-surface px-4 text-sm font-bold text-texte transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               <span aria-hidden="true">↩️ </span>Annuler le dernier pointage
             </button>
@@ -266,7 +266,7 @@ export default function RapprochementPage() {
         )}
 
         {!data && !loadError && (
-          <p className="py-6 text-center text-sm font-semibold text-[#6b574c]" role="status">
+          <p className="py-6 text-center text-sm font-semibold text-texte-doux" role="status">
             Chargement des opérations…
           </p>
         )}
@@ -313,7 +313,7 @@ export default function RapprochementPage() {
                   reconcile(readyIds);
                 }}
                 disabled={readyIds.some((id) => busyIds.has(id))}
-                className="min-h-11 w-full rounded-xl border border-[#b88f78] bg-white/70 px-4 text-sm font-bold text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
+                className="min-h-11 w-full rounded-xl border border-bordure-forte bg-white/70 px-4 text-sm font-bold text-texte transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
               >
                 Pointer d’un coup les {readyIds.length} déjà catégorisées
               </button>
@@ -322,19 +322,19 @@ export default function RapprochementPage() {
         )}
 
         {data && !current && (
-          <div className="rounded-carte border-[3px] border-dashed border-[#d7b59d] bg-[#f5eadf] p-6 text-center">
-            <p className="text-xl font-black text-[#5a473d]">Tout est pointé. <span aria-hidden="true">✨</span></p>
-            <p className="mt-1 text-sm text-[#6b574c]">Prochaine étape : regarder où est passé ton argent ce mois-ci.</p>
+          <div className="rounded-carte border-[3px] border-dashed border-bordure bg-surface-douce p-6 text-center">
+            <p className="text-xl font-black text-texte">Tout est pointé. <span aria-hidden="true">✨</span></p>
+            <p className="mt-1 text-sm text-texte-doux">Prochaine étape : regarder où est passé ton argent ce mois-ci.</p>
             <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
               <Link
                 href={ROUTES.actualExpenses}
-                className="inline-flex min-h-12 items-center justify-center rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 py-2 font-bold text-[#3d2a21] shadow-bonbon transition-transform hover:translate-y-[2px]"
+                className="inline-flex min-h-12 items-center justify-center rounded-carte border-[3px] border-bordure bg-accent px-5 py-2 font-bold text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px]"
               >
                 Voir mon bilan →
               </Link>
               <Link
                 href={ROUTES.import}
-                className="inline-flex min-h-12 items-center justify-center rounded-carte border-2 border-[#b88f78] bg-white/70 px-5 py-2 font-bold text-[#5d4d44]"
+                className="inline-flex min-h-12 items-center justify-center rounded-carte border-2 border-bordure-forte bg-white/70 px-5 py-2 font-bold text-texte"
               >
                 Importer un autre relevé
               </Link>
@@ -343,8 +343,8 @@ export default function RapprochementPage() {
         )}
 
         {data && isAdmin && (
-          <details className="rounded-2xl border border-dashed border-[#d7b59d] bg-[#f5eadf] px-3 py-1">
-            <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold text-[#5d4d44]">
+          <details className="rounded-2xl border border-dashed border-bordure bg-surface-douce px-3 py-1">
+            <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold text-texte">
               Créer une catégorie (administrateur)
             </summary>
             <div className="pb-2">

@@ -9,13 +9,13 @@ export default function NotFound() {
   return (
     <>
       <main id="contenu" className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="max-w-md rounded-carte border-[3px] border-[#d8b6a5] bg-[#f2e6d8] p-6 text-center">
+        <div className="max-w-md rounded-carte border-[3px] border-bordure bg-surface-douce p-6 text-center">
           <p className="text-4xl" aria-hidden="true">🐷</p>
-          <h1 className="mt-2 text-xl font-black text-[#5d4d44]">Page introuvable</h1>
-          <p className="mt-2 text-sm text-[#6b574c]">Cette page n’existe pas ou a changé d’adresse.</p>
+          <h1 className="mt-2 text-xl font-black text-texte">Page introuvable</h1>
+          <p className="mt-2 text-sm text-texte-doux">Cette page n’existe pas ou a changé d’adresse.</p>
           <Link
             href={ROUTES.dashboard}
-            className="mt-4 inline-flex min-h-12 items-center rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 font-bold text-[#3d2a21] shadow-bonbon focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+            className="mt-4 inline-flex min-h-12 items-center rounded-carte border-[3px] border-bordure bg-accent px-5 font-bold text-sur-accent shadow-bonbon focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Retour à l’accueil
           </Link>

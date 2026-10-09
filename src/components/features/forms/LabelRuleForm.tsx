@@ -55,10 +55,10 @@ export default function LabelRuleForm({ transactionLabel, category, onSaved, onC
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 rounded-xl border border-dashed border-[#b88f78] bg-white/60 p-3 sm:flex-row sm:items-end"
+      className="flex flex-col gap-3 rounded-xl border border-dashed border-bordure-forte bg-white/60 p-3 sm:flex-row sm:items-end"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <label htmlFor={fieldId} className="text-sm font-bold text-[#5d4d44]">
+        <label htmlFor={fieldId} className="text-sm font-bold text-texte">
           Mot-clé du libellé à retenir pour « {category.label} »
         </label>
         <input
@@ -70,14 +70,14 @@ export default function LabelRuleForm({ transactionLabel, category, onSaved, onC
           autoComplete="off"
           aria-invalid={error !== null}
           aria-describedby={`${fieldId}-help${error ? ` ${fieldId}-error` : ''}`}
-          className="min-h-11 rounded-xl border-2 border-[#9c7560] bg-white px-3 text-sm font-semibold text-[#54433d]"
+          className="min-h-11 rounded-xl border-2 border-bordure-forte bg-white px-3 text-sm font-semibold text-texte"
         />
-        <p id={`${fieldId}-help`} className="text-xs text-[#6b574c]">
+        <p id={`${fieldId}-help`} className="text-xs text-texte-doux">
           Les prochaines opérations dont le libellé contient ce mot seront classées automatiquement. Garde un mot
           précis (ex : ALDI) pour éviter les faux positifs.
         </p>
         {error && (
-          <p id={`${fieldId}-error`} role="alert" className="text-sm font-semibold text-[#8a4a1c]">
+          <p id={`${fieldId}-error`} role="alert" className="text-sm font-semibold text-attention">
             {error}
           </p>
         )}
@@ -87,14 +87,14 @@ export default function LabelRuleForm({ transactionLabel, category, onSaved, onC
         <button
           type="submit"
           disabled={isSaving}
-          className="min-h-11 rounded-xl border-2 border-[#e4a58f] bg-[#e59a86] px-4 text-sm font-bold text-[#3d2a21] disabled:opacity-60"
+          className="min-h-11 rounded-xl border-2 border-bordure bg-accent px-4 text-sm font-bold text-sur-accent disabled:opacity-60"
         >
           {isSaving ? 'Enregistrement…' : 'Enregistrer la règle'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="min-h-11 rounded-xl border border-[#b88f78] bg-white/70 px-4 text-sm font-bold text-[#5d4d44]"
+          className="min-h-11 rounded-xl border border-bordure-forte bg-white/70 px-4 text-sm font-bold text-texte"
         >
           Annuler
         </button>

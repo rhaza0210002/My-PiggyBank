@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
   if (sent) {
     return (
       <AuthCard title="Vérifie ta boîte mail">
-        <p role="status" className="text-center text-[#5d4d44]">
+        <p role="status" className="text-center text-texte">
           Si un compte existe pour <strong>{email.trim()}</strong>, un lien pour choisir un nouveau mot de passe vient
           d’être envoyé. Pense à regarder dans les courriers indésirables. Le lien est valable une heure.
         </p>
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
           {isLoading ? 'Envoi…' : 'Envoyer le lien'}
         </button>
       </form>
-      <p className="border-t border-[#d8b7a5]/60 pt-3 text-center">
+      <p className="border-t border-bordure/60 pt-3 text-center">
         <Link href={ROUTES.login} className={AUTH_LINK_CLASS}>Retour à la connexion</Link>
       </p>
     </AuthCard>

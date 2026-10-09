@@ -6,7 +6,7 @@ import { LEGAL_ROUTES } from '@/constants/routes';
 
 export const metadata: Metadata = { title: 'Cookies et stockage local' };
 
-const CELL = 'border border-[#d8b7a5] px-2 py-1.5 align-top text-left text-sm';
+const CELL = 'border border-bordure px-2 py-1.5 align-top text-left text-sm';
 
 export default function CookiesPage() {
   return (
@@ -18,7 +18,7 @@ export default function CookiesPage() {
       <div className="mt-2 overflow-x-auto" role="region" aria-label="Tableau des cookies et du stockage local" tabIndex={0}>
         <table className="w-full min-w-[34rem] border-collapse">
           <caption className="sr-only">Cookies et éléments de stockage local utilisés</caption>
-          <thead className="bg-[#f0d8c8]">
+          <thead className="bg-surface-douce">
             <tr>
               <th scope="col" className={CELL}>Nom</th>
               <th scope="col" className={CELL}>Rôle</th>

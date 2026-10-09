@@ -12,7 +12,7 @@ interface StoredTransactionsBreakdownProps {
 }
 
 function amountClass(amount: number): string {
-  return amount < 0 ? 'text-[#9c3633]' : 'text-[#3c763d]';
+  return amount < 0 ? 'text-depasse' : 'text-ok';
 }
 
 // booked_on est une date ISO (aaaa-mm-jj) : on la découpe sans passer par Date pour éviter tout décalage de fuseau.
@@ -22,10 +22,10 @@ function formatShortDate(isoDate: string): string {
 
 function TransactionsList({ transactions }: { transactions: StoredTransaction[] }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#d8b7a5]/60 bg-white/40">
+    <div className="overflow-hidden rounded-xl border border-bordure/60 bg-white/40">
       <table className="w-full min-w-0 border-collapse text-left text-[11px] sm:text-sm">
         <thead>
-          <tr className="bg-[#efe0d6] text-[#5d4d44]">
+          <tr className="bg-surface-douce text-texte">
             <th scope="col" className="px-2 py-2 font-bold sm:px-3">Date</th>
             <th scope="col" className="px-2 py-2 font-bold sm:px-3">Libellé</th>
             <th scope="col" className="px-2 py-2 text-right font-bold sm:px-3">Montant</th>
@@ -35,9 +35,9 @@ function TransactionsList({ transactions }: { transactions: StoredTransaction[] 
           {transactions.map((transaction) => {
             const amount = Number(transaction.amount);
             return (
-              <tr key={transaction.id} className="border-t border-[#d8b7a5]/40 align-top">
-                <td className="px-2 py-2 text-[#5d4d44] sm:px-3">{formatShortDate(transaction.booked_on)}</td>
-                <td className="max-w-[220px] break-words px-2 py-2 text-[#5d4d44] sm:px-3">{transaction.label}</td>
+              <tr key={transaction.id} className="border-t border-bordure/40 align-top">
+                <td className="px-2 py-2 text-texte sm:px-3">{formatShortDate(transaction.booked_on)}</td>
+                <td className="max-w-[220px] break-words px-2 py-2 text-texte sm:px-3">{transaction.label}</td>
                 <td className={`px-2 py-2 text-right font-semibold sm:px-3 ${amountClass(amount)}`}>
                   {signedEuroFormatter.format(amount)}
                 </td>
@@ -60,12 +60,12 @@ export default function StoredTransactionsBreakdown({ breakdown }: StoredTransac
       {breakdown.uncategorized.length > 0 && (
         <section
           aria-labelledby="uncategorized-title"
-          className="space-y-3 rounded-xl border border-[#d8846d] bg-[#fdf0ea] p-3"
+          className="space-y-3 rounded-xl border border-accent bg-surface p-3"
         >
-          <h3 id="uncategorized-title" className="text-lg font-black text-[#7a3b2a]">
+          <h3 id="uncategorized-title" className="text-lg font-black text-accent-fort">
             À catégoriser ({breakdown.uncategorized.length})
           </h3>
-          <p className="text-sm text-[#7a3b2a]">
+          <p className="text-sm text-accent-fort">
             Aucune règle de libellé ne correspond à ces opérations.
           </p>
           <TransactionsList transactions={breakdown.uncategorized} />
@@ -81,7 +81,7 @@ export default function StoredTransactionsBreakdown({ breakdown }: StoredTransac
             aria-label={`Détail ${group.title}`}
             className={`overflow-hidden rounded-xl border ${palette.border} ${palette.section}`}
           >
-            <h3 className={`flex items-center justify-between gap-3 px-4 py-3 font-black text-[#5d4d44] ${palette.header}`}>
+            <h3 className={`flex items-center justify-between gap-3 px-4 py-3 font-black text-texte ${palette.header}`}>
               <span>{group.title}</span>
               <span className={amountClass(group.total)}>{signedEuroFormatter.format(group.total)}</span>
             </h3>
@@ -147,13 +147,13 @@ function ExpandableCategoryRows({
             type="button"
             onClick={onToggle}
             aria-expanded={isExpanded}
-            className="flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left font-semibold text-[#5d4d44] transition hover:bg-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5d4d44]"
+            className="flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left font-semibold text-texte transition hover:bg-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus"
           >
-            <span aria-hidden="true" className="text-[11px] font-black text-[#6a534c]">{isExpanded ? '▾' : '▸'}</span>
+            <span aria-hidden="true" className="text-[11px] font-black text-texte-doux">{isExpanded ? '▾' : '▸'}</span>
             {label}
           </button>
         </td>
-        <td className={`${TABLE_STYLES.cellCategory} whitespace-nowrap text-sm text-[#6b574c]`}>
+        <td className={`${TABLE_STYLES.cellCategory} whitespace-nowrap text-sm text-texte-doux`}>
           {count} op.
         </td>
         <td className={`${TABLE_STYLES.cellAmount} ${amountClass(total)}`}>
@@ -162,7 +162,7 @@ function ExpandableCategoryRows({
       </tr>
       {isExpanded && (
         <tr>
-          <td colSpan={3} className="bg-[#f9f1ea] p-3">
+          <td colSpan={3} className="bg-surface p-3">
             <TransactionsList transactions={transactions} />
           </td>
         </tr>

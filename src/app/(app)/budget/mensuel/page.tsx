@@ -93,13 +93,13 @@ export default function MonthBudgetPage() {
   const isPastMonth = currentMonthIndex < currentCalendarMonth;
 
   const monthControls = (
-    <div className="flex items-center gap-1 rounded-xl border border-[#d8b7a5] bg-white/70 p-1">
+    <div className="flex items-center gap-1 rounded-xl border border-bordure bg-white/70 p-1">
       <button
         type="button"
         onClick={handlePrevMonth}
         disabled={currentMonthIndex <= currentCalendarMonth}
         aria-label="Mois précédent"
-        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-[#5a473d] hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:text-[#8a8a8a]"
+        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-texte hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:text-texte-doux"
       >
         <span aria-hidden="true">←</span>
       </button>
@@ -108,7 +108,7 @@ export default function MonthBudgetPage() {
         id="month-selector"
         value={currentMonthIndex}
         onChange={(e) => setCurrentMonthIndex(Number(e.target.value))}
-        className="min-h-11 rounded-lg border-2 border-[#9c7560] bg-white px-2 text-sm font-bold text-[#54433d]"
+        className="min-h-11 rounded-lg border-2 border-bordure-forte bg-white px-2 text-sm font-bold text-texte"
       >
         {MONTHS.map((m, idx) => (
           <option key={m.key} value={idx} disabled={idx < currentCalendarMonth}>
@@ -121,7 +121,7 @@ export default function MonthBudgetPage() {
         onClick={handleNextMonth}
         disabled={currentMonthIndex >= MONTHS.length - 1}
         aria-label="Mois suivant"
-        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-[#5a473d] hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:text-[#8a8a8a]"
+        className="flex h-11 w-11 items-center justify-center rounded-lg font-bold text-texte hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:text-texte-doux"
       >
         <span aria-hidden="true">→</span>
       </button>
@@ -133,7 +133,7 @@ export default function MonthBudgetPage() {
       type="button"
       onClick={handleSaveBudget}
       disabled={isSavingBudget || isPastMonth || dataGroups.length === 0}
-      className="min-h-11 rounded-xl border-2 border-[#6e8f72] bg-[#7fa984] px-4 text-sm font-bold text-[#17301c] shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:opacity-60"
+      className="min-h-11 rounded-xl border-2 border-bordure bg-ok-fond px-4 text-sm font-bold text-ok shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60"
     >
       {isSavingBudget ? 'Enregistrement...' : 'Valider budget'}
     </button>
@@ -156,10 +156,10 @@ export default function MonthBudgetPage() {
       ) : (
         <div className="flex flex-col gap-1 md:h-full md:min-h-0">
           {budgetSaveMessage && (
-            <p className="shrink-0 text-sm font-semibold text-[#1f4d25]" role="status">{budgetSaveMessage}</p>
+            <p className="shrink-0 text-sm font-semibold text-ok" role="status">{budgetSaveMessage}</p>
           )}
           {budgetSaveError && (
-            <p className="shrink-0 text-sm font-semibold text-[#9c3633]" role="alert">{budgetSaveError}</p>
+            <p className="shrink-0 text-sm font-semibold text-depasse" role="alert">{budgetSaveError}</p>
           )}
           <SectionStack
             label="Parties du budget du mois"

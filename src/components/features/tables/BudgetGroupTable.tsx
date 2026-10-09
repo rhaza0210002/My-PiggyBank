@@ -72,11 +72,11 @@ export default function BudgetGroupTable({
 
   return (
     <section className={`rounded-carte sm:rounded-carte border-[3px] border-dashed ${palette.border} ${palette.section} p-3 sm:p-4 shadow-bonbon`}>
-      <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-[#5d4d44]">
+      <h2 className="mb-2 px-2 text-center text-[clamp(1rem,1.5vw,1.25rem)] font-black tracking-[-0.05em] text-texte">
         {group.title} — {monthLabel}
       </h2>
       {getGroupHint(group.key) && (
-        <p className="mb-2 px-2 text-center text-xs text-[#6b574c]">{getGroupHint(group.key)}</p>
+        <p className="mb-2 px-2 text-center text-xs text-texte-doux">{getGroupHint(group.key)}</p>
       )}
 
       <div role="region" aria-label={`Tableau ${group.title}`} tabIndex={0} className={`w-full overflow-x-auto rounded-xl border ${palette.border} ${palette.table} shadow-inner`}>
@@ -85,7 +85,7 @@ export default function BudgetGroupTable({
           aria-label={`Tableau de ${group.title}`}
         >
           <thead>
-            <tr className={`${palette.header} text-[#5a473d]`}>
+            <tr className={`${palette.header} text-texte`}>
               <th scope="col" className={TABLE_STYLES.thCategory}>Catégorie</th>
               <th scope="col" className={TABLE_STYLES.thAmount}>
                 Montant ({monthLabel})
@@ -95,7 +95,7 @@ export default function BudgetGroupTable({
           <tbody>
             {group.rows.length === 0 ? (
               <tr>
-                <td colSpan={2} className="py-6 text-center text-[1rem] sm:text-[1.1rem] italic text-[#6b574c]">
+                <td colSpan={2} className="py-6 text-center text-[1rem] sm:text-[1.1rem] italic text-texte-doux">
                   Aucune donnée pour cette période.
                 </td>
               </tr>
@@ -117,7 +117,7 @@ export default function BudgetGroupTable({
                           onChange={(event) => setDraftAmount(event.target.value)}
                           onKeyDown={(event) => handleEditorKeyDown(event, row.category)}
                           aria-label={`Modifier le montant de ${row.category}`}
-                          className="w-28 rounded-md border border-[#d8b7a5] bg-white px-2 py-1 text-right text-sm font-semibold text-[#54433d] outline-none focus:ring-2 focus:ring-[#5b473d]"
+                          className="w-28 rounded-md border border-bordure bg-white px-2 py-1 text-right text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
                         />
                         <button
                           type="button"
@@ -147,7 +147,7 @@ export default function BudgetGroupTable({
                             onClick={() => beginEditing(row.category, row.values[monthIndex] ?? '-')}
                             title="Modifier le montant"
                             aria-label={`Modifier le montant de ${row.category}`}
-                            className="rounded p-1 text-[#6a534c] opacity-0 transition-opacity hover:bg-white/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5d4d44] group-hover:opacity-100 group-focus-within:opacity-100"
+                            className="rounded p-1 text-texte-doux opacity-0 transition-opacity hover:bg-white/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus group-hover:opacity-100 group-focus-within:opacity-100"
                           >
                             <Pencil size={16} aria-hidden="true" />
                           </button>

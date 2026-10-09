@@ -8,9 +8,9 @@ import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
 import { deleteMyAccount, exportMyData } from '@/services/personalDataService';
 import { exportFileName } from '@/utils/dataExport';
 
-const CARD = 'rounded-3xl border border-[#e5c4b4] bg-[#fff8f2] p-4 shadow-sm';
+const CARD = 'rounded-3xl border border-bordure bg-surface p-4 shadow-sm';
 const BUTTON =
-  'min-h-11 rounded-2xl border border-[#E5C4B4] bg-[#F8D5CB] px-4 text-sm font-semibold text-[#8f3d24] transition-colors hover:bg-[#f2c4b6] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-60';
+  'min-h-11 rounded-2xl border border-bordure bg-accent-doux px-4 text-sm font-semibold text-accent-fort transition-colors hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-60';
 const CONFIRMATION_WORD = 'SUPPRIMER';
 
 export default function MyDataPage() {
@@ -65,8 +65,8 @@ export default function MyDataPage() {
     <ScreenCard title="Mes données" icon="🔐" subtitle="Tu gardes la main : récupère-les ou supprime-les, quand tu veux.">
       <div className="grid gap-3 md:grid-cols-2">
         <section aria-labelledby="export-title" className={CARD}>
-          <h2 id="export-title" className="text-lg font-bold text-[#5a4d41]">Récupérer mes données</h2>
-          <p className="mt-1 text-sm text-[#6b574c]">
+          <h2 id="export-title" className="text-lg font-bold text-texte">Récupérer mes données</h2>
+          <p className="mt-1 text-sm text-texte-doux">
             Télécharge un fichier lisible (JSON) avec ton profil, tes opérations, ton budget, tes règles de libellé et
             tes réglages.
           </p>
@@ -83,9 +83,9 @@ export default function MyDataPage() {
           )}
         </section>
 
-        <section aria-labelledby="delete-title" className={`${CARD} border-[#d6a3a0]`}>
-          <h2 id="delete-title" className="text-lg font-bold text-[#5a4d41]">Supprimer mon compte</h2>
-          <p className="mt-1 text-sm text-[#6b574c]">
+        <section aria-labelledby="delete-title" className={`${CARD} border-bordure`}>
+          <h2 id="delete-title" className="text-lg font-bold text-texte">Supprimer mon compte</h2>
+          <p className="mt-1 text-sm text-texte-doux">
             Ton profil, tes opérations, ton budget, tes règles et tes réglages sont effacés <strong>définitivement</strong>.
             Pense à télécharger tes données avant.
           </p>
@@ -96,7 +96,7 @@ export default function MyDataPage() {
             </button>
           ) : (
             <form onSubmit={handleDelete} className="mt-3 space-y-2">
-              <label htmlFor={confirmId} className="block text-sm font-semibold text-[#5a4d41]">
+              <label htmlFor={confirmId} className="block text-sm font-semibold text-texte">
                 Pour confirmer, écris {CONFIRMATION_WORD}
               </label>
               <input
@@ -106,13 +106,13 @@ export default function MyDataPage() {
                 onChange={(event) => setConfirmation(event.target.value)}
                 autoComplete="off"
                 autoFocus
-                className="min-h-11 w-full rounded-xl border-2 border-[#9c7560] bg-white px-3 text-[#5a4d41]"
+                className="min-h-11 w-full rounded-xl border-2 border-bordure-forte bg-white px-3 text-texte"
               />
               <div className="flex flex-wrap gap-2">
                 <button
                   type="submit"
                   disabled={isDeleting || confirmation.trim().toUpperCase() !== CONFIRMATION_WORD}
-                  className="min-h-11 rounded-2xl border-2 border-[#8f2d2a] bg-[#8f2d2a] px-4 text-sm font-bold text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
+                  className="min-h-11 rounded-2xl border-2 border-accent-fort bg-depasse px-4 text-sm font-bold text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
                 >
                   {isDeleting ? 'Suppression…' : 'Supprimer définitivement'}
                 </button>
@@ -136,30 +136,30 @@ export default function MyDataPage() {
         </section>
 
         <section aria-labelledby="rights-title" className={`${CARD} md:col-span-2`}>
-          <h2 id="rights-title" className="text-lg font-bold text-[#5a4d41]">Tes droits et nos engagements</h2>
+          <h2 id="rights-title" className="text-lg font-bold text-texte">Tes droits et nos engagements</h2>
           <ul className="mt-2 grid gap-1 text-sm sm:grid-cols-2">
             <li>
-              <Link href={LEGAL_ROUTES.privacy} className="inline-flex min-h-8 items-center font-semibold text-[#8c4a38] underline">
+              <Link href={LEGAL_ROUTES.privacy} className="inline-flex min-h-8 items-center font-semibold text-accent-fort underline">
                 Politique de confidentialité
               </Link>
             </li>
             <li>
-              <Link href={LEGAL_ROUTES.cookies} className="inline-flex min-h-8 items-center font-semibold text-[#8c4a38] underline">
+              <Link href={LEGAL_ROUTES.cookies} className="inline-flex min-h-8 items-center font-semibold text-accent-fort underline">
                 Cookies et stockage local
               </Link>
             </li>
             <li>
-              <Link href={LEGAL_ROUTES.terms} className="inline-flex min-h-8 items-center font-semibold text-[#8c4a38] underline">
+              <Link href={LEGAL_ROUTES.terms} className="inline-flex min-h-8 items-center font-semibold text-accent-fort underline">
                 Conditions d’utilisation
               </Link>
             </li>
             <li>
-              <Link href={LEGAL_ROUTES.legalNotice} className="inline-flex min-h-8 items-center font-semibold text-[#8c4a38] underline">
+              <Link href={LEGAL_ROUTES.legalNotice} className="inline-flex min-h-8 items-center font-semibold text-accent-fort underline">
                 Mentions légales
               </Link>
             </li>
           </ul>
-          <p className="mt-2 text-xs text-[#6b574c]">
+          <p className="mt-2 text-xs text-texte-doux">
             Pseudo et mot de passe se modifient dans la page Profil. Pour toute autre demande (limitation, opposition),
             utilise le contact indiqué dans la politique de confidentialité.
           </p>

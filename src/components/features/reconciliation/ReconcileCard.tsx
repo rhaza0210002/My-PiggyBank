@@ -59,11 +59,11 @@ export default function ReconcileCard({
   return (
     <article
       aria-labelledby="reconcile-title"
-      className="space-y-2.5 rounded-carte border-[3px] border-[#d7b59d] bg-[#fff8f2] p-3 shadow-bonbon motion-safe:animate-[pop_0.35s_ease-out_1] sm:p-4"
+      className="space-y-2.5 rounded-carte border-[3px] border-bordure bg-surface p-3 shadow-bonbon motion-safe:animate-[pop_0.35s_ease-out_1] sm:p-4"
     >
       <div className="flex flex-col items-center gap-1 text-center">
         <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-[0.1em] text-[#6b574c]">
+          <p className="text-xs font-bold uppercase tracking-[0.1em] text-texte-doux">
             Il en reste {remaining} · <span className="capitalize">{formatDate(transaction.booked_on)}</span>
             {monthLabel && <span className="sr-only"> ({monthLabel})</span>}
           </p>
@@ -71,12 +71,12 @@ export default function ReconcileCard({
             id="reconcile-title"
             ref={titleRef}
             tabIndex={-1}
-            className="mt-0.5 break-words text-xl font-black leading-tight text-[#5d4d44] outline-none [overflow-wrap:anywhere] sm:text-2xl"
+            className="mt-0.5 break-words text-xl font-black leading-tight text-texte outline-none [overflow-wrap:anywhere] sm:text-2xl"
           >
             {transaction.label}
           </h2>
         </div>
-        <p className={`shrink-0 rounded-full px-4 py-0.5 text-2xl font-black sm:text-3xl ${amount < 0 ? 'bg-[#f8e5da] text-[#9c3633]' : 'bg-[#eaf4e6] text-[#2f5d32]'}`}>
+        <p className={`shrink-0 rounded-full px-4 py-0.5 text-2xl font-black sm:text-3xl ${amount < 0 ? 'bg-surface-douce text-depasse' : 'bg-ok-fond text-ok'}`}>
           {signedEuroFormatter.format(amount)}
         </p>
       </div>
@@ -87,12 +87,12 @@ export default function ReconcileCard({
             type="button"
             disabled={isBusy}
             onClick={() => onChangeCategory(suggestion.category.id)}
-            className="min-h-12 rounded-2xl border-[3px] border-[#a3452a] bg-[#fff1ea] px-4 text-base font-black text-[#7a2f1a] shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
+            className="min-h-12 rounded-2xl border-[3px] border-accent-fort bg-surface px-4 text-base font-black text-depasse shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
           >
             <span aria-hidden="true">✨ </span>
             {suggestion.category.label}
           </button>
-          <p className="mt-1 text-xs font-semibold text-[#6b574c]">
+          <p className="mt-1 text-xs font-semibold text-texte-doux">
             {suggestion.kind === 'exact'
               ? `Suggestion : déjà rangé là ${suggestion.count} fois`
               : 'Suggestion : ressemble à tes pointages passés'}
@@ -109,7 +109,7 @@ export default function ReconcileCard({
               disabled={isBusy}
               aria-pressed={item.id === transaction.category_id}
               onClick={() => onChangeCategory(item.id)}
-              className="min-h-11 rounded-full border-2 border-[#d8b7a5] bg-white px-3 text-sm font-semibold text-[#5a4d41] transition-colors hover:bg-[#F8D5CB] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50 aria-pressed:border-[#a3452a] aria-pressed:bg-[#F8D5CB] aria-pressed:font-bold aria-pressed:text-[#7a2f1a]"
+              className="min-h-11 rounded-full border-2 border-bordure bg-white px-3 text-sm font-semibold text-texte transition-colors hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50 aria-pressed:border-accent-fort aria-pressed:bg-accent-doux aria-pressed:font-bold aria-pressed:text-accent-fort"
             >
               {item.label}
             </button>
@@ -118,16 +118,16 @@ export default function ReconcileCard({
       )}
 
       <div>
-        <label htmlFor="reconcile-category" className="block text-center text-sm font-bold text-[#5d4d44]">
+        <label htmlFor="reconcile-category" className="block text-center text-sm font-bold text-texte">
           Catégorie
-          {category && <span className="ml-2 font-semibold text-[#2f5d32]">✓ choisie</span>}
+          {category && <span className="ml-2 font-semibold text-ok">✓ choisie</span>}
         </label>
         <select
           id="reconcile-category"
           value={transaction.category_id ?? ''}
           disabled={isBusy}
           onChange={(event) => onChangeCategory(event.target.value)}
-          className="mt-1 min-h-12 w-full rounded-xl border-2 border-[#9c7560] bg-white px-3 text-center text-base text-[#5d4d44] disabled:opacity-50"
+          className="mt-1 min-h-12 w-full rounded-xl border-2 border-bordure-forte bg-white px-3 text-center text-base text-texte disabled:opacity-50"
         >
           <option value="">— Choisir une catégorie —</option>
           {categoryGroups.map((group) => {
@@ -151,7 +151,7 @@ export default function ReconcileCard({
           type="button"
           onClick={onReconcile}
           disabled={isBusy || !transaction.category_id}
-          className="min-h-14 flex-1 rounded-carte border-[3px] border-[#e4a58f] bg-[#e59a86] px-5 text-lg font-black text-[#3d2a21] shadow-bonbon transition-all hover:translate-y-[2px] hover:shadow-bonbon focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none"
+          className="min-h-14 flex-1 rounded-carte border-[3px] border-bordure bg-accent px-5 text-lg font-black text-sur-accent shadow-bonbon transition-all hover:translate-y-[2px] hover:shadow-bonbon focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none"
         >
           {transaction.category_id ? 'Pointer ✓' : 'Choisis une catégorie'}
         </button>
@@ -160,7 +160,7 @@ export default function ReconcileCard({
             type="button"
             onClick={onSkip}
             disabled={isBusy}
-            className="min-h-14 rounded-carte border-2 border-[#b88f78] bg-white/70 px-5 font-bold text-[#5d4d44] transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] disabled:opacity-50"
+            className="min-h-14 rounded-carte border-2 border-bordure-forte bg-white/70 px-5 font-bold text-texte transition hover:bg-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50"
           >
             Plus tard
           </button>
@@ -182,7 +182,7 @@ export default function ReconcileCard({
           <button
             type="button"
             onClick={() => setIsRuleOpen(true)}
-            className="mx-auto flex min-h-11 items-center rounded-lg px-1 text-center text-sm font-bold text-[#8c4a38] underline underline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d]"
+            className="mx-auto flex min-h-11 items-center rounded-lg px-1 text-center text-sm font-bold text-accent-fort underline underline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Retenir ce libellé pour les prochains imports
           </button>

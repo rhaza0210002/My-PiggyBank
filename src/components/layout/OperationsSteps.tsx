@@ -24,11 +24,11 @@ export default function OperationsSteps() {
               <Link
                 href={step.href}
                 aria-current={isCurrent ? 'step' : undefined}
-                className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border-2 border-[#d8b7a5] bg-[#fff8f2] px-2 text-sm font-semibold text-[#5a4d41] transition hover:-translate-y-0.5 hover:bg-[#F8D5CB] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#5b473d] aria-[current=step]:border-[#a3452a] aria-[current=step]:bg-[#F8D5CB] aria-[current=step]:font-black aria-[current=step]:text-[#7a2f1a]"
+                className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border-2 border-bordure bg-surface px-2 text-sm font-semibold text-texte transition hover:-translate-y-0.5 hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus aria-[current=step]:border-accent-fort aria-[current=step]:bg-accent-doux aria-[current=step]:font-black aria-[current=step]:text-accent-fort"
               >
                 <span
                   aria-hidden="true"
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#a3452a] text-xs font-black text-white"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-fort text-xs font-black text-white"
                 >
                   {index + 1}
                 </span>
