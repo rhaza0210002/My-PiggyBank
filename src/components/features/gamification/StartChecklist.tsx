@@ -5,10 +5,9 @@ interface StartChecklistProps {
   steps: StartStep[];
 }
 
-/** Encart « 3 pas pour commencer » : un seul pas mis en avant à la fois, les autres restent lisibles. */
+/** Encart « 3 pas pour commencer » : un seul pas mis en avant à la fois, les autres restent lisibles. Il reste affiché une fois tout fait, pour garder le parcours en tête. */
 export default function StartChecklist({ steps }: StartChecklistProps) {
   const next = getNextStep(steps);
-  if (!next) return null;
   const doneCount = steps.filter((step) => step.done).length;
 
   return (
@@ -21,7 +20,7 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
       </h2>
       <ol className="mt-2 grid gap-2 md:grid-cols-3">
         {steps.map((step, index) => {
-          const isNext = step.id === next.id;
+          const isNext = step.id === next?.id;
           return (
             <li
               key={step.id}
@@ -47,12 +46,22 @@ export default function StartChecklist({ steps }: StartChecklistProps) {
                 {step.done && <span className="sr-only"> : fait</span>}
               </p>
               {!step.done && <p className="text-xs text-texte-doux">{step.hint}</p>}
+              {step.done && step.edit && <p className="text-xs text-texte-doux">{step.edit.note}</p>}
               {isNext && (
                 <Link
                   href={step.href}
                   className="mt-1 inline-flex min-h-11 items-center rounded-carte border-[3px] border-bordure bg-accent px-5 font-black text-sur-accent shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 >
                   C’est parti
+                </Link>
+              )}
+              {step.done && step.edit && (
+                <Link
+                  href={step.href}
+                  aria-label={`${step.edit.label} ${step.id === 'budget' ? 'mon budget' : step.title.toLowerCase()} : ${step.edit.note.charAt(0).toLowerCase()}${step.edit.note.slice(1).replace(/\.$/, '')}`}
+                  className="mt-1 inline-flex min-h-11 items-center rounded-carte border-[3px] border-texte bg-surface px-5 font-black text-texte shadow-bonbon transition-transform hover:translate-y-[2px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                >
+                  {step.edit.label}
                 </Link>
               )}
             </li>
