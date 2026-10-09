@@ -21,6 +21,7 @@ export default function BalanceCard({ monthName, isShown, onToggle, amountText, 
   return (
     <section
       aria-labelledby={titleId}
+      data-penche
       style={style}
       className={`flex flex-col gap-2 rounded-carte border-2 border-texte bg-cochon p-4 shadow-sticker sm:p-5 ${className}`}
     >
