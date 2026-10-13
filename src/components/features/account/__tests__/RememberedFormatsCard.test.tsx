@@ -29,3 +29,10 @@ describe('Mes données : réglages d’import retenus sur l’appareil', () => {
     expect(render(0, true)).toMatch(/role="status"[^>]*>C’est oublié\./);
   });
 });
+
+describe('Mes données : focus après « Oublier »', () => {
+  it('le titre de la carte peut recevoir le focus (le bouton disparaît)', () => {
+    const html = renderToStaticMarkup(<RememberedFormatsView count={2} forgotten={false} onForget={() => {}} />);
+    expect(html).toMatch(/<h2 id="formats-title"[^>]*tabindex="-1"/);
+  });
+});

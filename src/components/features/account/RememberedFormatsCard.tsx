@@ -16,7 +16,14 @@ interface RememberedFormatsViewProps {
 export function RememberedFormatsView({ count, forgotten, onForget }: RememberedFormatsViewProps) {
   return (
     <section aria-labelledby="formats-title" className={CARD}>
-      <h2 id="formats-title" className="text-lg font-bold text-texte">Réglages d’import retenus sur cet appareil</h2>
+      {/* Le bouton « Oublier » disparaît une fois cliqué : le focus revient sur ce titre. */}
+      <h2
+        id="formats-title"
+        tabIndex={-1}
+        className="rounded-lg text-lg font-bold text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      >
+        Réglages d’import retenus sur cet appareil
+      </h2>
       <p className="mt-1 text-sm text-texte-doux">
         Tes réponses aux questions d’import (quelle colonne est la date, le montant…), pour ne pas te les reposer.
         Gardées dans ce navigateur seulement, sans aucune opération ni aucun montant.
@@ -51,6 +58,7 @@ export default function RememberedFormatsCard() {
       onForget={() => {
         forgetFormats();
         setForgotten(true);
+        document.getElementById('formats-title')?.focus();
       }}
     />
   );

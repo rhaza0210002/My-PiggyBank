@@ -50,7 +50,11 @@ export default function CsvUploaderPage() {
   useEffect(() => {
     if (transactions.length === 0 && !pending) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (resultsRef.current) scrollIntoZone(resultsRef.current, reduced ? 'auto' : 'smooth');
+    if (!resultsRef.current) return;
+    scrollIntoZone(resultsRef.current, reduced ? 'auto' : 'smooth');
+    // « Importer » ou « Refaire les questions » ont disparu sous le doigt : le focus reprend sur les résultats.
+    const focusLost = !document.activeElement || document.activeElement === document.body;
+    if (focusLost) resultsRef.current.focus({ preventScroll: true });
   }, [transactions, pending]);
 
   const showLines = async (lines: StatementLine[], replacesDemo: boolean) => {
@@ -201,7 +205,7 @@ export default function CsvUploaderPage() {
             : ''}
         </p>
 
-        <div ref={resultsRef} className="scroll-mt-2 space-y-3">
+        <div ref={resultsRef} tabIndex={-1} aria-label="Résultat de la lecture" className="scroll-mt-2 space-y-3 outline-none">
           {pending && (
             <ColumnMappingSteps
               key={`${fileName}-${pending.doubts.join()}`}

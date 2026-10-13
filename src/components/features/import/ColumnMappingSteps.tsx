@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MONTHS } from '@/constants/tableStyles';
 import { signedEuroFormatter } from '@/utils/formatEuro';
 import { applyMapping } from '@/utils/statementImport/applyMapping';
@@ -80,16 +80,32 @@ export default function ColumnMappingSteps({ table, initialMapping, doubts, onCo
 
   const cellTone = (column: number) => (column === selected ? 'bg-accent' : '');
 
+  // À chaque nouvelle question, le focus va sur son titre : elle est lue, et « Retour » qui disparaît ne perd
+  // pas le focus. À l'arrivée de l'étape, seulement si le focus était perdu (bouton démonté).
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const isFirstStep = useRef(true);
+  useEffect(() => {
+    const focusLost = !document.activeElement || document.activeElement === document.body;
+    if (!isFirstStep.current || focusLost) headingRef.current?.focus({ preventScroll: true });
+    isFirstStep.current = false;
+  }, [index]);
+
   return (
-    <section aria-labelledby="associer-titre" className="space-y-4 rounded-carte border-2 border-texte bg-surface p-4 shadow-sticker-petit">
+    <section aria-label="Associer les colonnes" className="space-y-4 rounded-carte border-2 border-texte bg-surface p-4 shadow-sticker-petit">
       <p className="rounded-xl bg-attention-fond px-4 py-2.5 text-sm font-semibold text-attention">{doubtReason(doubts)}</p>
 
       {question && (
         <div className="space-y-2">
-          <p className="text-sm font-semibold text-texte-doux">
+          <p id="associer-compte" className="text-sm font-semibold text-texte-doux">
             Question {index + 1} sur {questions.length}
           </p>
-          <h2 id="associer-titre" className="text-lg font-black text-texte">
+          <h2
+            ref={headingRef}
+            id="associer-titre"
+            tabIndex={-1}
+            aria-describedby="associer-compte"
+            className="rounded-lg text-lg font-black text-texte focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          >
             <QuestionTitle question={question} />
           </h2>
 
@@ -148,7 +164,7 @@ export default function ColumnMappingSteps({ table, initialMapping, doubts, onCo
                   {columnRole && clickable.includes(column) ? (
                     <button
                       type="button"
-                      aria-label={`Choisir la colonne ${header}`}
+                      aria-label={`Choisir la colonne ${header || column + 1}`}
                       aria-pressed={column === selected}
                       onClick={() => setMapping(answerColumn(mapping, columnRole, column))}
                       className="-mx-2 rounded-lg px-2 py-1 text-left font-bold underline decoration-2 underline-offset-4 hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"

@@ -75,3 +75,28 @@ describe('ColumnMappingSteps : jamais le solde pour un montant', () => {
     expect(html).not.toContain('aria-label="Choisir la colonne Solde"');
   });
 });
+
+describe('ColumnMappingSteps : lecteurs d’écran et clavier', () => {
+  const render = (table = twoAmounts, doubts: Parameters<typeof ColumnMappingSteps>[0]['doubts'] = ['montant']) =>
+    renderToStaticMarkup(
+      <ColumnMappingSteps table={table} initialMapping={detectMapping(table).mapping} doubts={doubts} onConfirm={() => {}} />,
+    );
+
+  it('peut recevoir le focus sur la question, qui annonce aussi où on en est', () => {
+    const heading = render().match(/<h2[^>]*>/)?.[0] ?? '';
+    expect(heading).toContain('tabindex="-1"');
+    expect(heading).toContain('aria-describedby="associer-compte"');
+    expect(render()).toMatch(/id="associer-compte"[^>]*>Question 1 sur 3/);
+  });
+
+  it('reste nommée quand il n’y a aucune question à poser', () => {
+    const html = render(sg, []);
+    expect(html).not.toContain('Question 1');
+    expect(html).toMatch(/<section[^>]*aria-label="Associer les colonnes"/);
+  });
+
+  it('nomme une colonne sans en-tête par sa place', () => {
+    const blank = { ...sg, headers: sg.headers.map((header, index) => (index === 1 ? '' : header)) };
+    expect(render(blank, ['libelle'])).toContain('aria-label="Choisir la colonne 2"');
+  });
+});
