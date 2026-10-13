@@ -3,6 +3,7 @@
 import { useId, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import RememberedFormatsCard from '@/components/features/account/RememberedFormatsCard';
 import ScreenCard from '@/components/ui/ScreenCard';
 import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
 import { deleteMyAccount, exportMyData } from '@/services/personalDataService';
@@ -134,6 +135,10 @@ export default function MyDataPage() {
             </form>
           )}
         </section>
+
+        <div className="md:col-span-2">
+          <RememberedFormatsCard />
+        </div>
 
         <section aria-labelledby="rights-title" className={`${CARD} md:col-span-2`}>
           <h2 id="rights-title" className="text-lg font-bold text-texte">Tes droits et nos engagements</h2>

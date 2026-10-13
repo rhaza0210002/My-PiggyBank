@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import SectionStack, { withFirstRevealed } from '@/components/ui/SectionStack';
+import SectionStack, { ownsScroll, withFirstRevealed } from '@/components/ui/SectionStack';
 
 const sections = [
   { id: 'un', label: 'Décaissement', content: <p>Premier tableau</p> },
@@ -48,6 +48,17 @@ describe('SectionStack sans zone de hauteur fixe (import de relevé)', () => {
     expect(html).not.toContain('container-type');
     expect(html).not.toContain('snap-');
     expect(html).not.toContain('100cqh');
+  });
+
+  it('ne défile pas toute seule dans la carte : un seul défilement, sinon le bloc suivant reste un grand blanc', () => {
+    expect(html).not.toContain('overflow-y-auto');
+  });
+
+  it('guette l’arrivée des blocs dans la fenêtre, pas dans une zone qui ne défile pas', () => {
+    expect(ownsScroll(false, true)).toBe(false);
+    expect(ownsScroll(false, false)).toBe(false);
+    expect(ownsScroll(true, false)).toBe(false);
+    expect(ownsScroll(true, true)).toBe(true);
   });
 });
 

@@ -13,6 +13,7 @@ import {
   type CategoryTransactionGroup,
 } from '@/utils/csvTransactionGrouping';
 import type { BankTransaction } from '@/services/csvParser';
+import { euroFormatter } from '@/utils/formatEuro';
 import Icon from '@/components/ui/Icon';
 
 interface CsvTransactionsTableProps {
@@ -77,7 +78,7 @@ function CategoryRows({
         </td>
         <td className={TABLE_STYLES.cellCategory}>{group.records.length}</td>
         <td className={`${TABLE_STYLES.cellAmount} ${group.totalAmount < 0 ? 'text-depasse' : 'text-ok'}`}>
-          {group.totalAmount.toFixed(2)} €
+          {euroFormatter.format(group.totalAmount)}
         </td>
       </tr>
       {isExpanded && (
@@ -100,7 +101,7 @@ function CategoryRows({
                         {transaction.label || transaction.detail}
                       </td>
                       <td className={`px-2 py-2 text-right font-semibold sm:px-3 ${transaction.amount < 0 ? 'text-depasse' : 'text-ok'}`}>
-                        {transaction.amount.toFixed(2)} €
+                        {euroFormatter.format(transaction.amount)}
                       </td>
                     </tr>
                   ))}
@@ -237,7 +238,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
           </p>
           {categorizedCount === 0 && unmatchedExamples.length > 0 && (
             <p className="rounded-lg border-[1.5px] border-bordure bg-surface/50 p-3 text-sm text-texte-doux" role="alert">
-              Aucun détail ne correspond aux labels de <code>libelle_transacts</code>. Exemples lus : {unmatchedExamples.join(' | ')}
+              Aucune opération n’a été reconnue automatiquement. Tu pourras les ranger dans Pointer. Exemples lus : {unmatchedExamples.join(' | ')}
             </p>
           )}
           <div role="region" aria-label="Transactions importées" tabIndex={0} className="max-w-full overflow-x-auto rounded-xl border-[1.5px] border-bordure/50 shadow-inner">
@@ -245,7 +246,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
               <thead>
                 <tr className="bg-surface-douce text-texte">
                   <th scope="col" className={TABLE_STYLES.thCategory}>Groupe / Catégorie</th>
-                  <th scope="col" className={TABLE_STYLES.thCategory}>Nb items</th>
+                  <th scope="col" className={TABLE_STYLES.thCategory}>Opérations</th>
                   <th scope="col" className={TABLE_STYLES.thAmount}>Montant</th>
                 </tr>
               </thead>

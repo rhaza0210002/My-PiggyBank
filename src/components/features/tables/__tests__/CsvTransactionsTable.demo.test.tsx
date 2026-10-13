@@ -28,6 +28,27 @@ describe('CsvTransactionsTable en exemple', () => {
   });
 });
 
+describe('CsvTransactionsTable : montants et titres en français', () => {
+  const html = renderToStaticMarkup(<CsvTransactionsTable transactions={transactions} isDemo />);
+
+  it('écrit les montants au format français (virgule, espace des milliers)', () => {
+    expect(html).not.toMatch(/\d\.\d{2} €/);
+    expect(html).toMatch(/\d,\d{2}\s€/);
+  });
+
+  it('ne parle jamais de la table technique des règles', () => {
+    const uncategorized = transactions.map((transaction) => ({ ...transaction, categoryId: null, categoryKey: null, categoryLabel: null, label: '' }));
+    const plain = renderToStaticMarkup(<CsvTransactionsTable transactions={uncategorized} />);
+    expect(plain).not.toContain('libelle_transacts');
+    expect(plain).toContain('Aucune opération n’a été reconnue automatiquement');
+  });
+
+  it('nomme la colonne du nombre d’opérations en français', () => {
+    expect(html).not.toContain('Nb items');
+    expect(html).toContain('Opérations');
+  });
+});
+
 describe('CsvTransactionsTable hors exemple', () => {
   it('n’affiche aucune note d’exemple', () => {
     const html = renderToStaticMarkup(<CsvTransactionsTable transactions={transactions} />);
