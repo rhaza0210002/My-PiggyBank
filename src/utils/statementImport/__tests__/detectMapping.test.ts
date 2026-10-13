@@ -5,6 +5,7 @@ import { detectMapping } from '@/utils/statementImport/detectMapping';
 import type { CsvTable } from '@/utils/statementImport/types';
 import {
   AMBIGUOUS_DATES_CSV,
+  DEBITS_ONLY_CSV,
   DEBIT_CREDIT_CSV,
   DOT_DECIMAL_CSV,
   MDY_CSV,
@@ -95,5 +96,13 @@ describe('detectMapping : reconnaître les colonnes par leur contenu', () => {
     const result = detectMapping(table);
     expect(result.mapping.date).toBeNull();
     expect(result.doubts).toContain('date');
+  });
+});
+
+describe('detectMapping : colonnes Débit / Crédit dont une est vide sur le mois', () => {
+  it('garde Débit et Crédit sans question, pour ne jamais lire une dépense comme une rentrée', () => {
+    const { mapping, doubts } = detect(DEBITS_ONLY_CSV);
+    expect(mapping.amount).toEqual({ kind: 'split', debit: 2, credit: 3 });
+    expect(doubts).not.toContain('montant');
   });
 });

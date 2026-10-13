@@ -6,6 +6,7 @@ import {
   QUOTED_CSV,
   SG_CSV,
   TOTAL_LINE_CSV,
+  TRAILING_SEPARATOR_CSV,
 } from './fixtures';
 
 describe('splitCsvRecords : découpage conforme au CSV', () => {
@@ -55,5 +56,15 @@ describe('readCsvTable : trouver le tableau des opérations', () => {
 
   it('ne trouve rien dans un texte qui n’est pas un relevé', () => {
     expect(readCsvTable('bonjour\nau revoir')).toBeNull();
+  });
+});
+
+describe('readCsvTable : séparateur en fin de ligne', () => {
+  it('garde l’en-tête quand seules les opérations finissent par un séparateur', () => {
+    const table = readCsvTable(TRAILING_SEPARATOR_CSV)!;
+    expect(table.hasHeader).toBe(true);
+    expect(table.headers).toEqual(['Date', 'Libellé', 'Débit', 'Crédit']);
+    expect(table.rows).toHaveLength(3);
+    expect(table.rows[1]).toEqual(['03/09/2026', 'VIR SALAIRE', '', '1850,00']);
   });
 });

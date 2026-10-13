@@ -51,13 +51,20 @@ function pickDate(columns: ColumnProfile[]): ColumnProfile | null {
 const negativeShare = (column: ColumnProfile) =>
   column.values.filter((value) => compactAmount(value).startsWith('-')).length / column.values.length;
 
+/**
+ * Débit et Crédit nommés par l'en-tête. L'une des deux peut être vide sur tout le relevé (un mois sans rentrée) :
+ * elle reste dans l'association, sinon les débits, souvent écrits sans signe, seraient lus comme des rentrées.
+ */
+function pickNamedSplit(columns: ColumnProfile[]): AmountColumns | null {
+  const amountLike = (column: ColumnProfile) => column.values.length === 0 || column.amountShare >= AMOUNT_SHARE;
+  const debit = columns.find((column) => has(column.header, DEBIT) && amountLike(column));
+  const credit = columns.find((column) => has(column.header, CREDIT) && amountLike(column));
+  if (!debit || !credit || debit === credit || debit.values.length + credit.values.length === 0) return null;
+  return { kind: 'split', debit: debit.index, credit: credit.index };
+}
+
 /** Montant unique ou débit/crédit, et s'il reste un doute. */
 function pickAmount(candidates: ColumnProfile[]): { amount: AmountColumns; doubt: boolean } {
-  const debit = candidates.find((column) => has(column.header, DEBIT));
-  const credit = candidates.find((column) => has(column.header, CREDIT));
-  if (debit && credit && debit !== credit) {
-    return { amount: { kind: 'split', debit: debit.index, credit: credit.index }, doubt: false };
-  }
 
   if (candidates.length === 0) return { amount: { kind: 'single', column: null }, doubt: true };
   if (candidates.length === 1) return { amount: { kind: 'single', column: candidates[0].index }, doubt: false };
@@ -118,7 +125,10 @@ export function detectMapping(table: CsvTable): { mapping: ColumnMapping; doubts
   );
 
   const amountCandidates = usable.filter((column) => column.amountShare >= AMOUNT_SHARE);
-  const { amount, doubt: amountDoubt } = pickAmount(amountCandidates);
+  const namedSplit = pickNamedSplit(
+    columns.filter((column) => column !== date && !has(column.header, BALANCE) && !isCurrency(column)),
+  );
+  const { amount, doubt: amountDoubt } = namedSplit ? { amount: namedSplit, doubt: false } : pickAmount(amountCandidates);
 
   const texts = usable.filter(
     (column) => !amountCandidates.includes(column) && column.amountShare < 0.5 && column.dateShare < 0.5,

@@ -3,7 +3,7 @@ import { applyMapping, normalizeDate, parseAmount } from '@/utils/statementImpor
 import { readCsvTable } from '@/utils/statementImport/csvTable';
 import { detectMapping } from '@/utils/statementImport/detectMapping';
 import type { ColumnMapping } from '@/utils/statementImport/types';
-import { DEBIT_CREDIT_CSV, SG_CSV } from './fixtures';
+import { DEBIT_CREDIT_CSV, DEBITS_ONLY_CSV, SG_CSV } from './fixtures';
 
 describe('parseAmount', () => {
   it.each([
@@ -74,5 +74,20 @@ describe('applyMapping', () => {
     const { lines, unreadable } = applyMapping(table, mapping);
     expect(lines).toEqual([]);
     expect(unreadable).toBe(table.rows.length);
+  });
+});
+
+describe('applyMapping : cas réels', () => {
+  it('lit en négatif les dépenses d’un mois sans rentrée (Crédit vide)', () => {
+    const table = readCsvTable(DEBITS_ONLY_CSV)!;
+    const { lines } = applyMapping(table, detectMapping(table).mapping);
+    expect(lines.map((line) => line.amount)).toEqual([-54.2, -72, -4.3]);
+  });
+
+  it('garde une opération au libellé vide en prenant le détail', () => {
+    const table = readCsvTable(SG_CSV.replace('05/09/2026;PRLV EDF;', '05/09/2026;;'))!;
+    const { lines, unreadable } = applyMapping(table, detectMapping(table).mapping);
+    expect(unreadable).toBe(0);
+    expect(lines.find((line) => line.date === '05/09/2026')?.label).toBe('PRELEVEMENT EUROPEEN EDF CLIENTS');
   });
 });

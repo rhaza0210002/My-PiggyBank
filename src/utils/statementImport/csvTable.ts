@@ -60,6 +60,20 @@ function longestRegularRun(records: string[][]): number {
 
 const hasDate = (record: string[]) => record.some(isDateCell);
 
+/**
+ * Certaines banques finissent chaque opération par un séparateur, mais pas l'en-tête : une dernière case vide
+ * en trop. On la retire des lignes d'opérations pour qu'elles aient la largeur de l'en-tête.
+ */
+function dropTrailingEmptyColumn(records: string[][]): string[][] {
+  const withDate = records.filter(hasDate);
+  if (withDate.length === 0) return records;
+  const width = withDate[0].length;
+  const trailingEmpty = withDate.every((record) => record.length === width && record[width - 1] === '');
+  const headerAbove = records.some((record) => record.length === width - 1 && !hasDate(record));
+  if (!trailingEmpty || !headerAbove) return records;
+  return records.map((record) => (record.length === width && hasDate(record) ? record.slice(0, -1) : record));
+}
+
 /** Première ligne d'opération : elle contient une date et les suivantes, de même largeur, aussi. */
 function findTableStart(records: string[][]): number {
   return records.findIndex((record, index) => {
@@ -82,7 +96,8 @@ export function readCsvTable(text: string): CsvTable | null {
   }
   if (!best) return null;
 
-  const { separator, records } = best;
+  const { separator } = best;
+  const records = dropTrailingEmptyColumn(best.records);
   const start = findTableStart(records);
   if (start === -1) return null;
 

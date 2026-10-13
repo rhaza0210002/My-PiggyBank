@@ -52,13 +52,15 @@ export function applyMapping(table: CsvTable, mapping: ColumnMapping): { lines: 
 
   for (const row of table.rows) {
     const date = mapping.date === null ? null : normalizeDate(row[mapping.date] ?? '', mapping.dateOrder);
-    const label = mapping.label === null ? '' : (row[mapping.label] ?? '').trim();
+    const detail = mapping.detail === null ? '' : (row[mapping.detail] ?? '').trim();
+    // Case libellé vide sur une ligne, détail rempli (cela arrive à la Société Générale) : le détail sert de libellé.
+    const label = mapping.label === null ? '' : (row[mapping.label] ?? '').trim() || detail;
     const amount = amountOf(row, mapping);
     if (!date || !label || amount === null) {
       unreadable++;
       continue;
     }
-    lines.push({ date, label, detail: mapping.detail === null ? '' : (row[mapping.detail] ?? '').trim(), amount });
+    lines.push({ date, label, detail, amount });
   }
 
   return { lines, unreadable };

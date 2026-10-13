@@ -109,3 +109,19 @@ export const OFX_XML = `<?xml version="1.0" encoding="UTF-8"?>
 
 /** OFX valide mais sans aucune opération. */
 export const OFX_EMPTY = '<OFX><BANKMSGSRSV1><STMTTRNRS><STMTRS><BANKTRANLIST></BANKTRANLIST></STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>';
+
+/** Un mois sans aucune rentrée : la colonne Crédit est vide partout, les débits sont écrits sans signe. */
+export const DEBITS_ONLY_CSV = [
+  'Date;Libellé;Débit;Crédit;Solde',
+  '02/09/2026;CB CARREFOUR;54,20;;1 245,80',
+  '05/09/2026;PRLV EDF;72,00;;1 173,80',
+  '08/09/2026;CB BOULANGERIE;4,30;;1 169,50',
+].join('\n');
+
+/** Séparateur en fin de ligne sur les opérations, pas sur l'en-tête. */
+export const TRAILING_SEPARATOR_CSV = [
+  'Date;Libellé;Débit;Crédit',
+  '02/09/2026;CB CARREFOUR;54,20;;',
+  '03/09/2026;VIR SALAIRE;;1850,00;',
+  '05/09/2026;PRLV EDF;72,00;;',
+].join('\n');

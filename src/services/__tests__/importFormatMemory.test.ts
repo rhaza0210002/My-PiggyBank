@@ -95,6 +95,17 @@ describe('importFormatMemory : se souvenir des réponses, sur l’appareil seule
     expect(countRememberedFormats()).toBe(0);
   });
 
+  it('ignore une association retenue dont la forme n’est plus la bonne', () => {
+    const stale = { signature: 'format-0', mapping: {}, lastUsed: 1 };
+    const odd = { signature: 'format-1', mapping: { ...mapping(1), amount: { kind: 'autre' } }, lastUsed: 2 };
+    const good = { signature: 'format-2', mapping: mapping(2), lastUsed: 3 };
+    store.set(IMPORT_FORMATS_KEY, JSON.stringify({ version: 1, formats: [stale, odd, good] }));
+    expect(recallMapping('format-0')).toBeNull();
+    expect(recallMapping('format-1')).toBeNull();
+    expect(recallMapping('format-2')).toEqual(mapping(2));
+    expect(countRememberedFormats()).toBe(1);
+  });
+
   it('ne plante jamais quand le navigateur refuse le stockage', () => {
     broken = true;
     expect(() => rememberMapping('format-0', mapping(0))).not.toThrow();

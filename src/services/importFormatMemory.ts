@@ -29,15 +29,34 @@ function storage(): Storage | null {
   }
 }
 
+const isColumn = (value: unknown) => value === null || (Number.isInteger(value) && (value as number) >= 0);
+
+/** Une association retenue d'une forme inattendue (ancienne version, modifiée à la main) est ignorée. */
+function isMapping(value: unknown): value is ColumnMapping {
+  if (typeof value !== 'object' || value === null) return false;
+  const mapping = value as Partial<ColumnMapping>;
+  const amount = mapping.amount as Partial<Record<'kind' | 'column' | 'debit' | 'credit', unknown>> | undefined;
+  const amountOk =
+    amount?.kind === 'single'
+      ? isColumn(amount.column)
+      : amount?.kind === 'split' && isColumn(amount.debit) && isColumn(amount.credit);
+  return (
+    amountOk &&
+    isColumn(mapping.date) &&
+    isColumn(mapping.label) &&
+    isColumn(mapping.detail) &&
+    (mapping.decimal === ',' || mapping.decimal === '.') &&
+    (mapping.dateOrder === 'dmy' || mapping.dateOrder === 'mdy')
+  );
+}
+
 function read(): RememberedFormat[] {
   try {
     const raw = storage()?.getItem(IMPORT_FORMATS_KEY);
     if (!raw) return [];
     const data = JSON.parse(raw) as Partial<StoredShape>;
     if (data?.version !== VERSION || !Array.isArray(data.formats)) return [];
-    return data.formats.filter(
-      (format) => typeof format?.signature === 'string' && typeof format.mapping === 'object' && format.mapping !== null,
-    );
+    return data.formats.filter((format) => typeof format?.signature === 'string' && isMapping(format.mapping));
   } catch {
     return [];
   }
