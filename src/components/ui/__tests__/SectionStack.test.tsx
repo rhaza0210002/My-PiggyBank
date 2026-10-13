@@ -12,7 +12,9 @@ describe('SectionStack : cartes qui se suivent sur ordinateur', () => {
   const html = renderToStaticMarkup(<SectionStack sections={sections} label="Parties du budget" fillZone />);
 
   it('laisse de la marge sur les côtés : une carte grossie au survol n’est pas rognée', () => {
-    expect(html).toMatch(/md:overflow-y-auto[^"]*md:px-2|md:px-2[^"]*md:overflow-y-auto/);
+    // Une carte grossit de 2 % au survol (≈ 11 px de chaque côté) : 12 px de marge, et jamais de barre horizontale.
+    expect(html).toMatch(/md:overflow-y-auto[^"]*md:px-3/);
+    expect(html).toContain('md:overflow-x-hidden');
   });
 
   it('n’utilise pas l’accroche CSS, qui ramenait en arrière à chaque petit cran de molette', () => {

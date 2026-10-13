@@ -199,7 +199,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
 
       <div
         ref={scrollerRef}
-        className={`min-h-0 flex-1 space-y-4 md:overflow-y-auto md:px-2 ${
+        className={`min-h-0 flex-1 space-y-4 md:overflow-x-hidden md:overflow-y-auto md:px-3 md:[scrollbar-width:thin] md:[scrollbar-color:var(--color-bordure-forte)_transparent] ${
           // Au bout des cartes, la molette ne fait pas glisser toute la page (les onglets du haut disparaissaient).
           fillZone ? `md:[container-type:size] ${nested ? '' : 'md:overscroll-contain'}` : ''
         }`}

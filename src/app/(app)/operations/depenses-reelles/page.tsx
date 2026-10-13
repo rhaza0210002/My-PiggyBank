@@ -164,7 +164,7 @@ export default function DepenseReellePage() {
 
 
   return (
-    <div ref={zoneRef} className="md:h-full md:overflow-y-auto md:overscroll-contain md:[container-type:size]">
+    <div ref={zoneRef} className="md:h-full md:overflow-x-hidden md:overflow-y-auto md:overscroll-contain md:[scrollbar-width:thin] md:[scrollbar-color:var(--color-bordure-forte)_transparent] md:[container-type:size]">
       <div>
         <ScreenCard flow fit={hasDetail} title="Bilan du mois" icon="chart" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
           <div className="flex flex-col gap-2">
