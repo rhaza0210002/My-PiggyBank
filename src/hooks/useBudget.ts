@@ -9,6 +9,17 @@ import {
   getCategoriesGroupKey,
 } from "@/services/transactionCategoryService";
 
+/** Montant saisi : un nombre de 0 à 1 000 000 €, au centime près (virgule acceptée). */
+export function parseBudgetAmount(amount: string): number {
+  const text = amount.trim().replace(/s/g, "").replace(",", ".");
+  if (text === "") throw new Error("Indique un montant (0 si rien n’est prévu).");
+  const value = Number(text);
+  if (!Number.isFinite(value) || value < 0 || value > 1_000_000) {
+    throw new Error("Le montant doit être un nombre entre 0 et 1 000 000 €.");
+  }
+  return Math.round(value * 100) / 100;
+}
+
 export const useBudget = () => {
   const [dataGroups, setDataGroups] = useState<DataGroup[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -22,34 +33,14 @@ export const useBudget = () => {
           getCategories(),
           getBudgetEntries(year),
         ]);
-        let savedGroups: DataGroup[] = [];
-
-        try {
-          const savedData = localStorage.getItem("bilanAnnualData");
-          savedGroups = savedData ? JSON.parse(savedData) : [];
-        } catch {
-          localStorage.removeItem("bilanAnnualData");
-        }
-
+        // La base est la seule source : rien n'est gardé dans le navigateur (une valeur affichée est enregistrée).
         const groups = categoryGroups.map((categoryGroup) => {
           const groupKey = categoryGroup.label || String(categoryGroup.id);
-          const savedRows =
-            savedGroups.find(
-              (group) =>
-                group.key === groupKey || group.key === categoryGroup.libelle,
-            )?.rows ?? [];
-          const rowsByCategory = new Map(
-            savedRows.map((row) => [row.category.toLowerCase(), row]),
-          );
           const rows = categories
             .filter((category) => category.cat_group_key === categoryGroup.id)
             .map(
               (category) => {
-                const savedRow = rowsByCategory.get(category.label.toLowerCase());
-                const values = Array.from(
-                  { length: 12 },
-                  (_, monthIndex) => savedRow?.values?.[monthIndex] ?? "-",
-                );
+                const values: (number | string)[] = Array.from({ length: 12 }, () => "-");
 
                 budgetEntries
                   .filter((entry) => entry.category_id === category.id)
@@ -71,7 +62,6 @@ export const useBudget = () => {
                 }
 
                 return {
-                  ...savedRow,
                   categoryId: category.id,
                   category: category.label,
                   values,
@@ -98,21 +88,13 @@ export const useBudget = () => {
     fetchBudget();
   }, []);
 
-  useEffect(() => {
-    if (isLoaded && dataGroups.length > 0) {
-      localStorage.setItem("bilanAnnualData", JSON.stringify(dataGroups));
-    }
-  }, [dataGroups, isLoaded]);
-
   const updateRowValue = async (
     groupKey: string,
     category: string,
     monthIndex: number,
     amount: string,
   ) => {
-    const parsedNumber = Number(amount);
-    const parsedAmount =
-      amount.trim() === "" || !Number.isFinite(parsedNumber) ? "-" : parsedNumber;
+    const parsedAmount = parseBudgetAmount(amount);
     const selectedGroup = dataGroups.find((group) => group.key === groupKey);
     const normalizedCategory = category.trim();
 
@@ -132,6 +114,14 @@ export const useBudget = () => {
 
     const savedCategory = existingCategory ??
       await createCategory(normalizedCategory, selectedGroup.id);
+
+    // Enregistré tout de suite, pour ce mois et les suivants : ce qui s'affiche est ce qui est gardé.
+    const year = new Date().getFullYear();
+    await Promise.all(
+      Array.from({ length: 12 - monthIndex }, (_, offset) =>
+        saveBudgetEntry(savedCategory.id, monthIndex + offset, parsedAmount, year),
+      ),
+    );
 
     setDataGroups((prevGroups) =>
       prevGroups.map((group) => {
@@ -174,39 +164,7 @@ export const useBudget = () => {
     );
   };
 
-  const saveMonthBudget = async (monthIndex: number, year: number) => {
-    const entries = dataGroups.flatMap((group) =>
-      group.rows.flatMap((row) => {
-        const categoryId = row.categoryId;
-        if (!categoryId) return [];
-
-        return row.values.flatMap((rawAmount, entryMonthIndex) => {
-          if (
-            entryMonthIndex < monthIndex ||
-            rawAmount === undefined ||
-            rawAmount === "-"
-          ) {
-            return [];
-          }
-
-          const amount = Number(rawAmount);
-          return Number.isFinite(amount)
-            ? [{ categoryId, monthIndex: entryMonthIndex, amount }]
-            : [];
-        });
-      }),
-    );
-
-    await Promise.all(
-      entries.map(({ categoryId, monthIndex: entryMonthIndex, amount }) =>
-        saveBudgetEntry(categoryId, entryMonthIndex, amount, year),
-      ),
-    );
-
-    return entries.length;
-  };
-
-  return { dataGroups, setDataGroups, isLoaded, updateRowValue, saveMonthBudget };
+  return { dataGroups, setDataGroups, isLoaded, updateRowValue };
 };
 
 export default useBudget;

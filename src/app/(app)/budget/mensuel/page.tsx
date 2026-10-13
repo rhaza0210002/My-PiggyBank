@@ -5,18 +5,19 @@ import FormBilan from '@/components/features/forms/FormBilan';
 import BudgetDonut from '@/components/features/charts/AnnualBudgetDonut';
 import BudgetTotalsSection from '@/components/features/tables/BudgetTableSection';
 import BudgetGroupTable from '@/components/features/tables/BudgetGroupTable';
-import { useBudget } from '@/hooks/useBudget';
+import { parseBudgetAmount, useBudget } from '@/hooks/useBudget';
+import { euroFormatter } from '@/utils/formatEuro';
+import { ofMonth } from '@/utils/frenchMonth';
 import { BUDGET_MODES, BudgetMode } from '@/constants/budgetTypes';
 import { MONTHS } from '@/constants/tableStyles';
 import ScreenCard from '@/components/ui/ScreenCard';
 import SectionStack from '@/components/ui/SectionStack';
 
 export default function MonthBudgetPage() {
-  const { dataGroups, isLoaded, updateRowValue, saveMonthBudget } = useBudget();
+  const { dataGroups, isLoaded, updateRowValue } = useBudget();
   const currentCalendarMonth = new Date().getMonth();
 
   const [currentMode] = useState<BudgetMode>(BUDGET_MODES.MENSUEL);
-  const [isSavingBudget, setIsSavingBudget] = useState(false);
   const [budgetSaveMessage, setBudgetSaveMessage] = useState<string | null>(null);
   const [budgetSaveError, setBudgetSaveError] = useState<string | null>(null);
 
@@ -48,6 +49,7 @@ export default function MonthBudgetPage() {
     }
 
     await updateRowValue(data.groupKey, data.category, data.monthIndex, data.amount);
+    announceSaved(data.category, data.amount, data.monthIndex);
   };
 
   const handleUpdateAmount = async (
@@ -61,32 +63,14 @@ export default function MonthBudgetPage() {
     }
 
     await updateRowValue(groupKey, category, monthIndex, amount);
+    announceSaved(category, amount, monthIndex);
   };
 
-  const handleSaveBudget = async () => {
-    setIsSavingBudget(true);
-    setBudgetSaveMessage(null);
+  // Chaque montant est enregistré dès qu'il est validé : on le dit, pour que rien ne paraisse en suspens.
+  const announceSaved = (category: string, amount: string, monthIndex: number) => {
     setBudgetSaveError(null);
-
-    try {
-      const savedEntries = await saveMonthBudget(
-        currentMonthIndex,
-        new Date().getFullYear(),
-      );
-      setBudgetSaveMessage(
-        savedEntries > 0
-          ? `Budget de ${activeMonth.label} et des mois suivants enregistré (${savedEntries} montants).`
-          : `Aucun montant à enregistrer pour ${activeMonth.label}.`,
-      );
-    } catch (error) {
-      setBudgetSaveError(
-        error instanceof Error
-          ? error.message
-          : "Impossible d'enregistrer le budget.",
-      );
-    } finally {
-      setIsSavingBudget(false);
-    }
+    const value = euroFormatter.format(parseBudgetAmount(amount));
+    setBudgetSaveMessage(`Enregistré : ${category.trim()}, ${value} à partir ${ofMonth(MONTHS[monthIndex].label)}.`);
   };
 
   const activeMonth = MONTHS[currentMonthIndex];
@@ -128,17 +112,6 @@ export default function MonthBudgetPage() {
     </div>
   );
 
-  const saveButton = (
-    <button
-      type="button"
-      onClick={handleSaveBudget}
-      disabled={isSavingBudget || isPastMonth || dataGroups.length === 0}
-      className="min-h-11 rounded-xl border-[1.5px] border-bordure bg-ok-fond px-4 text-sm font-bold text-ok shadow-bonbon transition-transform hover:translate-y-[1px] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60"
-    >
-      {isSavingBudget ? 'Enregistrement...' : 'Valider budget'}
-    </button>
-  );
-
   return (
     <ScreenCard
       flow
@@ -147,7 +120,6 @@ export default function MonthBudgetPage() {
       actions={
         <>
           {monthControls}
-          {saveButton}
         </>
       }
     >

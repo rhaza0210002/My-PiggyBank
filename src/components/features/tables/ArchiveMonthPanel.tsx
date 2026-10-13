@@ -5,6 +5,7 @@ import { archiveMonth } from '@/services/archiveService';
 import { isDemoActive } from '@/services/demoStore';
 import { getArchiveBlocker, isArchivedList, type ArchivableTransaction } from '@/utils/archive';
 import Icon from '@/components/ui/Icon';
+import { ofMonth } from '@/utils/frenchMonth';
 
 interface ArchiveMonthPanelProps {
   year: number;
@@ -53,7 +54,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
       {!isConfirming ? (
         <>
           <p className="text-sm font-semibold text-texte">
-            Tout est pointé : tu peux ne garder que les totaux de {monthLabel.toLowerCase()} et effacer le détail de ton relevé.
+            Tout est pointé : tu peux ne garder que les totaux {ofMonth(monthLabel)} et effacer le détail de ton relevé.
           </p>
           <button
             type="button"
@@ -66,7 +67,7 @@ export default function ArchiveMonthPanel({ year, monthIndex, monthLabel, transa
       ) : (
         <div role="alertdialog" aria-labelledby="archive-confirm-title" aria-describedby="archive-confirm-text">
           <p id="archive-confirm-title" className="text-sm font-black text-texte">
-            Effacer le détail de {monthLabel.toLowerCase()} {year} ?
+            Effacer le détail {ofMonth(monthLabel)} {year} ?
           </p>
           <p id="archive-confirm-text" className="mt-1 text-sm text-texte">
             Les {transactions.length} opérations bancaires de ce mois seront supprimées définitivement. Restent : le total réel par

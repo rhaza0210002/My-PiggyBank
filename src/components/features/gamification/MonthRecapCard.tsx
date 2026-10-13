@@ -8,6 +8,7 @@ import { getCategories } from "@/services/transactionCategoryService";
 import { getTransactionsForMonth } from "@/services/transactionService";
 import { euroFormatter } from "@/utils/formatEuro";
 import { buildMonthRecap, type MonthRecap } from "@/utils/monthRecap";
+import { ofMonth } from '@/utils/frenchMonth';
 
 interface MonthRecapCardProps {
   year: number;
@@ -72,9 +73,6 @@ export function MonthRecapView({
   const [isOpen, setIsOpen] = useState(false);
 
   const monthName = MONTHS[monthIndex].label.toLowerCase();
-  const ofMonth = /^[aeiouéèh]/.test(monthName)
-    ? `d’${monthName}`
-    : `de ${monthName}`;
   const money = (value: number) =>
     revealAmount(isAmountShown, euroFormatter.format(value));
 
@@ -95,7 +93,7 @@ export function MonthRecapView({
           className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl text-left focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           <span>
-            <span aria-hidden="true">🎉 </span>Ton bilan {ofMonth}
+            <span aria-hidden="true">🎉 </span>Ton bilan {ofMonth(monthName)}
           </span>
           <span
             aria-hidden="true"

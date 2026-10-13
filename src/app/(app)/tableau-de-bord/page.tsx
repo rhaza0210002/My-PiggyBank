@@ -21,6 +21,7 @@ import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { getStartSteps } from '@/utils/startSteps';
 import { pickTip } from '@/utils/tips';
 import Icon from '@/components/ui/Icon';
+import { ofMonth } from '@/utils/frenchMonth';
 
 const PANEL = 'carte-vivante rounded-carte border-2 border-texte p-4 shadow-sticker sm:p-5';
 const PRIMARY_LINK =
@@ -130,7 +131,7 @@ export default function DashboardPage() {
               <p className="text-lg font-bold text-ok">
                 <span aria-hidden="true">🎉 </span>Mois bouclé, bravo !
               </p>
-              <Gauge value={month.done} max={month.total} label={`Opérations de ${monthName} pointées`} valueText={`${month.done} sur ${month.total}`} />
+              <Gauge value={month.done} max={month.total} label={`Opérations ${ofMonth(monthName)} pointées`} valueText={`${month.done} sur ${month.total}`} />
               <Link href={ROUTES.actualExpenses} className={PRIMARY_LINK}>Voir mes dépenses</Link>
             </>
           ) : (
@@ -141,7 +142,7 @@ export default function DashboardPage() {
               <Gauge
                 value={month.done}
                 max={month.total}
-                label={`Opérations de ${monthName} pointées`}
+                label={`Opérations ${ofMonth(monthName)} pointées`}
                 valueText={`${month.done} sur ${month.total} opérations pointées`}
               />
               <p className="text-xs text-texte-doux">{month.done} sur {month.total} déjà pointées</p>

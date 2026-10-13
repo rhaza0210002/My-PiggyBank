@@ -30,6 +30,7 @@ import { groupStoredTransactions } from '@/utils/storedTransactionGrouping';
 import EmptyState from '@/components/ui/EmptyState';
 import { childStarts, useSoftSnap } from '@/hooks/useSoftSnap';
 import { glideIntoZone } from '@/utils/scroll';
+import { ofMonth } from '@/utils/frenchMonth';
 
 const DETAIL_ID = 'bilan-detail';
 
@@ -170,7 +171,7 @@ export default function DepenseReellePage() {
           <div className="flex flex-col gap-2">
             {isLoading && (
               <p className="py-8 text-center text-sm font-semibold text-texte-doux" role="status">
-                Chargement des dépenses de {MONTHS[monthIndex].label.toLowerCase()}…
+                Chargement des dépenses {ofMonth(MONTHS[monthIndex].label)}…
               </p>
             )}
 

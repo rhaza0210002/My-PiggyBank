@@ -33,12 +33,6 @@ export default function CookiesPage() {
               <td className={CELL}>Jusqu’à ta déconnexion (au plus 400 jours)</td>
               <td className={CELL}>Strictement nécessaire</td>
             </tr>
-            <tr>
-              <th scope="row" className={CELL}>bilanAnnualData (stockage local)</th>
-              <td className={CELL}>Garde en mémoire l’affichage du budget pour aller plus vite</td>
-              <td className={CELL}>Effacé à ta déconnexion</td>
-              <td className={CELL}>Strictement nécessaire (confort d’affichage)</td>
-            </tr>
           </tbody>
         </table>
       </div>

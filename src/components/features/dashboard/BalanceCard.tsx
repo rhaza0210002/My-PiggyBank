@@ -1,5 +1,6 @@
 import { useId, type CSSProperties } from 'react';
 import BalanceToggle, { MASKED_AMOUNT } from '@/components/ui/BalanceToggle';
+import { ofMonth } from '@/utils/frenchMonth';
 
 interface BalanceCardProps {
   monthName: string;
@@ -33,7 +34,7 @@ export default function BalanceCard({ monthName, isShown, onToggle, amountText, 
       </div>
 
       {amountText === null ? (
-        <p className="text-sm font-semibold text-texte">Importe un relevé pour voir ton solde de {monthName.toLowerCase()}.</p>
+        <p className="text-sm font-semibold text-texte">Importe un relevé pour voir ton solde {ofMonth(monthName)}.</p>
       ) : (
         <>
           <p aria-live="polite" className="font-titre text-4xl font-extrabold leading-none text-texte">
@@ -47,7 +48,7 @@ export default function BalanceCard({ monthName, isShown, onToggle, amountText, 
             )}
           </p>
           <p className="text-sm font-semibold text-texte">
-            Solde de {monthName.toLowerCase()}
+            Solde {ofMonth(monthName)}
             {isShown && detail ? ` · ${detail}` : ''}
           </p>
         </>
