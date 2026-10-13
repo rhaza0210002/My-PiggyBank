@@ -40,6 +40,14 @@ export function withFirstRevealed(previous: ReadonlySet<string>, sections: Stack
 }
 
 /**
+ * La zone de blocs défile-t-elle elle-même ? Seulement sur ordinateur, quand elle a la hauteur du cadre. Sinon
+ * c'est la page (ou la carte autour) qui défile : on guette alors l'arrivée des blocs dans la fenêtre.
+ */
+export function ownsScroll(fillZone: boolean, isDesktop: boolean): boolean {
+  return fillZone && isDesktop;
+}
+
+/**
  * Plusieurs blocs à la suite, dans une seule zone qui défile. Une barre de raccourcis mène à chaque bloc
  * (défilement doux), indique celui qu'on lit, et chaque bloc apparaît quand on y arrive : le contenu n'est
  * monté qu'à ce moment, ce qui relance aussi les animations des graphiques.
@@ -64,8 +72,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
       return;
     }
 
-    // Bureau : la zone de blocs défile elle-même ; mobile : c'est la page qui défile.
-    const root = window.matchMedia('(min-width: 768px)').matches ? scroller : null;
+    const root = ownsScroll(fillZone, window.matchMedia('(min-width: 768px)').matches) ? scroller : null;
 
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -95,7 +102,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
       revealObserver.disconnect();
       activeObserver.disconnect();
     };
-  }, [sections]);
+  }, [sections, fillZone]);
 
   // La rangée de puces défile à l'horizontale, sans barre : la molette (verticale) et le doigt la font avancer.
   const [fadeRight, setFadeRight] = useState(false);
@@ -199,9 +206,12 @@ export default function SectionStack({ sections, label, background = 'surface-do
 
       <div
         ref={scrollerRef}
-        className={`min-h-0 flex-1 space-y-4 md:overflow-x-hidden md:overflow-y-auto md:px-3 md:[scrollbar-width:thin] md:[scrollbar-color:var(--color-bordure-forte)_transparent] ${
+        className={`min-h-0 flex-1 space-y-4 md:px-3 ${
+          // Seule une zone de hauteur fixe défile elle-même (sinon le bloc suivant n'est jamais révélé : grand blanc).
           // Au bout des cartes, la molette ne fait pas glisser toute la page (les onglets du haut disparaissaient).
-          fillZone ? `md:[container-type:size] ${nested ? '' : 'md:overscroll-contain'}` : ''
+          fillZone
+            ? `md:overflow-x-hidden md:overflow-y-auto md:[scrollbar-width:thin] md:[scrollbar-color:var(--color-bordure-forte)_transparent] md:[container-type:size] ${nested ? '' : 'md:overscroll-contain'}`
+            : ''
         }`}
       >
         <nav

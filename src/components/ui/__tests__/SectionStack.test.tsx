@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import SectionStack, { withFirstRevealed } from '@/components/ui/SectionStack';
+import SectionStack, { ownsScroll, withFirstRevealed } from '@/components/ui/SectionStack';
 import { softSnapTarget } from '@/utils/scroll';
 
 const sections = [
@@ -13,7 +13,7 @@ describe('SectionStack : cartes qui se suivent sur ordinateur', () => {
 
   it('laisse de la marge sur les côtés : une carte grossie au survol n’est pas rognée', () => {
     // Une carte grossit de 2 % au survol (≈ 11 px de chaque côté) : 12 px de marge, et jamais de barre horizontale.
-    expect(html).toMatch(/md:overflow-y-auto[^"]*md:px-3/);
+    expect(html).toMatch(/md:px-3[^"]*md:overflow-y-auto/);
     expect(html).toContain('md:overflow-x-hidden');
   });
 
@@ -54,6 +54,17 @@ describe('SectionStack sans zone de hauteur fixe (import de relevé)', () => {
     expect(html).not.toContain('snap-');
     expect(html).not.toContain('100cqh');
   });
+
+  it('ne défile pas toute seule dans la carte : un seul défilement, sinon le bloc suivant reste un grand blanc', () => {
+    expect(html).not.toContain('overflow-y-auto');
+  });
+
+  it('guette l’arrivée des blocs dans la fenêtre, pas dans une zone qui ne défile pas', () => {
+    expect(ownsScroll(false, true)).toBe(false);
+    expect(ownsScroll(false, false)).toBe(false);
+    expect(ownsScroll(true, false)).toBe(false);
+    expect(ownsScroll(true, true)).toBe(true);
+  });
 });
 
 describe('withFirstRevealed', () => {
@@ -66,6 +77,7 @@ describe('withFirstRevealed', () => {
     expect([...withFirstRevealed(new Set(['deux']), sections)].sort()).toEqual(['deux', 'un']);
     expect([...withFirstRevealed(new Set(), [])]).toEqual([]);
   });
+});
 
 describe('SectionStack : bloc court (formulaire)', () => {
   const withShort = [...sections, { id: 'ajout', label: 'Ajouter une ligne', content: <form />, fit: true }];
@@ -80,8 +92,6 @@ describe('SectionStack : bloc court (formulaire)', () => {
     const block = short.slice(0, short.indexOf('</section>'));
     expect(block).toContain('min-h-40');
   });
-
-});
 });
 
 describe('softSnapTarget : accroche douce', () => {

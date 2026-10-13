@@ -21,6 +21,15 @@ describe('page Import de relevé', () => {
     expect(html).toContain('Dépose le CSV de ta banque : on range les opérations pour toi, tu vérifies, c’est tout.');
   });
 
+  it('accepte les relevés CSV et OFX de toutes les banques', () => {
+    expect(html).toContain('accept=".csv,.ofx,.qfx,.txt"');
+    expect(html).toContain('Choisir mon relevé (CSV ou OFX)');
+  });
+
+  it('n’affiche aucun détail technique', () => {
+    expect(html).not.toMatch(/libelle_transacts|RLS|SQL/);
+  });
+
   it('annonce le résultat aux lecteurs d’écran dans une zone de statut', () => {
     expect(html).toMatch(/<p[^>]*role="status"/);
   });
