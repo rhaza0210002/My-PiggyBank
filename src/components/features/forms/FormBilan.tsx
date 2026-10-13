@@ -3,6 +3,7 @@
 import Button from '@/components/ui/Button';
 import React, { useState, FormEvent } from 'react';
 import type { DataGroup } from '@/types/budget';
+import { CATEGORY_LABEL_MAX, categoryLabelError, normalizeCategoryLabel } from '@/utils/categoryLabel';
 
 interface FormBilanProps {
   groups: DataGroup[];
@@ -44,6 +45,14 @@ export default function FormBilan({
       isSubmitting
     ) return;
 
+    // Nouvelle catégorie (pas dans les suggestions) : son nom est vérifié avant l'envoi.
+    const isKnown = categorySuggestions.some((name) => name.toLowerCase() === normalizeCategoryLabel(category).toLowerCase());
+    const invalid = isKnown ? null : categoryLabelError(category);
+    if (invalid) {
+      setSubmitError(invalid);
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitError(null);
     try {
@@ -71,7 +80,7 @@ export default function FormBilan({
     <form
       onSubmit={handleSubmit}
       className="flex flex-wrap items-end gap-4 rounded-carte border-[1.5px] border-bordure bg-surface-douce p-4 shadow-sm"
-      aria-label="Formulaire d'ajout de transaction"
+      aria-label="Ajouter une ligne au budget"
     >
       <div className="flex flex-1 min-w-[150px] flex-col gap-1">
         <label htmlFor="group-select" className="text-sm font-bold text-texte">
@@ -82,7 +91,6 @@ export default function FormBilan({
           value={selectedGroupKey}
           onChange={(e) => setGroupKey(e.target.value)}
           disabled={readOnly || groups.length === 0}
-          aria-label="Sélectionner un groupe"
           className="rounded-xl border-[1.5px] border-bordure-forte bg-surface p-2.5 text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
         >
           {groups.map((g) => (
@@ -103,7 +111,9 @@ export default function FormBilan({
           list="category-suggestions"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          placeholder="Ex: Électricité"
+          placeholder="Ex : Cadeaux"
+          maxLength={CATEGORY_LABEL_MAX}
+          autoComplete="off"
           required
           disabled={readOnly}
           aria-required="true"
@@ -125,11 +135,13 @@ export default function FormBilan({
           id="amount-input"
           type="number"
           step="0.01"
+          min="0"
+          inputMode="decimal"
+          required
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="0.00"
           disabled={readOnly}
-          aria-label="Montant en euros"
           className="rounded-xl border-[1.5px] border-bordure-forte bg-surface p-2.5 text-sm font-semibold text-texte outline-none focus:ring-2 focus:ring-focus"
         />
       </div>

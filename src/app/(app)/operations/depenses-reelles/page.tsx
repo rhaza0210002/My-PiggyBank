@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MONTHS } from '@/constants/tableStyles';
@@ -28,7 +28,9 @@ import {
 import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { groupStoredTransactions } from '@/utils/storedTransactionGrouping';
 import EmptyState from '@/components/ui/EmptyState';
+import { childStarts, useSoftSnap } from '@/hooks/useSoftSnap';
 import { glideIntoZone } from '@/utils/scroll';
+import { ofMonth } from '@/utils/frenchMonth';
 
 const DETAIL_ID = 'bilan-detail';
 
@@ -73,6 +75,9 @@ export default function DepenseReellePage() {
   const [loaded, setLoaded] = useState<LoadedMonth | null>(null);
   const [reloadCount, setReloadCount] = useState(0);
 
+  // Deux cartes sur ordinateur (résumé, puis détail) : accroche douce entre elles.
+  const zoneRef = useRef<HTMLDivElement>(null);
+
   const requestKey = `${year}-${monthIndex}`;
   const isLoading = loaded?.requestKey !== requestKey;
 
@@ -113,6 +118,7 @@ export default function DepenseReellePage() {
   const totals = data ? summarizeAmounts(data.transactions.map((transaction) => Number(transaction.amount))) : null;
   // Des opérations ce mois-ci : le détail part dans une deuxième carte, plus bas.
   const hasDetail = Boolean(data && !data.error && totals && totals.count > 0);
+  useSoftSnap(zoneRef, { enabled: hasDetail, starts: (zone) => childStarts(zone), outerFirst: true });
 
   const comparisonGroups: ComparisonGroup[] = breakdown
     ? [
@@ -159,13 +165,13 @@ export default function DepenseReellePage() {
 
 
   return (
-    <div className="md:h-full md:snap-y md:snap-proximity md:overflow-y-auto md:[container-type:size]">
-      <div className="md:snap-start">
+    <div ref={zoneRef} className="md:h-full md:overflow-x-hidden md:overflow-y-auto md:overscroll-contain md:[scrollbar-width:thin] md:[scrollbar-color:var(--color-bordure-forte)_transparent] md:[container-type:size]">
+      <div>
         <ScreenCard flow fit={hasDetail} title="Bilan du mois" icon="chart" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
           <div className="flex flex-col gap-2">
             {isLoading && (
               <p className="py-8 text-center text-sm font-semibold text-texte-doux" role="status">
-                Chargement des dépenses de {MONTHS[monthIndex].label.toLowerCase()}…
+                Chargement des dépenses {ofMonth(MONTHS[monthIndex].label)}…
               </p>
             )}
 
@@ -240,9 +246,10 @@ export default function DepenseReellePage() {
       </div>
 
       {hasDetail && data && totals && breakdown && (
-        <ScreenPanel id={DETAIL_ID} label="Détail du mois" className="md:h-[100cqh] md:snap-start">
+        <ScreenPanel id={DETAIL_ID} label="Détail du mois" className="md:h-[100cqh]">
           <SectionStack
             fillZone
+            nested
             label="Parties des dépenses du mois"
             sections={[
               {

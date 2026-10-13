@@ -9,6 +9,7 @@ import {
   ROUTES,
   SERVICE_WORKER_PATH,
 } from '@/constants/routes';
+import { buildContentSecurityPolicy, createNonce } from '@/utils/contentSecurityPolicy';
 
 export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -18,7 +19,21 @@ export async function proxy(request: NextRequest) {
     throw new Error("Les variables d'environnement Supabase sont manquantes.");
   }
 
-  let supabaseResponse = NextResponse.next({ request });
+  // CSP : un nonce par requête, lu par Next pour marquer ses propres scripts (voir contentSecurityPolicy.ts).
+  const nonce = createNonce();
+  const csp = buildContentSecurityPolicy({ nonce, supabaseUrl, isDev: process.env.NODE_ENV === 'development' });
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  requestHeaders.set('Content-Security-Policy', csp);
+  const nextWithCsp = () => {
+    // Les cookies de session rafraîchis plus bas doivent suivre jusqu'au rendu.
+    requestHeaders.set('cookie', request.headers.get('cookie') ?? '');
+    const response = NextResponse.next({ request: { headers: requestHeaders } });
+    response.headers.set('Content-Security-Policy', csp);
+    return response;
+  };
+
+  let supabaseResponse = nextWithCsp();
 
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -27,7 +42,7 @@ export async function proxy(request: NextRequest) {
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        supabaseResponse = NextResponse.next({ request });
+        supabaseResponse = nextWithCsp();
         cookiesToSet.forEach(({ name, value, options }) =>
           supabaseResponse.cookies.set(name, value, options),
         );

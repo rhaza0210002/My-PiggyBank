@@ -82,7 +82,7 @@ export default function BudgetGroupTable({
 
       <div role="region" aria-label={`Tableau ${group.title}`} tabIndex={0} className={`w-full overflow-x-auto rounded-xl border-[1.5px] ${palette.border} ${palette.table} shadow-inner`}>
         <table
-          className="w-full min-w-[320px] border-collapse text-left"
+          className="w-full border-collapse text-left"
           aria-label={`Tableau de ${group.title}`}
         >
           <thead>
@@ -113,6 +113,8 @@ export default function BudgetGroupTable({
                         <input
                           type="number"
                           step="0.01"
+                          min="0"
+                          inputMode="decimal"
                           autoFocus
                           value={draftAmount}
                           onChange={(event) => setDraftAmount(event.target.value)}
@@ -125,7 +127,7 @@ export default function BudgetGroupTable({
                           onClick={() => void saveEditing(row.category)}
                           title="Valider le montant"
                           aria-label={`Valider le montant de ${row.category}`}
-                          className="rounded p-1 text-ok hover:bg-ok-fond focus-visible:outline focus-visible:outline-2 focus-visible:outline-ok"
+                          className="-my-2 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-ok hover:bg-ok-fond focus-visible:outline focus-visible:outline-2 focus-visible:outline-ok"
                         >
                           <Check size={17} aria-hidden="true" />
                         </button>
@@ -134,7 +136,7 @@ export default function BudgetGroupTable({
                           onClick={cancelEditing}
                           title="Annuler la modification"
                           aria-label={`Annuler la modification de ${row.category}`}
-                          className="rounded p-1 text-depasse hover:bg-depasse-fond focus-visible:outline focus-visible:outline-2 focus-visible:outline-depasse"
+                          className="-my-2 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-depasse hover:bg-depasse-fond focus-visible:outline focus-visible:outline-2 focus-visible:outline-depasse"
                         >
                           <X size={17} aria-hidden="true" />
                         </button>
@@ -148,7 +150,7 @@ export default function BudgetGroupTable({
                             onClick={() => beginEditing(row.category, row.values[monthIndex] ?? '-')}
                             title="Modifier le montant"
                             aria-label={`Modifier le montant de ${row.category}`}
-                            className="rounded p-1 text-texte-doux opacity-0 transition-opacity hover:bg-surface/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus group-hover:opacity-100 group-focus-within:opacity-100"
+                            className="-my-2 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-texte-doux transition-colors hover:bg-surface/70 hover:text-texte focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus"
                           >
                             <Pencil size={16} aria-hidden="true" />
                           </button>

@@ -7,7 +7,7 @@ import LogoutButton from '@/components/features/header/LogoutButton';
 import { NAV_SECTIONS, ROUTES, getActiveSection } from '@/constants/routes';
 import { NAV_LINK_BASE } from '@/components/layout/navLinkClasses';
 import { supabase } from '@/lib/supabaseClient';
-import { getUserProfile } from '@/services/userService';
+import { PSEUDO_CHANGED_EVENT, getUserProfile } from '@/services/userService';
 import Pig from '@/components/ui/Pig';
 import Icon from '@/components/ui/Icon';
 
@@ -39,13 +39,18 @@ export default function AppHeader() {
       })
       .catch(() => {});
 
+    // Pseudo changé dans le profil : l'en-tête suit tout de suite.
+    const onPseudoChange = (event: Event) => setPseudo((event as CustomEvent<string | null>).detail);
+    window.addEventListener(PSEUDO_CHANGED_EVENT, onPseudoChange);
+
     return () => {
       isCurrent = false;
+      window.removeEventListener(PSEUDO_CHANGED_EVENT, onPseudoChange);
     };
   }, [userId]);
 
   return (
-    <header className="sticky top-0 z-40 mx-2 mt-2 rounded-bonbon border-2 border-texte bg-surface p-1 shadow-sticker-petit sm:mx-auto sm:w-[90%]">
+    <header className="sticky top-0 z-40 mx-2 mt-2 rounded-bonbon border-(length:--trait-entete) border-texte bg-surface p-1 shadow-sticker-petit sm:mx-auto sm:w-[90%]">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3">
         <Link
           href={ROUTES.dashboard}

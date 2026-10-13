@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { childStarts, useSoftSnap } from '@/hooks/useSoftSnap';
 import { animateScroll, findScrollParent, prefersReducedMotion } from '@/utils/scroll';
 
 export interface StackSection {
@@ -9,7 +10,7 @@ export interface StackSection {
   content: ReactNode;
   /** Le contenu porte déjà son propre titre visible : le titre du bloc reste lu par les lecteurs d'écran seulement. */
   hideTitle?: boolean;
-  /** Bloc court (un formulaire) : il garde la hauteur de son contenu au lieu de remplir la zone. */
+  /** Bloc court (un formulaire) : une fois monté, il ne garde pas la hauteur minimale d'attente. */
   fit?: boolean;
 }
 
@@ -20,10 +21,16 @@ interface SectionStackProps {
   /** Fond de la rangée de puces collante (doit être celui du conteneur pour ne pas former de bande). */
   background?: 'surface' | 'surface-douce';
   /**
-   * Sur ordinateur, la zone a une hauteur fixe (le cadre de l'écran) : chaque bloc devient une carte de cette
-   * hauteur, avec accroche douce. À laisser éteint quand la zone s'étire avec son contenu (import de relevé).
+   * Sur ordinateur, la zone a une hauteur fixe (le cadre de l'écran) et défile elle-même, avec accroche douce
+   * sur le début de chaque carte ; chaque carte garde la hauteur de son contenu. À laisser éteint quand la zone
+   * s'étire avec son contenu (import de relevé).
    */
   fillZone?: boolean;
+  /**
+   * Zone placée dans une autre zone qui défile (détail du bilan) : au bout des cartes, la molette passe à la zone
+   * qui l'entoure. Sinon elle s'arrête net, pour ne pas faire glisser toute la page.
+   */
+  nested?: boolean;
 }
 
 /** Le premier bloc est toujours monté : sur l'import, les blocs n'arrivent qu'après le choix d'un fichier. */
@@ -47,7 +54,7 @@ export function ownsScroll(fillZone: boolean, isDesktop: boolean): boolean {
  */
 const BACKGROUND_CLASSES = { surface: 'bg-surface', 'surface-douce': 'bg-surface-douce' } as const;
 
-export default function SectionStack({ sections, label, background = 'surface-douce', fillZone = false }: SectionStackProps) {
+export default function SectionStack({ sections, label, background = 'surface-douce', fillZone = false, nested = false }: SectionStackProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
@@ -144,6 +151,14 @@ export default function SectionStack({ sections, label, background = 'surface-do
     };
   }, [fillZone]);
 
+  // Accroche douce sur ordinateur, sous la rangée de puces collante.
+  useSoftSnap(scrollerRef, {
+    enabled: fillZone,
+    starts: (scroller) => childStarts(scroller, ':scope > section', navRef.current?.offsetHeight ?? 0),
+    stickyOffset: () => navRef.current?.offsetHeight ?? 0,
+    busyRef: cancelScrollRef,
+  });
+
   // Sur mobile la rangée de puces défile : la puce de la partie lue reste visible.
   useEffect(() => {
     const nav = navRef.current;
@@ -170,19 +185,17 @@ export default function SectionStack({ sections, label, background = 'surface-do
       };
       if (prefersReducedMotion()) parent.scrollTop = getTargetTop();
       else {
-        // L'accroche reprend la main une fois arrivé : pendant l'animation elle se battrait avec elle.
-        parent.style.scrollSnapType = 'none';
-        const release = () => {
-          parent.style.scrollSnapType = '';
-        };
-        const stop = animateScroll(parent, getTargetTop, () => {
-          release();
+        const done = () => {
           cancelScrollRef.current = null;
-        });
+        };
+        const stop = animateScroll(parent, getTargetTop, done);
         cancelScrollRef.current = () => {
           stop();
-          release();
+          done();
         };
+        // Un geste coupe le trajet (voir animateScroll) : l'accroche douce reprend la main.
+        parent.addEventListener('wheel', done, { once: true, passive: true });
+        parent.addEventListener('touchstart', done, { once: true, passive: true });
       }
     }
     element.focus({ preventScroll: true });
@@ -193,9 +206,11 @@ export default function SectionStack({ sections, label, background = 'surface-do
 
       <div
         ref={scrollerRef}
-        className={`min-h-0 flex-1 space-y-4 md:px-2 ${
+        className={`min-h-0 flex-1 space-y-4 md:px-3 ${
+          // Seule une zone de hauteur fixe défile elle-même (sinon le bloc suivant n'est jamais révélé : grand blanc).
+          // Au bout des cartes, la molette ne fait pas glisser toute la page (les onglets du haut disparaissaient).
           fillZone
-            ? 'md:snap-y md:snap-proximity md:overflow-y-auto md:[container-type:size] md:[scroll-padding-top:var(--nav-h)]'
+            ? `md:overflow-x-hidden md:overflow-y-auto md:[scrollbar-width:thin] md:[scrollbar-color:var(--color-bordure-forte)_transparent] md:[container-type:size] ${nested ? '' : 'md:overscroll-contain'}`
             : ''
         }`}
       >
@@ -235,7 +250,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
               data-section-id={section.id}
               aria-labelledby={`section-${section.id}-title`}
               tabIndex={-1}
-              className={`scroll-mt-1 outline-none ${fillZone ? `md:snap-start ${section.fit ? '' : 'md:min-h-[calc(100cqh-var(--nav-h))]'}` : ''}`}
+              className="scroll-mt-1 outline-none"
             >
               <h2
                 id={`section-${section.id}-title`}

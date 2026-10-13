@@ -19,8 +19,11 @@ const FILL_TRAVEL = 148;
 export default function Tirelire({ pointed, goal = DAILY_GOAL, tick }: TirelireProps) {
   const clipId = useId();
   const level = tirelireLevel(pointed, goal);
-  const count = `${pointed} sur ${goal}`;
-  const message = tick > 0 ? (level >= 1 ? 'Tirelire pleine pour aujourd’hui, bravo !' : `+1 pièce, ${count}`) : '';
+  // Au-delà de l'objectif, « 18 sur 10 » dérouterait : on dit le nombre et que l'objectif est atteint.
+  const isBeyond = pointed > goal;
+  const count = isBeyond ? `${pointed}` : `${pointed} sur ${goal}`;
+  const spoken = isBeyond ? `${pointed} pointées, objectif de ${goal} atteint` : count;
+  const message = tick > 0 ? (level >= 1 ? 'Tirelire pleine pour aujourd’hui, bravo !' : `+1 pièce, ${spoken}`) : '';
 
   return (
     <div className="flex items-center justify-center gap-4">
@@ -33,7 +36,7 @@ export default function Tirelire({ pointed, goal = DAILY_GOAL, tick }: TirelireP
         <svg
           key={`pig-${tick}`}
           role="img"
-          aria-label={`Tirelire du jour : ${count}`}
+          aria-label={`Tirelire du jour : ${spoken}`}
           data-niveau={String(level)}
           viewBox="0 0 260 210"
           className={`h-full w-full ${tick > 0 ? 'tirelire-pig' : ''}`}
@@ -78,7 +81,9 @@ export default function Tirelire({ pointed, goal = DAILY_GOAL, tick }: TirelireP
       </div>
       <div>
         <p className="text-2xl font-black text-texte">{count}</p>
-        <p className="text-sm text-texte-doux">pointées aujourd’hui</p>
+        <p className="text-sm text-texte-doux">
+          pointées aujourd’hui{isBeyond && <><br />objectif de {goal} atteint</>}
+        </p>
         <p role="status" className="min-h-6 text-sm font-bold text-attention">
           {message && <span aria-hidden="true">🪙 </span>}
           {message}

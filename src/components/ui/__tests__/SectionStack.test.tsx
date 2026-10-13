@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import SectionStack, { ownsScroll, withFirstRevealed } from '@/components/ui/SectionStack';
+import { softSnapTarget } from '@/utils/scroll';
 
 const sections = [
   { id: 'un', label: 'Décaissement', content: <p>Premier tableau</p> },
@@ -11,22 +12,26 @@ describe('SectionStack : cartes qui se suivent sur ordinateur', () => {
   const html = renderToStaticMarkup(<SectionStack sections={sections} label="Parties du budget" fillZone />);
 
   it('laisse de la marge sur les côtés : une carte grossie au survol n’est pas rognée', () => {
-    expect(html).toMatch(/md:overflow-y-auto[^"]*md:px-2|md:px-2[^"]*md:overflow-y-auto/);
+    // Une carte grossit de 2 % au survol (≈ 11 px de chaque côté) : 12 px de marge, et jamais de barre horizontale.
+    expect(html).toMatch(/md:px-3[^"]*md:overflow-y-auto/);
+    expect(html).toContain('md:overflow-x-hidden');
   });
 
-  it('accroche doucement le défilement sur chaque carte (proximity, jamais mandatory)', () => {
-    expect(html).toContain('md:snap-y');
-    expect(html).toContain('md:snap-proximity');
-    expect(html).not.toContain('snap-mandatory');
+  it('n’utilise pas l’accroche CSS, qui ramenait en arrière à chaque petit cran de molette', () => {
+    expect(html).not.toContain('snap-');
   });
 
-  it('aligne chaque carte en haut de la zone, sous la rangée de puces', () => {
-    expect(html.match(/md:snap-start/g)).toHaveLength(sections.length);
-    expect(html).toContain('scroll-padding-top');
+  it('au bout des cartes, ne fait pas défiler toute la page', () => {
+    expect(html).toContain('md:overscroll-contain');
   });
 
-  it('donne à chaque carte au moins la hauteur visible de la zone', () => {
-    expect(html.match(/md:min-h-\[calc\(100cqh-var\(--nav-h\)\)\]/g)).toHaveLength(sections.length);
+  it('imbriquée dans une autre zone (bilan), laisse la molette passer à celle-ci au bout des cartes', () => {
+    const nested = renderToStaticMarkup(<SectionStack sections={sections} label="Détail" fillZone nested />);
+    expect(nested).not.toContain('overscroll-contain');
+  });
+
+  it('donne à chaque carte la hauteur de son contenu : pas de grand vide sous une carte courte', () => {
+    expect(html).not.toContain('100cqh');
   });
 
   it('garde une puce par carte, la première marquée comme courante', () => {
@@ -72,6 +77,7 @@ describe('withFirstRevealed', () => {
     expect([...withFirstRevealed(new Set(['deux']), sections)].sort()).toEqual(['deux', 'un']);
     expect([...withFirstRevealed(new Set(), [])]).toEqual([]);
   });
+});
 
 describe('SectionStack : bloc court (formulaire)', () => {
   const withShort = [...sections, { id: 'ajout', label: 'Ajouter une ligne', content: <form />, fit: true }];
@@ -86,9 +92,35 @@ describe('SectionStack : bloc court (formulaire)', () => {
     const block = short.slice(0, short.indexOf('</section>'));
     expect(block).toContain('min-h-40');
   });
-
-  it('reste une étape du défilement accroché', () => {
-    expect(short.slice(0, 300)).toContain('md:snap-start');
-  });
 });
+
+describe('softSnapTarget : accroche douce', () => {
+  // Débuts de cartes à 0, 430, 860 ; zone de 430 px de haut : on se cale à moins de 64,5 px d'un début.
+  const starts = [0, 430, 860];
+
+  it('laisse lire au milieu d’une carte, même à petits crans', () => {
+    expect(softSnapTarget(starts, 100, 430, 1200)).toBeNull();
+    expect(softSnapTarget(starts, 200, 430, 1200)).toBeNull();
+  });
+
+  it('se cale sur le début de carte tout proche, devant ou derrière', () => {
+    expect(softSnapTarget(starts, 380, 430, 1200)).toBe(430);
+    expect(softSnapTarget(starts, 470, 430, 1200)).toBe(430);
+  });
+
+  it('n’annule jamais un cran de molette, même dans une zone très haute', () => {
+    expect(softSnapTarget([0, 367], 100, 668, 367)).toBeNull();
+    expect(softSnapTarget([0, 367], 300, 668, 367)).toBeNull();
+    expect(softSnapTarget([0, 367], 320, 668, 367)).toBe(367);
+  });
+
+  it('ne bouge pas quand on y est déjà', () => {
+    expect(softSnapTarget(starts, 431, 430, 1200)).toBeNull();
+  });
+
+  it('ne vise jamais au-delà de la fin de la zone', () => {
+    expect(softSnapTarget(starts, 790, 430, 800)).toBe(800);
+    expect(softSnapTarget([0, 860], 760, 430, 800)).toBe(800);
+    expect(softSnapTarget([0, 860], 600, 430, 800)).toBeNull();
+  });
 });

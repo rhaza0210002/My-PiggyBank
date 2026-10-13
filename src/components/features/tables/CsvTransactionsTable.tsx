@@ -14,6 +14,7 @@ import {
 } from '@/utils/csvTransactionGrouping';
 import type { BankTransaction } from '@/services/csvParser';
 import { euroFormatter } from '@/utils/formatEuro';
+import { statementMonth } from '@/utils/statementMonth';
 import Icon from '@/components/ui/Icon';
 
 interface CsvTransactionsTableProps {
@@ -322,7 +323,7 @@ export default function CsvTransactionsTable({ transactions, isDemo = false, onD
             id: 'comparison',
             label: 'Comparaison avec le budget',
             hideTitle: true,
-            content: <MonthlyBudgetComparison groups={groups} />,
+            content: <MonthlyBudgetComparison groups={groups} initialMonth={statementMonth(transactions.map((transaction) => transaction.date))} />,
           },
         ]}
       />

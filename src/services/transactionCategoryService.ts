@@ -1,6 +1,7 @@
 // src/services/transactionCategoryService.ts
 import { supabase } from '@/lib/supabaseClient';
 import { cachedLoad, invalidateCache } from '@/utils/memoryCache';
+import { categoryLabelError, normalizeCategoryLabel } from '@/utils/categoryLabel';
 
 /** Groupes et catégories changent très rarement : on les garde 5 minutes (et on les oublie à chaque création). */
 const REFERENCE_TTL_MS = 5 * 60 * 1000;
@@ -16,6 +17,8 @@ export interface Category {
   id: string;
   label: string;
   cat_group_key: number;
+  /** NULL : catégorie commune ; sinon catégorie personnelle de l'utilisateur. */
+  user_id?: string | null;
   created_at?: string;
 }
 
@@ -70,36 +73,43 @@ async function loadCategories(): Promise<Category[]> {
   return data || [];
 }
 
+/**
+ * Crée une catégorie personnelle (visible dans ce compte seulement), ou commune si l'administrateur le demande. Le nom est vérifié ici puis par la base,
+ * qui limite aussi le nombre de catégories par compte (voir categoryLabel.ts).
+ */
 export async function createCategory(
-  label: string, 
-  categoryGroupId: number
+  label: string,
+  categoryGroupId: number,
+  { shared = false }: { shared?: boolean } = {},
 ): Promise<Category> {
   if (!categoryGroupId) {
-    throw new Error("L'ID du groupe de catégorie est vide ou manquant !");
+    throw new Error('Choisis un groupe pour la catégorie.');
   }
+  const invalid = categoryLabelError(label);
+  if (invalid) throw new Error(invalid);
 
   const { data, error } = await supabase
     .from('transac_cat')
-    .insert({ 
-      label: label.trim(), 
-      cat_group_key: categoryGroupId
-    })
+    // Commune (administrateur seulement, la base le vérifie) ou personnelle (propriétaire posé par la base).
+    .insert({ label: normalizeCategoryLabel(label), cat_group_key: categoryGroupId, ...(shared ? { user_id: null } : {}) })
     .select('*')
     .single();
 
   if (error) {
-    console.error("Erreur Supabase détaillée :", error);
-    if (error.code === '42501') {
-      throw new Error("Seul l'administrateur peut créer une catégorie.");
-    }
-    if (error.code === '23505') {
-      throw new Error('Cette catégorie existe déjà dans ce groupe.');
-    }
-    throw new Error(error.message);
+    console.error('Création de catégorie refusée :', error.code);
+    throw new Error(translateCategoryError(error.code, error.message));
   }
 
   invalidateCache('categories:');
   return data;
+}
+
+/** Messages de la base en français ; les règles de nom et la limite arrivent déjà rédigées. */
+export function translateCategoryError(code: string | undefined, message: string): string {
+  if (code === '23505') return 'Cette catégorie existe déjà dans ce groupe.';
+  if (code === '22023' || code === '54000') return message;
+  if (code === '42501') return 'Tu ne peux pas modifier cette catégorie.';
+  return 'Impossible de créer la catégorie pour le moment.';
 }
 
 /**

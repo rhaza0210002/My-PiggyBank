@@ -41,7 +41,7 @@
 
   /* Style « autocollant » : contour d'encre franc et ombre pleine décalée, jamais d'ombre floue. */
   --shadow-bonbon: 0 2px 0 var(--color-texte);
-  --shadow-corail: 0 0 0 2.5px var(--color-texte), 0 2px 0 2.5px var(--color-texte);
+  --shadow-corail: 0 0 0 var(--trait-onglet) var(--color-texte), 0 var(--ombre-onglet) 0 var(--trait-onglet) var(--color-texte);
   --shadow-sticker: 2px 3px 0 var(--color-texte);
   --shadow-sticker-petit: 1px 2px 0 var(--color-texte);
   --shadow-doux: 0 8px 24px color-mix(in srgb, var(--color-texte) 12%, transparent);
@@ -76,6 +76,10 @@
 }
 
 :root {
+  /* Épaisseurs des traits : anneau et ombre de l'onglet actif, contour du menu du haut. */
+  --trait-onglet: 2.5px;
+  --ombre-onglet: 2px;
+  --trait-entete: 2px;
   --duree-pointage: 0.5s;
   --duree-niveau: 0.5s;
 }

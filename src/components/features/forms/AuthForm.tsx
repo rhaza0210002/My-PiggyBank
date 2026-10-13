@@ -1,7 +1,7 @@
 "use client";
 
 import Button from '@/components/ui/Button';
-import GoogleLogo from '@/components/features/forms/GoogleLogo';
+// import GoogleLogo from '@/components/features/forms/GoogleLogo'; // Google en pause
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
@@ -33,7 +33,7 @@ const LABEL_CLASS = 'block px-1 text-sm font-bold text-texte';
 const HINT_CLASS = 'px-1 text-xs text-texte-doux';
 const HINT_OK_CLASS = 'px-1 text-xs font-bold text-ok';
 
-export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, serverError = null }: AuthFormProps) {
+export default function AuthForm({ mode, onSubmit, isLoading = false, serverError = null }: AuthFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [pseudo, setPseudo] = useState('');
@@ -85,16 +85,17 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
     });
   };
 
+  // Google en pause : à décommenter avec le bouton plus bas.
   // Sur l'inscription, Google crée aussi un compte : on demande donc d'abord d'accepter les conditions.
-  const handleGoogle = () => {
-    if (isRegister && !acceptedTerms) {
-      fail('terms', 'Coche la case pour accepter les conditions d’utilisation et la politique de confidentialité.');
-      return;
-    }
-    setInvalidField(null);
-    setValidationError(null);
-    onGoogle?.();
-  };
+  // const handleGoogle = () => {
+  //   if (isRegister && !acceptedTerms) {
+  //     fail('terms', 'Coche la case pour accepter les conditions d’utilisation et la politique de confidentialité.');
+  //     return;
+  //   }
+  //   setInvalidField(null);
+  //   setValidationError(null);
+  //   onGoogle?.();
+  // };
 
   const fieldProps = (field: string) => ({
     'aria-invalid': invalidField === field ? true : undefined,
@@ -140,6 +141,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
                 value={pseudo}
                 onChange={(event) => setPseudo(event.target.value)}
                 autoComplete="nickname"
+                maxLength={40}
                 required
                 placeholder="Ton pseudo"
                 className={INPUT_CLASS}
@@ -235,6 +237,8 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
           </Button>
         </form>
 
+        {/* Connexion Google en pause (2026-10-13) : bouton commenté. Pour le remettre, décommenter ce bloc,
+            handleGoogle, l'import de GoogleLogo et onGoogle dans les props, puis NEXT_PUBLIC_GOOGLE_AUTH=on.
         {onGoogle && (
           <div className="space-y-3">
             <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-wide text-texte-doux" aria-hidden="true">
@@ -271,6 +275,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, onGoogle, 
             )}
           </div>
         )}
+        */}
 
         <div className="border-t border-bordure/60 pt-4 text-center">
           <p className="text-[0.95rem] text-texte">
