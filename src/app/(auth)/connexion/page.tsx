@@ -8,12 +8,14 @@ import { ROUTES } from '@/constants/routes';
 import { loginUser, resendConfirmationEmail, signInWithGoogle } from '@/services/authService';
 
 const LINK_ERROR = 'Ce lien n’est plus valable ou a déjà servi. Connecte-toi, ou demande un nouveau lien.';
+const SESSION_ERROR = 'Ta session a expiré (par exemple après une longue pause). Reconnecte-toi pour continuer.';
+const QUERY_ERRORS: Record<string, string> = { lien: LINK_ERROR, session: SESSION_ERROR };
 
 function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState<string | null>(
-    searchParams.get('erreur') === 'lien' ? LINK_ERROR : null,
+    QUERY_ERRORS[searchParams.get('erreur') ?? ''] ?? null,
   );
   const [unconfirmedEmail, setUnconfirmedEmail] = useState<string | null>(null);
   const [resent, setResent] = useState(false);

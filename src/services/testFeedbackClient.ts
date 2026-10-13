@@ -42,3 +42,9 @@ export function reportClientError(error: unknown): void {
   const stack = error instanceof Error ? error.stack?.split('\n').slice(0, 8).join('\n') : undefined;
   void sendFeedback({ kind: 'erreur', message, stack });
 }
+
+/** Note un message d'erreur montré à l'écran (zones role="alert") : l'app a géré l'erreur, mais le testeur l'a vue. */
+export function reportDisplayedError(text: string): void {
+  const message = text.replace(/\s+/g, ' ').trim();
+  if (message) reportClientError(`Affiché à l’écran : ${message}`);
+}

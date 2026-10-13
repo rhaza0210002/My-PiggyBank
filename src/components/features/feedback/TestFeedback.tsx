@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { reportClientError, sendFeedback } from '@/services/testFeedbackClient';
+import { reportClientError, reportDisplayedError, sendFeedback } from '@/services/testFeedbackClient';
 
 const WHO_KEY = 'piggy-testeur';
 
@@ -21,9 +21,25 @@ export default function TestFeedback() {
     const onRejection = (event: PromiseRejectionEvent) => reportClientError(event.reason);
     window.addEventListener('error', onError);
     window.addEventListener('unhandledrejection', onRejection);
+
+    // Les erreurs gérées par l'app s'affichent toutes dans des zones role="alert" : on note leur texte.
+    const shown = new WeakMap<Element, string>();
+    const scan = () => {
+      document.querySelectorAll('[role="alert"]').forEach((alert) => {
+        const text = alert.textContent ?? '';
+        if (shown.get(alert) === text) return;
+        shown.set(alert, text);
+        reportDisplayedError(text);
+      });
+    };
+    const observer = new MutationObserver(scan);
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    scan();
+
     return () => {
       window.removeEventListener('error', onError);
       window.removeEventListener('unhandledrejection', onRejection);
+      observer.disconnect();
     };
   }, []);
 
