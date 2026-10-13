@@ -10,7 +10,7 @@ export interface StackSection {
   content: ReactNode;
   /** Le contenu porte déjà son propre titre visible : le titre du bloc reste lu par les lecteurs d'écran seulement. */
   hideTitle?: boolean;
-  /** Bloc court (un formulaire) : il garde la hauteur de son contenu au lieu de remplir la zone. */
+  /** Bloc court (un formulaire) : une fois monté, il ne garde pas la hauteur minimale d'attente. */
   fit?: boolean;
 }
 
@@ -21,8 +21,9 @@ interface SectionStackProps {
   /** Fond de la rangée de puces collante (doit être celui du conteneur pour ne pas former de bande). */
   background?: 'surface' | 'surface-douce';
   /**
-   * Sur ordinateur, la zone a une hauteur fixe (le cadre de l'écran) : chaque bloc devient une carte de cette
-   * hauteur, avec accroche douce. À laisser éteint quand la zone s'étire avec son contenu (import de relevé).
+   * Sur ordinateur, la zone a une hauteur fixe (le cadre de l'écran) et défile elle-même, avec accroche douce
+   * sur le début de chaque carte ; chaque carte garde la hauteur de son contenu. À laisser éteint quand la zone
+   * s'étire avec son contenu (import de relevé).
    */
   fillZone?: boolean;
   /**
@@ -239,7 +240,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
               data-section-id={section.id}
               aria-labelledby={`section-${section.id}-title`}
               tabIndex={-1}
-              className={`scroll-mt-1 outline-none ${fillZone && !section.fit ? 'md:min-h-[calc(100cqh-var(--nav-h))]' : ''}`}
+              className="scroll-mt-1 outline-none"
             >
               <h2
                 id={`section-${section.id}-title`}

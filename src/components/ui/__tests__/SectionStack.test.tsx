@@ -28,8 +28,8 @@ describe('SectionStack : cartes qui se suivent sur ordinateur', () => {
     expect(nested).not.toContain('overscroll-contain');
   });
 
-  it('donne à chaque carte au moins la hauteur visible de la zone', () => {
-    expect(html.match(/md:min-h-\[calc\(100cqh-var\(--nav-h\)\)\]/g)).toHaveLength(sections.length);
+  it('donne à chaque carte la hauteur de son contenu : pas de grand vide sous une carte courte', () => {
+    expect(html).not.toContain('100cqh');
   });
 
   it('garde une puce par carte, la première marquée comme courante', () => {
