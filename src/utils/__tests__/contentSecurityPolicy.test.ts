@@ -31,6 +31,10 @@ describe('buildContentSecurityPolicy', () => {
     expect(dev).not.toContain('upgrade-insecure-requests');
   });
 
+  it('sur le Wi-Fi local en http, ne force pas le HTTPS (sinon plus rien ne se charge)', () => {
+    expect(buildContentSecurityPolicy({ ...base, isHttps: false })).not.toContain('upgrade-insecure-requests');
+  });
+
   it('ignore un chemin glissé dans l’adresse Supabase', () => {
     const csp2 = buildContentSecurityPolicy({ ...base, supabaseUrl: 'https://projet.supabase.co/rest/v1;script-src *' });
     expect(csp2).toContain('connect-src \'self\' https://projet.supabase.co wss://projet.supabase.co;');

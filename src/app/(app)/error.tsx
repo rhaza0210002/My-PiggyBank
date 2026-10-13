@@ -1,10 +1,15 @@
 "use client";
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { ROUTES } from '@/constants/routes';
 import Pig from '@/components/ui/Pig';
+import { reportClientError } from '@/services/testFeedbackClient';
 
-export default function AppError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function AppError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  // Séance de test : l'erreur qui a mené ici est notée (sans effet le reste du temps).
+  useEffect(() => reportClientError(error), [error]);
+
   return (
     <div className="mx-auto flex h-full max-w-xl items-center justify-center px-4">
       <div role="alert" className="w-full rounded-carte border-2 border-bordure bg-surface-douce p-6 text-center">

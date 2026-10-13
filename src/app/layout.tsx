@@ -4,6 +4,8 @@ import { headers } from "next/headers";
 import localFont from "next/font/local";
 import { Baloo_2, Nunito } from "next/font/google";
 import AccessibilityFlower from "@/components/features/accessibility/AccessibilityFlower";
+import TestFeedback from "@/components/features/feedback/TestFeedback";
+import { isTestSessionEnabled } from "@/utils/testFeedback";
 import { noFlashScript } from "@/utils/accessibilityPrefs";
 import "./globals.css";
 
@@ -51,6 +53,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <body className="min-h-full flex flex-col bg-fond text-texte" suppressHydrationWarning>
         {children}
         <AccessibilityFlower />
+        {isTestSessionEnabled() && <TestFeedback />}
       </body>
     </html>
   );
