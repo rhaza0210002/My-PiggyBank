@@ -394,3 +394,21 @@
   Vérifier qu'aucune page ne défile à l'horizontale.
 - [ ] **Step 3** : relire les captures. Si une correction est nécessaire, faire un commit `fix(front): …`, puis relancer l'étape 1.
 - [ ] **Step 4** : envoyer la branche sur GitHub pour la sauvegarder (`git push`). **Pas de PR** sans demande de l'utilisatrice.
+
+## Bilan de la revue finale (2026-10-13)
+
+Corrigé après la revue : débits lus comme des rentrées quand la colonne Crédit est vide sur le mois ; ligne au
+libellé vide écartée ; en-tête perdu quand seules les opérations finissent par un séparateur ; mémoire de forme
+inattendue qui bloquait un format ; focus et annonces des questions.
+
+Laissé pour plus tard (mineur) :
+- préférer l'en-tête « Libellé » quand une autre colonne de texte a plus de valeurs différentes (aperçu seulement) ;
+- ligne de solde de même largeur que le tableau comptée comme illisible (doute qui revient chaque mois) ;
+- décimale devinée « , » pour un fichier à point sans décimales (`-1,234`) ;
+- dates avec heure (`2026-09-02 10:11:12`, banques en ligne) non reconnues ;
+- guillemet ouvrant jamais fermé : le reste du fichier tombe dans une case ;
+- UTF-16 (« Texte Unicode » d'Excel) non décodé ;
+- OFX XML : entités (`&amp;`) non décodées ;
+- association retenue même quand elle ne donne aucune ligne ; « Importer » actif sur un aperçu vide ;
+- contrôle « débit et crédit rarement remplis sur la même ligne » de la spec non implémenté ;
+- fixtures UTF-8 avec BOM / windows-1252 du même contenu.
