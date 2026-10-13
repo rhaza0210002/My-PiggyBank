@@ -71,7 +71,6 @@ L'utilisatrice, propriétaire du dépôt, garde un contournement d'urgence (*byp
 ### 6. Documentation
 
 - `CONTRIBUTING.md` : les règles 1 à 4 en une page, à lire en 2 minutes.
-- Corriger les accents du commentaire dans `ci.yml`.
 - Mettre à jour la mémoire de Claude (`feedback-git-front-back`) avec ces règles.
 
 ### Laissé de côté pour l'instant
