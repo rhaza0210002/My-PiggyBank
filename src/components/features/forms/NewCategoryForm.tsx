@@ -7,14 +7,17 @@ import {
   type Category,
   type CategoryGroup,
 } from '@/services/transactionCategoryService';
+import { CATEGORY_LABEL_MAX, MAX_OWN_CATEGORIES, categoryLabelError, normalizeCategoryLabel } from '@/utils/categoryLabel';
 
 interface NewCategoryFormProps {
   groups: CategoryGroup[];
   categories: Category[];
   onCreated: (category: Category) => void;
+  /** Administrateur : catégorie commune à tous les comptes ; sinon personnelle. */
+  shared?: boolean;
 }
 
-export default function NewCategoryForm({ groups, categories, onCreated }: NewCategoryFormProps) {
+export default function NewCategoryForm({ groups, categories, onCreated, shared = false }: NewCategoryFormProps) {
   const formId = useId();
   const [label, setLabel] = useState('');
   const [groupId, setGroupId] = useState<string>('');
@@ -26,12 +29,18 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const name = label.trim();
+    const name = normalizeCategoryLabel(label);
     const group = groups.find((item) => String(item.id) === selectedGroupId);
     if (!name || !group || isSubmitting) return;
 
     setError(null);
     setStatus(null);
+
+    const invalid = categoryLabelError(name);
+    if (invalid) {
+      setError(invalid);
+      return;
+    }
 
     const alreadyExists = categories.some(
       (category) => category.cat_group_key === group.id && category.label.trim().toLowerCase() === name.toLowerCase(),
@@ -43,7 +52,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
 
     setIsSubmitting(true);
     try {
-      const created = await createCategory(name, group.id);
+      const created = await createCategory(name, group.id, { shared });
       onCreated(created);
       setLabel('');
       setStatus(`Catégorie « ${created.label} » créée dans « ${group.libelle} ».`);
@@ -61,10 +70,17 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
     >
       <h2 id={`${formId}-title`} className="px-2 text-[1.2rem] font-black text-texte">
         Nouvelle catégorie
-        <span className="ml-2 rounded-full bg-texte px-2 py-0.5 align-middle text-xs font-bold text-surface">
-          Administrateur
-        </span>
+        {shared && (
+          <span className="ml-2 rounded-full bg-texte px-2 py-0.5 align-middle text-xs font-bold text-surface">
+            Pour tout le monde
+          </span>
+        )}
       </h2>
+      <p className="px-2 text-sm text-texte-doux">
+        {shared
+          ? 'Administrateur : la catégorie sera proposée à tous les comptes.'
+          : `Elle n’apparaît que dans ton compte. ${MAX_OWN_CATEGORIES} au plus, ${CATEGORY_LABEL_MAX} caractères maximum.`}
+      </p>
 
       <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -95,7 +111,7 @@ export default function NewCategoryForm({ groups, categories, onCreated }: NewCa
             value={label}
             onChange={(event) => setLabel(event.target.value)}
             required
-            maxLength={60}
+            maxLength={CATEGORY_LABEL_MAX}
             autoComplete="off"
             aria-invalid={error !== null}
             aria-describedby={error ? `${formId}-error` : undefined}

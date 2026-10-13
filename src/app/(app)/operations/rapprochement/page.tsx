@@ -353,13 +353,14 @@ export default function RapprochementPage() {
           </div>
         )}
 
-        {data && isAdmin && (
+        {data && (
           <details className="rounded-2xl border-[1.5px] border-dashed border-bordure bg-surface-douce px-3 py-1">
             <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold text-texte">
-              Créer une catégorie (administrateur)
+              {isAdmin ? 'Créer une catégorie (administrateur)' : 'Créer ma propre catégorie'}
             </summary>
             <div className="pb-2">
               <NewCategoryForm
+                shared={isAdmin}
                 groups={data.categoryGroups}
                 categories={data.categories}
                 onCreated={(category) =>
