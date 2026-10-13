@@ -28,7 +28,7 @@ Un dépôt qui suit les usages courants de GitHub sans ajouter de charge à l'ut
 
 - `main` : ce qui est en ligne. On n'y fusionne **que sur demande de l'utilisatrice**, par une PR de livraison `feat/front` → `main` (ou `feat/back` → `main`).
 - `feat/front` et `feat/back` : branches d'intégration, une par côté.
-- **Branches de travail** : une par sujet, créée depuis la branche d'intégration du bon côté. Nom : `type/sujet-court`, avec les types `feat`, `fix`, `docs`, `chore`, `refactor` ou `test`, par exemple `fix/bilan-coupe` ou `feat/import-csv-souple`.
+- **Branches de travail** : une par chantier (voir règle 3), créée depuis la branche d'intégration du bon côté. Nom : `type/sujet-court`, avec les types `feat`, `fix`, `docs`, `chore`, `refactor` ou `test`, par exemple `fix/bilan-coupe` ou `feat/import-csv-souple`.
 - **Pas d'empilement** : une branche de travail ne part jamais d'une autre branche de travail non fusionnée. Si un sujet dépend d'un autre, on attend la fusion du premier.
 - Une branche de travail est effacée automatiquement après sa fusion.
 
@@ -42,7 +42,9 @@ Un dépôt qui suit les usages courants de GitHub sans ajouter de charge à l'ut
 
 ### 3. Pull requests
 
-- Une PR = une branche de travail = un sujet, vers `feat/front` ou `feat/back`.
+- **Une PR n'est ouverte que lorsque l'utilisatrice le demande.** Jusque-là, le travail reste en commits sur sa branche, envoyée sur GitHub pour être sauvegardée, mais sans PR.
+- **Une PR = un chantier, pas une retouche.** Un chantier, c'est par exemple « import CSV souple » ou « passe responsive ». Les petites corrections d'une même session vont ensemble sur une branche `fix/retouches-AAAA-MM-JJ`. On évite ainsi une multitude de petites PR, tout en gardant des PR qu'on peut relire en une fois.
+- Vers `feat/front` ou `feat/back`.
 - Titre : celui du commit principal (même format).
 - Modèle de description `.github/pull_request_template.md` :
   - Pourquoi ;
@@ -81,7 +83,7 @@ L'utilisatrice, propriétaire du dépôt, garde un contournement d'urgence (*byp
 
 Chaque étape est faite par Claude. L'utilisatrice valide seulement ce plan.
 
-1. Sur `chore/normes-github` : `CONTRIBUTING.md`, `.github/pull_request_template.md`, correction de `ci.yml`. Commit `chore(repo): …`, puis PR vers `feat/front`.
+1. Sur `chore/normes-github` : `CONTRIBUTING.md`, `.github/pull_request_template.md`, correction de `ci.yml`. Commit `chore(repo): …`. La PR vers `feat/front` n'est ouverte que sur demande de l'utilisatrice.
 2. Réglages du dépôt (`gh api`) : effacement auto des branches après fusion, méthodes de fusion squash et merge commit, rebase désactivé.
 3. Rulesets sur `main`, `feat/front` et `feat/back` (règle 4). On vérifie ensuite qu'une poussée directe sur `feat/front` est bien refusée.
 4. Ménage : liste exacte des branches à effacer montrée à l'utilisatrice, effacement après son accord.
