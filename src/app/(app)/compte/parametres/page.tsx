@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import AccessibilityButtonSetting from '@/components/features/accessibility/AccessibilityButtonSetting';
 import PushReminderToggle from '@/components/features/forms/PushReminderToggle';
+import ScreenCard from '@/components/ui/ScreenCard';
 import {
   DEFAULT_USER_SETTINGS,
   getUserSettings,
@@ -69,11 +70,8 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="mx-auto flex min-h-[60vh] max-w-5xl flex-col gap-4 px-4 py-10 sm:px-6 lg:px-8">
-      <div className={CARD}>
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent-fort">Paramètres</p>
-        <h1 className="mt-2 text-2xl font-bold text-texte">Tes préférences de suivi</h1>
-      </div>
+    <ScreenCard flow title="Paramètres" icon="settings" subtitle="Tes préférences de suivi et d’accessibilité.">
+      <div className="mx-auto flex max-w-3xl flex-col gap-4">
 
       <section aria-labelledby="notif-prefs-title" className={CARD}>
         <h2 id="notif-prefs-title" className="text-lg font-bold text-texte">Notifications</h2>
@@ -117,6 +115,7 @@ export default function SettingsPage() {
           <AccessibilityButtonSetting />
         </div>
       </section>
-    </div>
+      </div>
+    </ScreenCard>
   );
 }

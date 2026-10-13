@@ -165,10 +165,17 @@ export default function SectionStack({ sections, label, background = 'surface-do
     if (!nav || !scroller || typeof ResizeObserver === 'undefined') return;
     const update = () => scroller.style.setProperty('--nav-h', `${nav.offsetHeight}px`);
     update();
+    // L'accroche a pu se caler pendant que la page se mettait en place : on repart du haut, une fois stable.
+    const settle = requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (fillZone) scroller.scrollTop = 0;
+    }));
     const observer = new ResizeObserver(update);
     observer.observe(nav);
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      cancelAnimationFrame(settle);
+      observer.disconnect();
+    };
+  }, [fillZone]);
 
   // Sur mobile la rangée de puces défile : la puce de la partie lue reste visible.
   useEffect(() => {
@@ -219,7 +226,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
 
       <div
         ref={scrollerRef}
-        className={`min-h-0 flex-1 space-y-4 md:overflow-y-auto ${
+        className={`min-h-0 flex-1 space-y-4 md:overflow-y-auto md:px-2 ${
           fillZone ? 'md:snap-y md:snap-proximity md:[container-type:size] md:[scroll-padding-top:var(--nav-h)]' : ''
         }`}
       >
@@ -268,7 +275,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
                 {section.label}
               </h2>
               <div
-                className={`${section.fit ? '' : 'min-h-40'} transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none ${
+                className={`${section.fit && isRevealed ? '' : 'min-h-40'} transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none ${
                   isRevealed ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 motion-reduce:translate-y-0'
                 }`}
               >

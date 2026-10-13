@@ -109,7 +109,7 @@ export default function BudgetGroupTable({
                   <td className={TABLE_STYLES.cellCategory}>{row.category}</td>
                   <td className={`${TABLE_STYLES.cellAmount} group relative`}>
                     {editingCategory === row.category ? (
-                      <div className="flex items-center justify-center gap-1">
+                      <div className="flex items-center justify-end gap-1">
                         <input
                           type="number"
                           step="0.01"
@@ -140,7 +140,7 @@ export default function BudgetGroupTable({
                         </button>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex items-center justify-end gap-2">
                         <span>{formatCurrency(row.values[monthIndex] ?? '-')}</span>
                         {!readOnly && (
                           <button
