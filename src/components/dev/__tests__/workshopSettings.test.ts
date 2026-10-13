@@ -13,6 +13,17 @@ describe('atelier de l’identité graphique', () => {
     expect(variables['--font-titre']).toContain('--font-baloo');
   });
 
+  it('règle l’épaisseur des contours (onglet actif, menu du haut)', () => {
+    expect(workshopVariables(base)['--trait-onglet']).toBe('2.5px');
+    const thinner = { ...base, lines: { onglet: 1, ombreOnglet: 0, entete: 1.5 } };
+    expect(workshopVariables(thinner)).toMatchObject({ '--trait-onglet': '1px', '--ombre-onglet': '0px', '--trait-entete': '1.5px' });
+    expect(describeChanges(base, thinner)).toEqual([
+      'Contour de l’onglet actif : 1px',
+      'Ombre de l’onglet actif : 0px',
+      'Contour du menu du haut : 1.5px',
+    ]);
+  });
+
   it('ne pose pas de variable pour une couleur pas encore lue', () => {
     expect(workshopVariables(base)).not.toHaveProperty('--color-corail');
   });

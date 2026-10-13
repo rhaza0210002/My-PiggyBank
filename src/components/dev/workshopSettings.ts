@@ -45,7 +45,23 @@ export interface WorkshopSettings {
   textScale: number;
   fontText: FontId;
   fontTitle: FontId;
+  /** Épaisseurs en px : anneau et ombre de l'onglet actif, contour du menu du haut. */
+  lines?: WorkshopLines;
 }
+
+export interface WorkshopLines {
+  onglet: number;
+  ombreOnglet: number;
+  entete: number;
+}
+
+export const DEFAULT_LINES: WorkshopLines = { onglet: 2.5, ombreOnglet: 2, entete: 2 };
+
+export const LINE_SETTINGS: { key: keyof WorkshopLines; label: string; variable: string; max: number }[] = [
+  { key: 'onglet', label: 'Contour de l’onglet actif', variable: '--trait-onglet', max: 3 },
+  { key: 'ombreOnglet', label: 'Ombre de l’onglet actif', variable: '--ombre-onglet', max: 3 },
+  { key: 'entete', label: 'Contour du menu du haut', variable: '--trait-entete', max: 3 },
+];
 
 export const DEFAULT_FORM = { radiusCard: 1.5, textScale: 100, fontText: 'nunito', fontTitle: 'baloo' } as const;
 
@@ -61,6 +77,8 @@ export function workshopVariables(settings: WorkshopSettings): Record<string, st
   variables['--radius-carte'] = `${settings.radiusCard}rem`;
   variables['--font-sans'] = fontValue(settings.fontText);
   variables['--font-titre'] = fontValue(settings.fontTitle);
+  const lines = settings.lines ?? DEFAULT_LINES;
+  for (const { key, variable } of LINE_SETTINGS) variables[variable] = `${lines[key]}px`;
   return variables;
 }
 
@@ -74,5 +92,10 @@ export function describeChanges(before: WorkshopSettings, after: WorkshopSetting
   if (before.textScale !== after.textScale) changes.push(`Taille du texte : ${after.textScale} %`);
   if (before.fontText !== after.fontText) changes.push(`Police du texte : ${after.fontText}`);
   if (before.fontTitle !== after.fontTitle) changes.push(`Police des titres : ${after.fontTitle}`);
+  for (const { key, label } of LINE_SETTINGS) {
+    const was = (before.lines ?? DEFAULT_LINES)[key];
+    const now = (after.lines ?? DEFAULT_LINES)[key];
+    if (was !== now) changes.push(`${label} : ${now}px`);
+  }
   return changes;
 }

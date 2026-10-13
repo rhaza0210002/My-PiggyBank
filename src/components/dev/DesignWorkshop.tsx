@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   DEFAULT_FORM,
+  DEFAULT_LINES,
+  LINE_SETTINGS,
   FONT_CHOICES,
   WORKSHOP_COLORS,
   describeChanges,
@@ -167,6 +169,24 @@ export default function DesignWorkshop() {
                 onChange={(event) => update({ ...settings, radiusCard: Number(event.target.value) })}
               />
             </label>
+            {LINE_SETTINGS.map(({ key, label, max }) => {
+              const lines = settings.lines ?? DEFAULT_LINES;
+              return (
+                <label key={key} className="flex min-h-9 items-center justify-between gap-2 font-semibold">
+                  <span>
+                    {label} <span className="text-xs font-normal text-texte-doux">{lines[key]} px</span>
+                  </span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={max}
+                    step={0.5}
+                    value={lines[key]}
+                    onChange={(event) => update({ ...settings, lines: { ...lines, [key]: Number(event.target.value) } })}
+                  />
+                </label>
+              );
+            })}
             <label className="flex min-h-9 items-center justify-between gap-2 font-semibold">
               Taille du texte
               <input
