@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { headers } from "next/headers";
 import localFont from "next/font/local";
 import { Baloo_2, Nunito } from "next/font/google";
 import AccessibilityFlower from "@/components/features/accessibility/AccessibilityFlower";
@@ -39,11 +40,13 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#8fd36f" };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Nonce posé par le proxy : sans lui, la CSP bloquerait ce petit script (préférences d'affichage).
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html lang="fr" className={`${nunito.variable} ${baloo.variable} ${luciole.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: noFlashScript() }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: noFlashScript() }} />
       </head>
       <body className="min-h-full flex flex-col bg-fond text-texte" suppressHydrationWarning>
         {children}
