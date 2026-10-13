@@ -16,7 +16,7 @@ Un dépôt qui suit les usages courants de GitHub sans ajouter de charge à l'ut
 | Dépôt | Public, compte personnel `rhaza0210002`, seule collaboratrice. |
 | Branches | `main` (production), `feat/front` (42 commits d'avance sur `main`), `feat/back` (identique à `main`, inutilisée). **74 branches distantes**, dont 71 déjà fusionnées dans `feat/front`. |
 | Protection | Aucune règle sur `main` ni sur `feat/front` : on peut y pousser directement, forcer ou effacer. |
-| Vérifications (CI) | `.github/workflows/ci.yml` : lint, typecheck, tests et build sur chaque PR, plus un audit des dépendances qui ne bloque pas. Bonne base. Un commentaire a des accents abîmés (`DÃ©`). |
+| Vérifications (CI) | `.github/workflows/ci.yml` : lint, typecheck, tests et build sur chaque PR, plus un audit des dépendances qui ne bloque pas. Bonne base. |
 | Fusions | Les trois méthodes sont permises (merge, squash, rebase). Les branches ne sont pas effacées après fusion. |
 | PR | Pas de modèle de description. Des branches ont été empilées les unes sur les autres (`feat/responsive` contenait #62 à #66), ce qui rend les PR difficiles à relire. |
 | Commits | Majoritairement `feat(front):` et `fix(front):`. Les plus anciens utilisent d'autres portées (`feat(exemple):`) ou n'en ont pas (`test`). |
@@ -83,7 +83,7 @@ L'utilisatrice, propriétaire du dépôt, garde un contournement d'urgence (*byp
 
 Chaque étape est faite par Claude. L'utilisatrice valide seulement ce plan.
 
-1. Sur `chore/normes-github` : `CONTRIBUTING.md`, `.github/pull_request_template.md`, correction de `ci.yml`. Commit `chore(repo): …`. La PR vers `feat/front` n'est ouverte que sur demande de l'utilisatrice.
+1. Sur `chore/normes-github` : `CONTRIBUTING.md`, `.github/pull_request_template.md`. Commit `chore(repo): …`. La PR vers `feat/front` n'est ouverte que sur demande de l'utilisatrice.
 2. Réglages du dépôt (`gh api`) : effacement auto des branches après fusion, méthodes de fusion squash et merge commit, rebase désactivé.
 3. Rulesets sur `main`, `feat/front` et `feat/back` (règle 4). On vérifie ensuite qu'une poussée directe sur `feat/front` est bien refusée.
 4. Ménage : liste exacte des branches à effacer montrée à l'utilisatrice, effacement après son accord.
