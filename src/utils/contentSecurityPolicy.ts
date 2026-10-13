@@ -9,6 +9,8 @@ export interface CspOptions {
   supabaseUrl: string;
   /** En développement, React a besoin d'eval pour ses messages d'erreur ; jamais en production. */
   isDev: boolean;
+  /** Page servie en HTTPS (Vercel, tunnel) : on force aussi le HTTPS des ressources. Pas sur le Wi-Fi local en http. */
+  isHttps?: boolean;
 }
 
 /** Nonce imprévisible, nouveau à chaque requête. */
@@ -16,7 +18,7 @@ export function createNonce(): string {
   return btoa(crypto.randomUUID());
 }
 
-export function buildContentSecurityPolicy({ nonce, supabaseUrl, isDev }: CspOptions): string {
+export function buildContentSecurityPolicy({ nonce, supabaseUrl, isDev, isHttps = true }: CspOptions): string {
   const supabase = new URL(supabaseUrl).origin;
   const realtime = supabase.replace(/^http/, 'ws');
   const directives = [
@@ -34,6 +36,6 @@ export function buildContentSecurityPolicy({ nonce, supabaseUrl, isDev }: CspOpt
     "form-action 'self'",
     "frame-ancestors 'none'",
   ];
-  if (!isDev) directives.push('upgrade-insecure-requests');
+  if (!isDev && isHttps) directives.push('upgrade-insecure-requests');
   return directives.join('; ');
 }

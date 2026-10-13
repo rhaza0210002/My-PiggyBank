@@ -10,6 +10,7 @@ import {
   SERVICE_WORKER_PATH,
 } from '@/constants/routes';
 import { buildContentSecurityPolicy, createNonce } from '@/utils/contentSecurityPolicy';
+import { FEEDBACK_ROUTE } from '@/utils/testFeedback';
 
 export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -21,7 +22,8 @@ export async function proxy(request: NextRequest) {
 
   // CSP : un nonce par requête, lu par Next pour marquer ses propres scripts (voir contentSecurityPolicy.ts).
   const nonce = createNonce();
-  const csp = buildContentSecurityPolicy({ nonce, supabaseUrl, isDev: process.env.NODE_ENV === 'development' });
+  const isHttps = request.nextUrl.protocol === 'https:' || request.headers.get('x-forwarded-proto') === 'https';
+  const csp = buildContentSecurityPolicy({ nonce, supabaseUrl, isDev: process.env.NODE_ENV === 'development', isHttps });
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);
   requestHeaders.set('Content-Security-Policy', csp);
@@ -61,6 +63,9 @@ export async function proxy(request: NextRequest) {
 
   // Tâche planifiée (secret), service worker et manifeste : pas de session à exiger ni de redirection.
   if (pathname === REMINDERS_CRON_ROUTE || pathname === SERVICE_WORKER_PATH || pathname === MANIFEST_PATH) return supabaseResponse;
+
+  // Retours de séance de test : une erreur peut arriver avant la connexion (la route se protège elle-même).
+  if (pathname === FEEDBACK_ROUTE) return supabaseResponse;
 
   if (!isAuthenticated && !isAuthPage) {
     return redirectWithCookies(request, supabaseResponse, ROUTES.login);

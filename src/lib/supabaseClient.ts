@@ -1,4 +1,6 @@
 import { createBrowserClient } from '@supabase/ssr';
+import { ROUTES } from '@/constants/routes';
+import { createFreshSessionFetch } from '@/lib/freshSessionFetch';
 import { endDemo } from '@/services/demoStore';
 import { invalidateCache } from '@/utils/memoryCache';
 
@@ -9,8 +11,24 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Les variables d'environnement Supabase sont manquantes.");
 }
 
+// Jeton périmé (sortie de veille, onglet oublié) : session renouvelée et requête rejouée ;
+// si ce n'est plus possible, retour à la connexion avec un message clair plutôt qu'une erreur « JWT ».
+const freshSessionFetch = createFreshSessionFetch({
+  refresh: async () => {
+    const { data, error } = await supabase.auth.refreshSession();
+    return error ? null : (data.session?.access_token ?? null);
+  },
+  onSessionLost: () => {
+    void supabase.auth.signOut({ scope: 'local' }).finally(() => {
+      // Rechargement complet voulu : rien de la session perdue ne doit rester en mémoire.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.assign(`${ROUTES.login}?erreur=session`);
+    });
+  },
+});
+
 // Client navigateur : la session est stockée dans des cookies pour que le proxy puisse la lire.
-export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey, { global: { fetch: freshSessionFetch } });
 
 // Une autre session ne doit jamais voir les données gardées en mémoire par la précédente.
 supabase.auth.onAuthStateChange((event) => {

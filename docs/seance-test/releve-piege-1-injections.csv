@@ -1,0 +1,9 @@
+Date;Libellé;Montant
+02/10/2026;<script>alert('piggy')</script>;-12,00
+03/10/2026;=HYPERLINK("https://exemple.test";"clique");-8,50
+04/10/2026;+cmd|' /C calc'!A0;-3,20
+05/10/2026;'; DROP TABLE transactions; --;-41,00
+06/10/2026;<img src=x onerror=alert(1)>;-5,00
+07/10/2026;@SUM(1+1)*cmd;-1,00
+08/10/2026;CB BOULANGERIE 🥐 & CAFÉ ☕;-6,40
+09/10/2026;VIR SALAIRE OCTOBRE;1850,00
