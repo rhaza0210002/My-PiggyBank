@@ -16,12 +16,13 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <SkipLink />
       <AppHeader />
       {/*
-        Le pied de page suit le contenu dans la zone qui défile : il n'apparaît qu'en bas de page (collé à la barre
-        d'onglets sur mobile). La page garde exactement la hauteur de l'écran, le pied de page est juste en dessous.
+        Mobile : le pied de page suit le contenu dans la zone qui défile (collé à la barre d'onglets).
+        Ordinateur et tablette : il tient dans la hauteur de l'écran, sous la carte. La page elle-même ne défile
+        donc pas (sinon une seconde barre de défilement de 41 px apparaissait à côté de celle des cartes).
       */}
-      <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto outline-none">
+      <main id="contenu" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto outline-none md:flex md:flex-col">
         <DemoBanner />
-        <div className="min-h-full pb-2 md:h-full">{children}</div>
+        <div className="min-h-full pb-2 md:min-h-0 md:flex-1">{children}</div>
         <Footer variant="compact" />
       </main>
       <BottomNav />
