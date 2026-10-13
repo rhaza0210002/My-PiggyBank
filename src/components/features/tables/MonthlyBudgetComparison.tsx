@@ -14,6 +14,7 @@ import {
 import { formatCurrency } from '@/utils/budgetCalculations';
 import { getDifference, isIncomeGroup } from '@/utils/budgetComparison';
 import EmptyState from '@/components/ui/EmptyState';
+import { ofMonth } from '@/utils/frenchMonth';
 
 /** Montant réel cumulé d'une catégorie, quelle que soit l'origine des transactions. */
 export interface ComparisonGroup {
@@ -27,6 +28,8 @@ interface MonthlyBudgetComparisonProps {
   /** Si renseignés, le mois et l'année sont pilotés par le parent et le sélecteur de mois est masqué. */
   monthIndex?: number;
   year?: number;
+  /** Mois proposé au départ (celui du relevé importé) ; le sélecteur reste libre. */
+  initialMonth?: { year: number; monthIndex: number } | null;
 }
 
 interface BudgetComparisonRow {
@@ -55,6 +58,7 @@ export default function MonthlyBudgetComparison({
   groups,
   monthIndex: controlledMonthIndex,
   year: controlledYear,
+  initialMonth = null,
 }: MonthlyBudgetComparisonProps) {
   const balance = useBalanceVisibility();
   const [internalYear, setInternalYear] = useState<number | null>(null);
@@ -71,10 +75,10 @@ export default function MonthlyBudgetComparison({
   useEffect(() => {
     const now = new Date();
     startTransition(() => {
-      setInternalYear(now.getFullYear());
-      setInternalMonthIndex(now.getMonth());
+      setInternalYear(initialMonth?.year ?? now.getFullYear());
+      setInternalMonthIndex(initialMonth?.monthIndex ?? now.getMonth());
     });
-  }, []);
+  }, [initialMonth?.year, initialMonth?.monthIndex]);
 
   useEffect(() => {
     if (currentYear === null) return;
@@ -219,7 +223,7 @@ export default function MonthlyBudgetComparison({
         </div>
       </div>
       <p className="text-xs text-texte-doux">
-        Budget {MONTHS[monthIndex].label} {currentYear} comparé au réel {isMonthControlled ? 'enregistré' : 'du fichier CSV importé'}.
+        Budget {ofMonth(MONTHS[monthIndex].label)} {currentYear} comparé au réel {isMonthControlled ? 'enregistré' : 'du fichier CSV importé'}.
       </p>
 
       {isLoading ? (
