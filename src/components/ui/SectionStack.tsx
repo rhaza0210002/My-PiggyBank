@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { findScrollParent } from '@/utils/scroll';
+import { animateScroll, findScrollParent, prefersReducedMotion } from '@/utils/scroll';
 
 export interface StackSection {
   id: string;
@@ -38,46 +38,6 @@ export function withFirstRevealed(previous: ReadonlySet<string>, sections: Stack
  */
 export function ownsScroll(fillZone: boolean, isDesktop: boolean): boolean {
   return fillZone && isDesktop;
-}
-
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const SCROLL_DURATION_MS = 650;
-const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-/**
- * Défilement animé (départ et arrivée en douceur). La cible est recalculée à chaque image : les blocs qui
- * apparaissent en chemin ne font pas sauter l'animation. Un geste de l'utilisateur la coupe aussitôt.
- */
-function animateScroll(parent: HTMLElement, getTargetTop: () => number, onDone: () => void): () => void {
-  const startTop = parent.scrollTop;
-  const startTime = performance.now();
-  let frame = 0;
-
-  const stop = () => {
-    cancelAnimationFrame(frame);
-    parent.removeEventListener('wheel', stop);
-    parent.removeEventListener('touchstart', stop);
-    parent.removeEventListener('keydown', stop);
-  };
-
-  const step = (now: number) => {
-    const progress = Math.min(1, (now - startTime) / SCROLL_DURATION_MS);
-    parent.scrollTop = startTop + (getTargetTop() - startTop) * easeInOutCubic(progress);
-    if (progress < 1) {
-      frame = requestAnimationFrame(step);
-    } else {
-      stop();
-      onDone();
-    }
-  };
-
-  parent.addEventListener('wheel', stop, { passive: true });
-  parent.addEventListener('touchstart', stop, { passive: true });
-  parent.addEventListener('keydown', stop);
-  frame = requestAnimationFrame(step);
-  return stop;
 }
 
 /**

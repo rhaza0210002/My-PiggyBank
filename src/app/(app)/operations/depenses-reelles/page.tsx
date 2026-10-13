@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MONTHS } from '@/constants/tableStyles';
 import { ROUTES } from '@/constants/routes';
 import MonthlyBudgetComparison, {
@@ -10,7 +10,7 @@ import MonthlyBudgetComparison, {
 } from '@/components/features/tables/MonthlyBudgetComparison';
 import BudgetVsActualDonuts from '@/components/features/charts/BudgetVsActualDonuts';
 import BalanceToggle, { revealAmount, useBalanceVisibility } from '@/components/ui/BalanceToggle';
-import ScreenCard from '@/components/ui/ScreenCard';
+import ScreenCard, { ScreenPanel } from '@/components/ui/ScreenCard';
 import SectionStack from '@/components/ui/SectionStack';
 import ArchiveMonthPanel from '@/components/features/tables/ArchiveMonthPanel';
 import StoredTransactionsBreakdown from '@/components/features/tables/StoredTransactionsBreakdown';
@@ -28,6 +28,9 @@ import {
 import { euroFormatter, signedEuroFormatter } from '@/utils/formatEuro';
 import { groupStoredTransactions } from '@/utils/storedTransactionGrouping';
 import EmptyState from '@/components/ui/EmptyState';
+import { glideIntoZone } from '@/utils/scroll';
+
+const DETAIL_ID = 'bilan-detail';
 
 interface LoadedMonth {
   requestKey: string;
@@ -108,6 +111,8 @@ export default function DepenseReellePage() {
     ? groupStoredTransactions(data.transactions, data.categories, data.categoryGroups)
     : null;
   const totals = data ? summarizeAmounts(data.transactions.map((transaction) => Number(transaction.amount))) : null;
+  // Des opérations ce mois-ci : le détail part dans une deuxième carte, plus bas.
+  const hasDetail = Boolean(data && !data.error && totals && totals.count > 0);
 
   const comparisonGroups: ComparisonGroup[] = breakdown
     ? [
@@ -152,112 +157,135 @@ export default function DepenseReellePage() {
     </div>
   );
 
+
   return (
-    <ScreenCard flow title="Bilan du mois" icon="chart" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
-      <div className="flex flex-col gap-2 md:h-full md:min-h-0">
-        {isLoading && (
-          <p className="py-8 text-center text-sm font-semibold text-texte-doux" role="status">
-            Chargement des dépenses de {MONTHS[monthIndex].label.toLowerCase()}…
-          </p>
-        )}
+    <div className="md:h-full md:snap-y md:snap-proximity md:overflow-y-auto md:[container-type:size]">
+      <div className="md:snap-start">
+        <ScreenCard flow fit={hasDetail} title="Bilan du mois" icon="chart" subtitle="Ce que tu as vraiment dépensé, comparé à ton budget." actions={monthNav}>
+          <div className="flex flex-col gap-2">
+            {isLoading && (
+              <p className="py-8 text-center text-sm font-semibold text-texte-doux" role="status">
+                Chargement des dépenses de {MONTHS[monthIndex].label.toLowerCase()}…
+              </p>
+            )}
 
-        {data?.error && (
-          <p role="alert" className="rounded-lg border-[1.5px] border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
-            {data.error}
-          </p>
-        )}
+            {data?.error && (
+              <p role="alert" className="rounded-lg border-[1.5px] border-depasse bg-depasse-fond p-3 text-sm font-semibold text-depasse">
+                {data.error}
+              </p>
+            )}
 
-        {data && !data.error && totals && breakdown && (
-          totals.count === 0 ? (
-            <EmptyState
-              title={`Pas encore d’opérations en ${MONTHS[monthIndex].label.toLowerCase()} ${year}`}
-              text="Importe ton relevé : on range les opérations pour toi."
-              action={{ href: ROUTES.import, label: 'Importer mon relevé' }}
-            />
-          ) : (
-            <>
-              <dl className="grid shrink-0 grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">
-                <SummaryCard label="Revenus" value={euroFormatter.format(totals.income)} tone="positive" />
-                <SummaryCard label="Dépenses" value={euroFormatter.format(totals.expenses)} tone="negative" />
-                <SummaryCard
-                  label="Solde du mois"
-                  value={revealAmount(balance.isShown, signedEuroFormatter.format(totals.net))}
-                  tone={balance.isShown && totals.net < 0 ? 'negative' : 'positive'}
-                  action={<BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} className="size-9 text-base" />}
+            {data && !data.error && totals && breakdown && (
+              totals.count === 0 ? (
+                <EmptyState
+                  title={`Pas encore d’opérations en ${MONTHS[monthIndex].label.toLowerCase()} ${year}`}
+                  text="Importe ton relevé : on range les opérations pour toi."
+                  action={{ href: ROUTES.import, label: 'Importer mon relevé' }}
                 />
-                <SummaryCard
-                  label="À catégoriser"
-                  value={String(breakdown.uncategorized.length)}
-                  tone={breakdown.uncategorized.length > 0 ? 'warning' : 'neutral'}
-                />
-              </dl>
+              ) : (
+                <>
+                  <dl className="grid shrink-0 grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">
+                    <SummaryCard label="Revenus" value={euroFormatter.format(totals.income)} tone="positive" />
+                    <SummaryCard label="Dépenses" value={euroFormatter.format(totals.expenses)} tone="negative" />
+                    <SummaryCard
+                      label="Solde du mois"
+                      value={revealAmount(balance.isShown, signedEuroFormatter.format(totals.net))}
+                      tone={balance.isShown && totals.net < 0 ? 'negative' : 'positive'}
+                      action={<BalanceToggle isShown={balance.isShown} onToggle={balance.toggle} className="size-9 text-base" />}
+                    />
+                    <SummaryCard
+                      label="À catégoriser"
+                      value={String(breakdown.uncategorized.length)}
+                      tone={breakdown.uncategorized.length > 0 ? 'warning' : 'neutral'}
+                    />
+                  </dl>
 
-              <ArchiveMonthPanel
-                year={year}
-                monthIndex={monthIndex}
-                monthLabel={MONTHS[monthIndex].label}
-                transactions={data.transactions}
-                onArchived={() => setReloadCount((count) => count + 1)}
-              />
+                  <ArchiveMonthPanel
+                    year={year}
+                    monthIndex={monthIndex}
+                    monthLabel={MONTHS[monthIndex].label}
+                    transactions={data.transactions}
+                    onArchived={() => setReloadCount((count) => count + 1)}
+                  />
 
-              {breakdown.uncategorized.length > 0 && (
-                <Link
-                  href={ROUTES.reconciliation}
-                  className="flex min-h-11 shrink-0 items-center justify-between gap-2 rounded-2xl border-[1.5px] border-bordure bg-attention-fond px-4 text-sm font-bold text-attention focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
-                >
-                  <span>{breakdown.uncategorized.length} opération{breakdown.uncategorized.length > 1 ? 's' : ''} sans catégorie</span>
-                  <span aria-hidden="true">Pointer →</span>
-                  <span className="sr-only">Aller pointer les opérations</span>
-                </Link>
-              )}
+                  {breakdown.uncategorized.length > 0 && (
+                    <Link
+                      href={ROUTES.reconciliation}
+                      className="flex min-h-11 shrink-0 items-center justify-between gap-2 rounded-2xl border-[1.5px] border-bordure bg-attention-fond px-4 text-sm font-bold text-attention focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                    >
+                      <span>{breakdown.uncategorized.length} opération{breakdown.uncategorized.length > 1 ? 's' : ''} sans catégorie</span>
+                      <span aria-hidden="true">Pointer →</span>
+                      <span className="sr-only">Aller pointer les opérations</span>
+                    </Link>
+                  )}
 
-              <SectionStack
-                fillZone
-                label="Parties des dépenses du mois"
-                sections={[
-                  {
-                    id: 'overview',
-                    label: 'Budget et réel',
-                    content: (
-                      <BudgetVsActualDonuts
-                        year={year}
-                        monthIndex={monthIndex}
-                        monthLabel={MONTHS[monthIndex].label}
-                        transactions={data.transactions}
-                        categories={data.categories}
-                        categoryGroups={data.categoryGroups}
-                      />
-                    ),
-                  },
-                  {
-                    id: 'comparison',
-                    label: 'Écarts par catégorie',
-                    content: (
-                      <section className="rounded-carte border-2 border-dashed border-bordure bg-surface-douce p-3">
-                        <MonthlyBudgetComparison
-                          key={year}
-                          groups={comparisonGroups}
-                          monthIndex={monthIndex}
-                          year={year}
-                        />
-                      </section>
-                    ),
-                  },
-                  {
-                    id: 'detail',
-                    label: `Opérations (${totals.count})`,
-                    content: (
-                      <section aria-label="Détail des opérations" className="space-y-3 rounded-carte border-2 border-dashed border-bordure bg-surface-douce p-3">
-                        <StoredTransactionsBreakdown breakdown={breakdown} />
-                      </section>
-                    ),
-                  },
-                ]}
-              />
-            </>
-          )
-        )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const panel = document.getElementById(DETAIL_ID);
+                      if (!panel) return;
+                      glideIntoZone(panel);
+                      panel.focus({ preventScroll: true });
+                    }}
+                    className="mx-auto flex min-h-11 items-center gap-1.5 rounded-full border-[1.5px] border-bordure bg-surface px-4 text-sm font-bold text-texte transition hover:bg-accent-doux focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                  >
+                    Voir le détail du mois
+                    <ChevronDown size={18} aria-hidden="true" />
+                  </button>
+                </>
+              )
+            )}
+          </div>
+        </ScreenCard>
       </div>
-    </ScreenCard>
+
+      {hasDetail && data && totals && breakdown && (
+        <ScreenPanel id={DETAIL_ID} label="Détail du mois" className="md:h-[100cqh] md:snap-start">
+          <SectionStack
+            fillZone
+            label="Parties des dépenses du mois"
+            sections={[
+              {
+                id: 'overview',
+                label: 'Budget et réel',
+                content: (
+                  <BudgetVsActualDonuts
+                    year={year}
+                    monthIndex={monthIndex}
+                    monthLabel={MONTHS[monthIndex].label}
+                    transactions={data.transactions}
+                    categories={data.categories}
+                    categoryGroups={data.categoryGroups}
+                  />
+                ),
+              },
+              {
+                id: 'comparison',
+                label: 'Écarts par catégorie',
+                content: (
+                  <section className="rounded-carte border-2 border-dashed border-bordure bg-surface-douce p-3">
+                    <MonthlyBudgetComparison
+                      key={year}
+                      groups={comparisonGroups}
+                      monthIndex={monthIndex}
+                      year={year}
+                    />
+                  </section>
+                ),
+              },
+              {
+                id: 'detail',
+                label: `Opérations (${totals.count})`,
+                content: (
+                  <section aria-label="Détail des opérations" className="space-y-3 rounded-carte border-2 border-dashed border-bordure bg-surface-douce p-3">
+                    <StoredTransactionsBreakdown breakdown={breakdown} />
+                  </section>
+                ),
+              },
+            ]}
+          />
+        </ScreenPanel>
+      )}
+    </div>
   );
 }
