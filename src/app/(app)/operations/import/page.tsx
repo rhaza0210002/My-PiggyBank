@@ -5,7 +5,8 @@ import Link from 'next/link';
 import CsvTransactionsTable from '@/components/features/tables/CsvTransactionsTable';
 import ScreenCard from '@/components/ui/ScreenCard';
 import { ROUTES } from '@/constants/routes';
-import { SocieteGeneraleParser, type BankTransaction } from '@/services/csvParser';
+import { categorizeLines, type BankTransaction } from '@/services/csvParser';
+import { readStatement } from '@/utils/statementImport/readStatement';
 import { scrollIntoZone } from '@/utils/scroll';
 import { endDemo, isDemoActive } from '@/services/demoStore';
 import { buildDemoTransactions, shouldConfirmReplaceDemo } from '@/utils/demoStatement';
@@ -64,8 +65,8 @@ export default function CsvUploaderPage() {
           );
         }
 
-        const parser = new SocieteGeneraleParser(text, transactionLabels);
-        const parsed = parser.parse();
+        const result = readStatement(text);
+        const parsed = result.kind === 'error' ? [] : categorizeLines(result.lines, transactionLabels);
 
         if (parsed.length === 0) {
           setError("Aucune transaction valide n'a pu être lue dans ce fichier.");
