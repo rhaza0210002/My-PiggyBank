@@ -141,6 +141,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, serverErro
                 value={pseudo}
                 onChange={(event) => setPseudo(event.target.value)}
                 autoComplete="nickname"
+                maxLength={40}
                 required
                 placeholder="Ton pseudo"
                 className={INPUT_CLASS}

@@ -7,7 +7,7 @@ import LogoutButton from '@/components/features/header/LogoutButton';
 import { NAV_SECTIONS, ROUTES, getActiveSection } from '@/constants/routes';
 import { NAV_LINK_BASE } from '@/components/layout/navLinkClasses';
 import { supabase } from '@/lib/supabaseClient';
-import { getUserProfile } from '@/services/userService';
+import { PSEUDO_CHANGED_EVENT, getUserProfile } from '@/services/userService';
 import Pig from '@/components/ui/Pig';
 import Icon from '@/components/ui/Icon';
 
@@ -39,8 +39,13 @@ export default function AppHeader() {
       })
       .catch(() => {});
 
+    // Pseudo changé dans le profil : l'en-tête suit tout de suite.
+    const onPseudoChange = (event: Event) => setPseudo((event as CustomEvent<string | null>).detail);
+    window.addEventListener(PSEUDO_CHANGED_EVENT, onPseudoChange);
+
     return () => {
       isCurrent = false;
+      window.removeEventListener(PSEUDO_CHANGED_EVENT, onPseudoChange);
     };
   }, [userId]);
 

@@ -16,6 +16,13 @@ describe('Tirelire', () => {
     expect(html).toContain('data-niveau="1"');
   });
 
+  it('au-delà de l’objectif, dit le nombre et « objectif atteint », jamais « 18 sur 10 »', () => {
+    const html = renderToStaticMarkup(<Tirelire pointed={18} tick={0} />);
+    expect(html).not.toContain('18 sur 10');
+    expect(html).toContain('objectif de 10 atteint');
+    expect(html).toContain('aria-label="Tirelire du jour : 18 pointées, objectif de 10 atteint"');
+  });
+
   it('ne joue aucune pièce tant qu’aucun pointage n’a eu lieu', () => {
     const html = renderToStaticMarkup(<Tirelire pointed={3} tick={0} />);
     expect(html).not.toContain('tirelire-coin');

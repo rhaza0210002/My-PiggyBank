@@ -9,7 +9,7 @@ import Gauge from '@/components/ui/Gauge';
 import ScreenCard from '@/components/ui/ScreenCard';
 import { useGamification } from '@/hooks/useGamification';
 import { suggestCategory, type LabeledCategory } from '@/utils/categorySuggestion';
-import { XP_PER_OPERATION } from '@/utils/gamification';
+import { XP_CATCH_UP_BONUS, XP_PER_COMPLETE_MONTH, XP_PER_OPERATION } from '@/utils/gamification';
 import { isCurrentUserAdmin } from '@/services/adminService';
 import { ROUTES } from '@/constants/routes';
 import {
@@ -46,7 +46,7 @@ export default function RapprochementPage() {
   const [hasActed, setHasActed] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const { data: progress, refresh: refreshProgress } = useGamification();
-  const wasMonthComplete = useRef<boolean | null>(null);
+  const previousMonths = useRef<{ completed: number; caughtUp: number } | null>(null);
   const previousLevel = useRef<number | null>(null);
   const [noticeCount, setNoticeCount] = useState(0);
   // +1 à chaque pointage (c'est lui qui fait tomber la pièce) ; retombe à 0 à une annulation pour effacer « +1 pièce ».
@@ -84,17 +84,24 @@ export default function RapprochementPage() {
 
   useEffect(() => {
     if (!progress) return;
-    const isComplete = progress.currentMonth.status === 'complete';
-    if (wasMonthComplete.current === false && isComplete) {
-      setCelebration('Mois bouclé ! Toutes les opérations du mois sont pointées. Bravo, c’est gagné pour de bon.');
-    }
-    wasMonthComplete.current = isComplete;
+    // Un mois vient d'être bouclé (celui-ci ou un mois passé) : on annonce le bonus réellement gagné.
+    const before = previousMonths.current;
+    const caughtUp = before !== null && progress.caughtUpMonths > before.caughtUp;
+    const completed = before !== null && progress.completedMonths > before.completed;
+    previousMonths.current = { completed: progress.completedMonths, caughtUp: progress.caughtUpMonths };
 
     const { level, title } = progress.levelInfo;
-    if (previousLevel.current !== null && level > previousLevel.current && !isComplete) {
+    const leveledUp = previousLevel.current !== null && level > previousLevel.current;
+    previousLevel.current = level;
+    const levelNote = leveledUp ? ` Niveau ${level} : ${title} !` : '';
+
+    if (caughtUp) {
+      setCelebration(`Mois rattrapé ! +${XP_PER_COMPLETE_MONTH + XP_CATCH_UP_BONUS} points : un mois passé est bouclé, rien ne s’est perdu.${levelNote}`);
+    } else if (completed) {
+      setCelebration(`Mois bouclé ! +${XP_PER_COMPLETE_MONTH} points : toutes les opérations du mois sont pointées. Bravo, c’est gagné pour de bon.${levelNote}`);
+    } else if (leveledUp) {
       setCelebration(`Niveau ${level} : ${title} ! Tu progresses à ton rythme, continue comme ça.`);
     }
-    previousLevel.current = level;
   }, [progress]);
 
   const setBusy = (ids: string[], busy: boolean) => {
