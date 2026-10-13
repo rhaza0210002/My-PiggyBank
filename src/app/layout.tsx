@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import localFont from "next/font/local";
 import { Baloo_2, Nunito } from "next/font/google";
 import AccessibilityFlower from "@/components/features/accessibility/AccessibilityFlower";
+import DesignWorkshop from "@/components/dev/DesignWorkshop";
 import { noFlashScript } from "@/utils/accessibilityPrefs";
 import "./globals.css";
 
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="min-h-full flex flex-col bg-fond text-texte" suppressHydrationWarning>
         {children}
         <AccessibilityFlower />
+        {process.env.NODE_ENV === "development" && <DesignWorkshop />}
       </body>
     </html>
   );
