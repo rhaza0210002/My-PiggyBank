@@ -21,6 +21,26 @@ export function scrollIntoZone(element: HTMLElement, behavior: ScrollBehavior): 
   parent.scrollTo({ top, behavior });
 }
 
+/** Part de la hauteur de la zone sous laquelle on se cale sur le début de la carte la plus proche… */
+export const SOFT_SNAP_SHARE = 0.15;
+/** …sans jamais dépasser un demi-cran de molette (environ 100 px) : un cran n'est jamais annulé. */
+export const SOFT_SNAP_MAX_PX = 56;
+
+/**
+ * Accroche douce : là où la zone doit glisser une fois le défilement arrêté, ou null pour ne pas bouger.
+ * On ne se cale que si l'arrêt est tout près du début d'une carte ; au milieu d'une carte longue, on laisse lire.
+ */
+export function softSnapTarget(starts: number[], scrollTop: number, zoneHeight: number, maxScroll: number): number | null {
+  const reachable = starts.map((start) => Math.min(Math.max(0, start), maxScroll));
+  let nearest: number | null = null;
+  for (const start of reachable) {
+    if (nearest === null || Math.abs(start - scrollTop) < Math.abs(nearest - scrollTop)) nearest = start;
+  }
+  if (nearest === null) return null;
+  const distance = Math.abs(nearest - scrollTop);
+  return distance > 2 && distance <= Math.min(zoneHeight * SOFT_SNAP_SHARE, SOFT_SNAP_MAX_PX) ? nearest : null;
+}
+
 export const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
