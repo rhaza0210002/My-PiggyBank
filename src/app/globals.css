@@ -76,7 +76,7 @@
 }
 
 :root {
-  /* Épaisseurs réglables dans l'atelier : anneau et ombre de l'onglet actif, contour du menu du haut. */
+  /* Épaisseurs des traits : anneau et ombre de l'onglet actif, contour du menu du haut. */
   --trait-onglet: 2.5px;
   --ombre-onglet: 2px;
   --trait-entete: 2px;
