@@ -82,7 +82,7 @@ export default function BudgetGroupTable({
 
       <div role="region" aria-label={`Tableau ${group.title}`} tabIndex={0} className={`w-full overflow-x-auto rounded-xl border-[1.5px] ${palette.border} ${palette.table} shadow-inner`}>
         <table
-          className="w-full min-w-[320px] border-collapse text-left"
+          className="w-full border-collapse text-left"
           aria-label={`Tableau de ${group.title}`}
         >
           <thead>
