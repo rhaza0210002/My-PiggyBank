@@ -32,6 +32,14 @@ export function withFirstRevealed(previous: ReadonlySet<string>, sections: Stack
   return first && !previous.has(first) ? new Set([...previous, first]) : previous;
 }
 
+/**
+ * La zone de blocs défile-t-elle elle-même ? Seulement sur ordinateur, quand elle a la hauteur du cadre. Sinon
+ * c'est la page (ou la carte autour) qui défile : on guette alors l'arrivée des blocs dans la fenêtre.
+ */
+export function ownsScroll(fillZone: boolean, isDesktop: boolean): boolean {
+  return fillZone && isDesktop;
+}
+
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -97,8 +105,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
       return;
     }
 
-    // Bureau : la zone de blocs défile elle-même ; mobile : c'est la page qui défile.
-    const root = window.matchMedia('(min-width: 768px)').matches ? scroller : null;
+    const root = ownsScroll(fillZone, window.matchMedia('(min-width: 768px)').matches) ? scroller : null;
 
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -128,7 +135,7 @@ export default function SectionStack({ sections, label, background = 'surface-do
       revealObserver.disconnect();
       activeObserver.disconnect();
     };
-  }, [sections]);
+  }, [sections, fillZone]);
 
   // La rangée de puces défile à l'horizontale, sans barre : la molette (verticale) et le doigt la font avancer.
   const [fadeRight, setFadeRight] = useState(false);
@@ -226,8 +233,10 @@ export default function SectionStack({ sections, label, background = 'surface-do
 
       <div
         ref={scrollerRef}
-        className={`min-h-0 flex-1 space-y-4 md:overflow-y-auto md:px-2 ${
-          fillZone ? 'md:snap-y md:snap-proximity md:[container-type:size] md:[scroll-padding-top:var(--nav-h)]' : ''
+        className={`min-h-0 flex-1 space-y-4 md:px-2 ${
+          fillZone
+            ? 'md:snap-y md:snap-proximity md:overflow-y-auto md:[container-type:size] md:[scroll-padding-top:var(--nav-h)]'
+            : ''
         }`}
       >
         <nav
