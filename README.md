@@ -47,7 +47,9 @@ yarn db:reset                       # rejoue toutes les migrations + seed.sql su
 - `supabase/migrations/20261019120000_reference_prod.sql` : la structure réelle de la prod au 19 octobre 2026
   (tables, RLS, fonctions, triggers, droits). Elle remplace les migrations d'avant, appliquées à la main et
   gardées pour mémoire dans `supabase/migrations-historique/`.
-- `supabase/seed.sql` : groupes, catégories et règles partagées copiés de la prod, et deux comptes fictifs :
+- `supabase/migrations/20261019130000_donnees_de_reference.sql` : groupes, catégories et règles partagées dont
+  l'app a besoin partout (prod comprise), sans les règles aux noms personnels.
+- `supabase/seed.sql` (base locale seulement) : deux comptes fictifs et un petit budget :
   `dev@piggybank.local` / `piggybank-dev` et `admin@piggybank.local` / `piggybank-admin` (administrateur).
 - `.env.local` en dev : `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:55321`, et les clés `ANON_KEY` et
   `SERVICE_ROLE_KEY` affichées par `npx supabase status -o env`. Les valeurs de prod ne servent qu'à Vercel.
