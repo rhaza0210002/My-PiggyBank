@@ -8,7 +8,7 @@ import { NAV_SECTIONS, ROUTES, getActiveSection } from '@/constants/routes';
 import { NAV_LINK_BASE } from '@/components/layout/navLinkClasses';
 import { supabase } from '@/lib/supabaseClient';
 import { PSEUDO_CHANGED_EVENT, getUserProfile } from '@/services/userService';
-import Pig from '@/components/ui/Pig';
+import Logo from '@/components/ui/Logo';
 import Icon from '@/components/ui/Icon';
 
 export default function AppHeader() {
@@ -57,8 +57,7 @@ export default function AppHeader() {
           aria-label="My PiggyBank, retour à l'accueil"
           className="flex min-h-12 shrink-0 items-center gap-2 rounded-xl p-1 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
-          <Pig className="size-10 -rotate-6" />
-          <span className="whitespace-nowrap font-titre text-xl font-extrabold text-texte sm:text-2xl md:max-lg:hidden">My PiggyBank</span>
+          <Logo eager className="h-14 w-auto" />
         </Link>
 
         <nav aria-label="Navigation principale" className="hidden md:block">

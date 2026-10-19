@@ -31,8 +31,10 @@
   --color-sur-corail: #1f2a1b;
   --color-piece: #ffe066;
   --color-piece-bord: #e0b020;
-  --color-cochon: #ffc7d6;
-  --color-cochon-bord: #ff8aa9;
+  --color-cochon: #ffd3c8;
+  --color-cochon-bord: #f59c8c;
+  /* Contour brun du cochon, comme sur le logo. */
+  --color-cochon-trait: #6b3b2c;
   --color-focus: #2f3d2a;
 
   --radius-petit: 0.75rem;
@@ -168,7 +170,7 @@ a[class*='shadow-bonbon']:active {
 /* Tirelire : la pièce tombe dans la fente, le cochon rebondit et ferme l'œil, le niveau de pièces monte. */
 .tirelire-coin {
   position: absolute;
-  left: 38%;
+  left: calc(50% - 13px);
   top: -4px;
   z-index: 1;
   display: flex;

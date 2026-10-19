@@ -16,7 +16,7 @@ function role(name: string): string {
 const REQUIRED_ROLES = [
   'fond', 'surface', 'surface-douce', 'bordure', 'bordure-forte', 'texte', 'texte-doux',
   'accent', 'sur-accent', 'accent-fort', 'accent-doux', 'ok', 'ok-fond', 'attention', 'attention-fond',
-  'depasse', 'depasse-fond', 'corail', 'corail-clair', 'sur-corail', 'piece', 'piece-bord', 'cochon', 'cochon-bord', 'focus',
+  'depasse', 'depasse-fond', 'corail', 'corail-clair', 'sur-corail', 'piece', 'piece-bord', 'cochon', 'cochon-bord', 'cochon-trait', 'focus',
 ];
 
 describe('contrastRatio', () => {
@@ -56,6 +56,8 @@ describe('rôles de couleur', () => {
   it.each([
     ['bordure-forte', 'surface'],
     ['focus', 'fond'],
+    ['cochon-trait', 'cochon'],
+    ['cochon-trait', 'surface'],
   ])('contrôle visible : %s sur %s (3:1 minimum)', (foreground, background) => {
     expect(contrastRatio(role(foreground), role(background))).toBeGreaterThanOrEqual(3);
   });
