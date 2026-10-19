@@ -9,8 +9,8 @@ interface TirelireProps {
   tick: number;
 }
 
-const BODY = { cx: 120, cy: 104, rx: 92, ry: 82 };
-const FILL_TRAVEL = 148;
+const BODY = { cx: 130, cy: 112, rx: 92, ry: 80 };
+const FILL_TRAVEL = 150;
 
 /**
  * Le cochon est la jauge du jour : une pièce tombe dans la fente à chaque pointage et le niveau de pièces monte.
@@ -48,35 +48,41 @@ export default function Tirelire({ pointed, goal = DAILY_GOAL, tick }: TirelireP
               <ellipse {...BODY} />
             </clipPath>
           </defs>
-          <path d="M32 106 C14 100 16 80 30 82 C40 84 36 94 27 92" fill="none" className="stroke-cochon-bord" strokeWidth="5" />
-          <path d="M176 50 Q184 12 212 22 Q218 40 200 66Z" className="fill-cochon stroke-cochon-bord" strokeWidth="4" />
-          <rect x="68" y="166" width="40" height="32" rx="16" className="fill-cochon stroke-cochon-bord" strokeWidth="4" />
-          <rect x="138" y="166" width="40" height="32" rx="16" className="fill-cochon stroke-cochon-bord" strokeWidth="4" />
+          <path d="M220 120c16-2 22-18 12-24-9-5-15 6-6 10 6 3 12-1 14-6" fill="none" className="stroke-cochon-trait" strokeWidth="5" />
+          <rect x="80" y="170" width="36" height="32" rx="14" className="fill-cochon stroke-cochon-trait" strokeWidth="5" />
+          <rect x="144" y="170" width="36" height="32" rx="14" className="fill-cochon stroke-cochon-trait" strokeWidth="5" />
+          <path d="M58 84C44 52 48 26 64 20c18-4 38 14 46 26z" className="fill-cochon stroke-cochon-trait" strokeWidth="5" />
+          <path d="M202 84c14-32 10-58-6-64-18-4-38 14-46 26z" className="fill-cochon stroke-cochon-trait" strokeWidth="5" />
+          <path d="M66 70c-8-18-6-34 2-37 12-1 24 9 30 17z" className="fill-cochon-bord" />
+          <path d="M194 70c8-18 6-34-2-37-12-1-24 9-30 17z" className="fill-cochon-bord" />
           <ellipse {...BODY} className="fill-cochon" />
           <g clipPath={`url(#${clipId})`}>
             <rect
               x="0"
-              y="186"
+              y="192"
               width="260"
-              height="160"
+              height="170"
               className="tirelire-niveau fill-piece"
               style={{ transform: `translateY(${-level * FILL_TRAVEL}px)` }}
             />
           </g>
-          <ellipse {...BODY} fill="none" className="stroke-cochon-bord" strokeWidth="4" />
-          <path d="M62 52 Q76 34 98 30" fill="none" className="stroke-surface" strokeWidth="6" opacity="0.7" />
-          <path d="M134 44 Q132 6 164 12 Q182 22 176 54Z" className="fill-cochon stroke-cochon-bord" strokeWidth="4" />
-          <path d="M147 42 Q147 22 162 26 Q169 34 167 48Z" className="fill-cochon-bord" opacity="0.5" />
-          <rect x="86" y="24" width="42" height="8" rx="4" className="fill-texte" opacity="0.7" />
-          <ellipse cx="156" cy="120" rx="14" ry="8" className="fill-cochon-bord" opacity="0.5" />
+          <ellipse {...BODY} fill="none" className="stroke-cochon-trait" strokeWidth="5" />
+          <path d="M66 86Q74 60 96 48" fill="none" className="stroke-surface" strokeWidth="7" opacity="0.7" />
+          <rect x="108" y="40" width="44" height="9" rx="4.5" className="fill-cochon-trait" />
           <g className="tirelire-oeil">
-            <ellipse cx="166" cy="92" rx="9" ry="11" className="fill-texte" />
-            <circle cx="169" cy="87" r="3.4" className="fill-surface" />
+            <ellipse cx="94" cy="104" rx="10" ry="12" className="fill-cochon-trait" />
+            <ellipse cx="166" cy="104" rx="10" ry="12" className="fill-cochon-trait" />
+            <circle cx="98" cy="99" r="4.2" className="fill-surface" />
+            <circle cx="170" cy="99" r="4.2" className="fill-surface" />
+            <circle cx="90" cy="109" r="2" className="fill-surface" />
+            <circle cx="162" cy="109" r="2" className="fill-surface" />
           </g>
-          <ellipse cx="208" cy="108" rx="18" ry="21" className="fill-cochon-bord" opacity="0.8" />
-          <ellipse cx="202" cy="106" rx="3" ry="5" className="fill-texte" opacity="0.6" />
-          <ellipse cx="214" cy="105" rx="3" ry="5" className="fill-texte" opacity="0.6" />
-          <path d="M176 126 Q184 134 192 126" fill="none" className="stroke-texte" strokeWidth="3.5" opacity="0.7" />
+          <ellipse cx="68" cy="130" rx="15" ry="10" className="fill-cochon-bord" opacity="0.75" />
+          <ellipse cx="192" cy="130" rx="15" ry="10" className="fill-cochon-bord" opacity="0.75" />
+          <ellipse cx="130" cy="130" rx="28" ry="20" className="fill-cochon-bord stroke-cochon-trait" strokeWidth="5" />
+          <ellipse cx="120" cy="130" rx="4.5" ry="7" className="fill-cochon-trait" />
+          <ellipse cx="140" cy="130" rx="4.5" ry="7" className="fill-cochon-trait" />
+          <path d="M117 162q13 9 26 0" fill="none" className="stroke-cochon-trait" strokeWidth="5" />
         </svg>
       </div>
       <div>

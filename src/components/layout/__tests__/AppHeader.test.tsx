@@ -7,9 +7,9 @@ vi.mock('@/lib/supabaseClient', () => ({ supabase: { auth: { getSession: async (
 import AppHeader from '@/components/layout/AppHeader';
 
 describe('AppHeader', () => {
-  it('libère la place sur tablette : le nom de l’app se cache entre md et lg, le cochon et le nom accessible restent', () => {
+  it('affiche le logo officiel dans le lien de retour à l’accueil, avec un nom accessible', () => {
     const html = renderToStaticMarkup(<AppHeader />);
-    expect(html).toMatch(/<span class="[^"]*md:max-lg:hidden[^"]*">My PiggyBank<\/span>/);
+    expect(html).toMatch(/<img[^>]*alt="My PiggyBank"[^>]*logo-my-piggybank\.png/);
     expect(html).toContain('aria-label="My PiggyBank, retour à l&#x27;accueil"');
   });
 });
