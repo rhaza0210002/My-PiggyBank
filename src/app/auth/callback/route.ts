@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { withSessionMaxAge } from '@/lib/sessionCookie';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 import { ROUTES } from '@/constants/routes';
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
       cookies: {
         getAll: () => cookieStore.getAll(),
         setAll: (cookiesToSet) =>
-          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options)),
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, withSessionMaxAge(options))),
       },
     },
   );
