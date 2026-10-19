@@ -9,7 +9,8 @@ Stack : Next.js 16 (App Router), React 19, Tailwind 4, Supabase (auth + base Pos
 
 ```bash
 yarn install
-cp .env.example .env.local   # puis renseigner les deux variables
+cp .env.example .env.local   # puis y mettre les valeurs de la base locale (voir plus bas)
+yarn db:start                # base de dev locale dans Docker (Docker Desktop doit tourner)
 yarn dev
 ```
 
@@ -20,14 +21,36 @@ Variables d'environnement (`.env.local`, jamais commité) :
 | `NEXT_PUBLIC_SUPABASE_URL` | URL du projet Supabase |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clé publique (anon) du projet |
 
-Scripts : `yarn dev`, `yarn build`, `yarn lint`, `yarn typecheck`, `yarn test`.
+Scripts : `yarn dev`, `yarn build`, `yarn lint`, `yarn typecheck`, `yarn test`, et pour la base locale
+`yarn db:start`, `yarn db:stop`, `yarn db:reset`, `yarn db:migration <nom>`.
 
 ## Base de données (Supabase)
 
-Les scripts SQL sont dans `supabase/` :
+### Trois environnements, une seule règle
 
-- `supabase/migrations/` : tables `transactions` et `user_settings` (avec RLS), colonne `reconciled_at`, règles de libellé par utilisateur. À relire puis exécuter dans l'ordre des noms de fichier, dans le SQL Editor.
-- `supabase/seed-libelle-transacts.sql` : règles par défaut libellé → catégorie (`user_id` vide) utilisées par l'import CSV. Chaque utilisateur peut ajouter ses propres règles, qui l'emportent sur celles par défaut.
+| Environnement | Où | Données |
+|---|---|---|
+| **Dev** | Supabase local dans Docker (`yarn db:start`, API sur `http://127.0.0.1:55321`) | fictives (`supabase/seed.sql`) |
+| **Test** | local aussi, exposé aux testeurs par le tunnel Cloudflare de `yarn seance-test` | fictives |
+| **Prod** | projet Supabase « my PiggyBank » (`uwszahzlzopzguvkrliu`) | les vraies |
+
+**Toute modification de la base passe par un fichier de `supabase/migrations/`**, jamais à la main dans
+le SQL Editor. Une migration est essayée en local d'abord, puis n'est appliquée à la prod qu'après accord.
+
+```bash
+yarn db:migration ajout_colonne_x   # crée supabase/migrations/<horodatage>_ajout_colonne_x.sql
+yarn db:reset                       # rejoue toutes les migrations + seed.sql sur la base locale
+```
+
+- `supabase/config.toml` : pile locale `my-piggybank`, ports **553xx** (le projet manaquest garde les 543xx).
+  Studio : `http://127.0.0.1:55323`, e-mails envoyés par l'auth locale : `http://127.0.0.1:55324`.
+- `supabase/migrations/20261019120000_reference_prod.sql` : la structure réelle de la prod au 19 octobre 2026
+  (tables, RLS, fonctions, triggers, droits). Elle remplace les migrations d'avant, appliquées à la main et
+  gardées pour mémoire dans `supabase/migrations-historique/`.
+- `supabase/seed.sql` : groupes, catégories et règles partagées copiés de la prod, et deux comptes fictifs :
+  `dev@piggybank.local` / `piggybank-dev` et `admin@piggybank.local` / `piggybank-admin` (administrateur).
+- `.env.local` en dev : `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:55321`, et les clés `ANON_KEY` et
+  `SERVICE_ROLE_KEY` affichées par `npx supabase status -o env`. Les valeurs de prod ne servent qu'à Vercel.
 
 ## Authentification
 
@@ -67,7 +90,7 @@ update auth.users
 
 - **Pages publiques** : `/mentions-legales`, `/confidentialite`, `/cookies`, `/accessibilite`, `/conditions` (groupe `src/app/(legal)`), liées dans le pied de page. Leurs textes sont un point de départ à relire et à valider ; ce ne sont pas des conseils juridiques.
 - **Identité de l'éditeur** : à renseigner via `NEXT_PUBLIC_LEGAL_NAME`, `NEXT_PUBLIC_LEGAL_ADDRESS`, `NEXT_PUBLIC_LEGAL_DIRECTOR`, `NEXT_PUBLIC_CONTACT_EMAIL` (voir `.env.example`). Tant qu'elles sont vides, un repère « à renseigner » s'affiche.
-- **Droits des personnes** : page `Compte > Mes données` — export JSON (accès, portabilité) et suppression du compte (effacement, `public.delete_my_account()`, migration `20261008180000_delete_my_account.sql` à exécuter dans le SQL Editor).
+- **Droits des personnes** : page `Compte > Mes données` — export JSON (accès, portabilité) et suppression du compte (effacement, `public.delete_my_account()`, comprise dans la migration de référence).
 - **Consentement** : case d'acceptation des conditions à l'inscription (date et version enregistrées dans les métadonnées du compte). Aucun cookie non essentiel : pas de bandeau.
 - **Appareil** : le cache d'affichage du budget (`localStorage`) est effacé à la déconnexion et à la suppression du compte.
 
@@ -96,7 +119,9 @@ L'application est un projet Next.js standard, déployable sur Vercel :
 2. Définir `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY` pour Production et Preview.
 3. Dans Supabase, Authentication > URL Configuration : mettre l'URL de production dans *Site URL* et
    ajouter les URL de preview dans *Redirect URLs*.
-4. Vérifier que les migrations de `supabase/migrations/` ont été exécutées sur la base de production.
+4. Migrations en prod, après accord seulement : `npx supabase link --project-ref uwszahzlzopzguvkrliu`, puis
+   `npx supabase db push`. La première fois, marquer la migration de référence comme déjà appliquée :
+   `npx supabase migration repair --status applied 20261019120000`.
 
 ## Structure
 
