@@ -8,6 +8,9 @@ export const isTestSessionEnabled = (): boolean => process.env.NEXT_PUBLIC_TEST_
 
 export const FEEDBACK_ROUTE = '/api/retours';
 
+/** Prénom laissé par la personne qui teste, gardé dans le navigateur pour ne pas le redemander. */
+export const TESTER_NAME_KEY = 'piggy-testeur';
+
 export type FeedbackKind = 'erreur' | 'signalement' | 'erreur-serveur';
 
 export interface Feedback {

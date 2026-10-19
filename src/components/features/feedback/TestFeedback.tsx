@@ -2,8 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { reportClientError, reportDisplayedError, sendFeedback } from '@/services/testFeedbackClient';
-
-const WHO_KEY = 'piggy-testeur';
+import { TESTER_NAME_KEY } from '@/utils/testFeedback';
 
 /**
  * Séance de test seulement : note les erreurs du navigateur et propose « Signaler un souci ».
@@ -45,7 +44,7 @@ export default function TestFeedback() {
 
   const open = () => {
     try {
-      setWho(localStorage.getItem(WHO_KEY) ?? '');
+      setWho(localStorage.getItem(TESTER_NAME_KEY) ?? '');
     } catch {
       // Stockage indisponible : le prénom reste à écrire.
     }
@@ -58,7 +57,7 @@ export default function TestFeedback() {
     if (!message.trim() || state === 'sending') return;
     setState('sending');
     try {
-      localStorage.setItem(WHO_KEY, who.trim());
+      localStorage.setItem(TESTER_NAME_KEY, who.trim());
     } catch {
       // Sans stockage, le prénom sera simplement redemandé.
     }
