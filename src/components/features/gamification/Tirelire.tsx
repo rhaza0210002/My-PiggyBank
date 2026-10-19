@@ -10,12 +10,13 @@ interface TirelireProps {
 }
 
 const PIG_SRC = '/brand/cochon-tirelire.png';
+const BODY_MASK_SRC = '/brand/cochon-tirelire-masque.png';
 /** Part de la hauteur de l'image remplie quand la tirelire est pleine : jusqu'à la fente, pas les oreilles. */
 const FULL_HEIGHT_PERCENT = 90;
-// Le cochon du logo sert de pochoir : l'or ne déborde jamais de sa silhouette.
+// Pochoir du corps rose seulement : l'or ne recouvre ni les traits, ni les yeux, ni le groin, ni les joues.
 const PIG_MASK = {
-  maskImage: `url(${PIG_SRC})`,
-  WebkitMaskImage: `url(${PIG_SRC})`,
+  maskImage: `url(${BODY_MASK_SRC})`,
+  WebkitMaskImage: `url(${BODY_MASK_SRC})`,
   maskSize: '100% 100%',
   WebkitMaskSize: '100% 100%',
 };
@@ -48,7 +49,7 @@ export default function Tirelire({ pointed, goal = DAILY_GOAL, tick }: TirelireP
           className={`relative ${tick > 0 ? 'tirelire-pig' : ''}`}
         >
           <Image src={PIG_SRC} alt="" width={431} height={332} loading="eager" className="h-auto w-full" />
-          <div aria-hidden="true" className="absolute inset-0 overflow-hidden mix-blend-multiply" style={PIG_MASK}>
+          <div aria-hidden="true" className="absolute inset-0 overflow-hidden" style={PIG_MASK}>
             <div
               className="tirelire-niveau absolute inset-x-0 bottom-0 bg-piece"
               style={{ height: `${level * FULL_HEIGHT_PERCENT}%` }}
