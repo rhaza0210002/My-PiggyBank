@@ -13,7 +13,7 @@ export const LEGAL = {
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
   contactEmailLabel: process.env.NEXT_PUBLIC_CONTACT_EMAIL || TO_FILL('Adresse e-mail de contact'),
   /** Date de dernière mise à jour des documents légaux (à modifier à chaque évolution). */
-  lastUpdate: '8 octobre 2026',
+  lastUpdate: '19 octobre 2026',
   year: new Date().getFullYear(),
 } as const;
 

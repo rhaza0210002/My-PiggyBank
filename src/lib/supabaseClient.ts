@@ -1,6 +1,8 @@
-import { createBrowserClient } from '@supabase/ssr';
+import { createBrowserClient, parseCookieHeader, serializeCookieHeader } from '@supabase/ssr';
 import { ROUTES } from '@/constants/routes';
 import { createFreshSessionFetch } from '@/lib/freshSessionFetch';
+import { withSessionMaxAge } from '@/lib/sessionCookie';
+import { browserSupabaseUrl, isSupabaseViaApp, sessionCookieName } from '@/lib/supabaseUrl';
 import { endDemo } from '@/services/demoStore';
 import { invalidateCache } from '@/utils/memoryCache';
 
@@ -27,8 +29,22 @@ const freshSessionFetch = createFreshSessionFetch({
   },
 });
 
-// Client navigateur : la session est stockée dans des cookies pour que le proxy puisse la lire.
-export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey, { global: { fetch: freshSessionFetch } });
+// Client navigateur : la session est stockée dans des cookies pour que le proxy puisse la lire,
+// avec la même durée de vie courte que côté serveur (voir sessionCookie).
+const viaApp = isSupabaseViaApp();
+const origin = typeof window === 'undefined' ? null : window.location.origin;
+
+export const supabase = createBrowserClient(browserSupabaseUrl(supabaseUrl, origin, viaApp), supabaseAnonKey, {
+  global: { fetch: freshSessionFetch },
+  ...(viaApp ? { cookieOptions: { name: sessionCookieName(supabaseUrl) } } : {}),
+  cookies: {
+    getAll: () => parseCookieHeader(document.cookie).map(({ name, value }) => ({ name, value: value ?? '' })),
+    setAll: (cookiesToSet) =>
+      cookiesToSet.forEach(({ name, value, options }) => {
+        document.cookie = serializeCookieHeader(name, value, withSessionMaxAge(options));
+      }),
+  },
+});
 
 // Une autre session ne doit jamais voir les données gardées en mémoire par la précédente.
 supabase.auth.onAuthStateChange((event) => {

@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { withSessionMaxAge } from '@/lib/sessionCookie';
 import { NextResponse, type NextRequest } from 'next/server';
 import {
   AUTH_CALLBACK_ROUTE,
@@ -46,7 +47,7 @@ export async function proxy(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         supabaseResponse = nextWithCsp();
         cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options),
+          supabaseResponse.cookies.set(name, value, withSessionMaxAge(options)),
         );
       },
     },
@@ -90,5 +91,6 @@ function redirectWithCookies(request: NextRequest, source: NextResponse, pathnam
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)'],
+  // /supabase : appels à la base relayés pendant une séance de test (next.config.ts), sans session à vérifier.
+  matcher: ['/((?!supabase/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)'],
 };

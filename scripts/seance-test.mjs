@@ -4,19 +4,24 @@
 //   yarn seance-test               construction + app + tunnel
 //   yarn seance-test --sans-build  réutilise la dernière construction
 //   yarn seance-test --wifi        sans tunnel : seulement les amis sur le même Wi-Fi
+//   yarn seance-test --garder-donnees  ne remet pas la base de test à neuf (reprendre une séance)
+//
+// La base est la base locale (Docker), remise à neuf à chaque séance ; le navigateur des testeurs la joint
+// par l'app (`/supabase`), puisque le tunnel n'expose que l'app.
 //
 // Les retours (erreurs et « Signaler un souci ») arrivent dans .superpowers/retours/retours.jsonl.
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { networkInterfaces } from 'node:os';
 import path from 'node:path';
 
 const PORT = 3100;
 const args = new Set(process.argv.slice(2));
 const withTunnel = !args.has('--wifi');
-const env = { ...process.env, NEXT_PUBLIC_TEST_SESSION: 'on', TEST_SESSION: 'on' };
+const env = { ...process.env, NEXT_PUBLIC_TEST_SESSION: 'on', TEST_SESSION: 'on', NEXT_PUBLIC_SUPABASE_VIA_APP: 'on' };
 const next = path.join('node_modules', 'next', 'dist', 'bin', 'next');
 const marker = path.join('.next', 'SEANCE_TEST');
+const BUILD_VERSION = 'v2-base-locale';
 const children = [];
 
 const say = (text) => console.log(`\n🐷 ${text}`);
@@ -60,15 +65,48 @@ if (withTunnel && !cloudflared) {
   process.exit(1);
 }
 
-// Une construction ordinaire n'a pas le bouton de retours : on ne la réutilise que si elle vient d'ici.
-if (!args.has('--sans-build') || !existsSync(marker)) {
+// Base de test : la base locale (Docker), remise à neuf à chaque séance. Jamais la prod.
+function envLocal(name) {
+  const file = path.join(process.cwd(), '.env.local');
+  if (!existsSync(file)) return null;
+  const line = readFileSync(file, 'utf8').split(/\r?\n/).find((item) => item.startsWith(`${name}=`));
+  return line ? line.slice(name.length + 1).trim() : null;
+}
+
+const supabaseUrl = envLocal('NEXT_PUBLIC_SUPABASE_URL') ?? '';
+if (!/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(supabaseUrl)) {
+  say('.env.local ne pointe pas sur la base locale : pas de séance de test sur la base de prod.');
+  say('Mets-y NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:55321 (voir le README, « Base de données »).');
+  process.exit(1);
+}
+
+const supabaseCli = (cliArgs) => spawnSync('npx', ['supabase', ...cliArgs], { stdio: 'inherit', shell: true }).status;
+if (spawnSync('npx', ['supabase', 'status'], { stdio: 'ignore', shell: true }).status !== 0) {
+  say('Démarrage de la base locale (Docker Desktop doit tourner)…');
+  if (supabaseCli(['start']) !== 0) {
+    say('La base locale n’a pas démarré : Docker Desktop est-il lancé ?');
+    process.exit(1);
+  }
+}
+if (!args.has('--garder-donnees')) {
+  say('Remise à neuf de la base de test (comptes et données fictifs)…');
+  if (supabaseCli(['db', 'reset']) !== 0) {
+    say('La remise à neuf a échoué : rien n’est lancé.');
+    process.exit(1);
+  }
+  spawnSync(process.execPath, [path.join('scripts', 'admin-local.mjs')], { stdio: 'inherit' });
+}
+
+// Une construction ordinaire n'a ni le bouton de retours ni le relais vers la base : on ne la réutilise que
+// si elle vient d'ici, dans la même version du script.
+if (!args.has('--sans-build') || !existsSync(marker) || !readFileSync(marker, 'utf8').startsWith(BUILD_VERSION)) {
   say('Construction de l’app en mode séance de test (1 à 2 minutes)…');
   const build = spawnSync(process.execPath, [next, 'build'], { stdio: 'inherit', env });
   if (build.status !== 0) {
     say('La construction a échoué : rien n’est lancé.');
     process.exit(1);
   }
-  writeFileSync(marker, new Date().toISOString());
+  writeFileSync(marker, `${BUILD_VERSION} ${new Date().toISOString()}`);
 }
 
 say(`Lancement de l’app sur le port ${PORT}…`);

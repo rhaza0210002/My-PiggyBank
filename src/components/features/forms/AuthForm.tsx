@@ -5,7 +5,7 @@ import Button from '@/components/ui/Button';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { LEGAL_ROUTES, ROUTES } from '@/constants/routes';
-import Pig from '@/components/ui/Pig';
+import Logo from '@/components/ui/Logo';
 
 interface AuthFormData {
   email: string;
@@ -108,7 +108,7 @@ export default function AuthForm({ mode, onSubmit, isLoading = false, serverErro
       <div className="space-y-6 rounded-carte border-2 border-dashed border-bordure p-5 sm:p-6">
 
         <div className="space-y-2 text-center">
-          <Pig className="mx-auto mb-2 size-16" />
+          <Logo eager className="mx-auto mb-2 h-32 w-auto" />
           <h1 className="text-[1.8rem] font-black tracking-[-0.05em] text-texte">
             {isRegister ? "Crée ta tirelire" : "Connexion à My PiggyBank"}
           </h1>
