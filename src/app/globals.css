@@ -82,8 +82,11 @@
   --trait-onglet: 2.5px;
   --ombre-onglet: 2px;
   --trait-entete: 2px;
+  /* Pointage : la pièce tombe (1 s), puis le cochon rebondit et se remplit quand elle est entrée. */
+  --duree-piece: 1s;
+  --arrivee-piece: 0.72s;
   --duree-pointage: 0.5s;
-  --duree-niveau: 0.5s;
+  --duree-niveau: 0.6s;
 }
 
 body {
@@ -167,43 +170,73 @@ a[class*='shadow-bonbon']:active {
   scale: 0.97;
 }
 
-/* Tirelire : la pièce tombe dans la fente, le cochon rebondit et se remplit d'or. */
+/* Tirelire : la pièce apparaît au-dessus du cochon, tourne, tombe dans la fente et passe derrière son dos ;
+   à son arrivée, un éclat, le cochon rebondit et se remplit d'or. */
 .tirelire-coin {
   position: absolute;
-  left: calc(50% - 13px);
-  top: -4px;
-  z-index: 1;
+  left: calc(50% - 15px);
+  top: 0;
   display: flex;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   align-items: center;
   justify-content: center;
   border: 3px solid var(--color-piece-bord);
   border-radius: 9999px;
   background: var(--color-piece);
   color: var(--color-sur-accent);
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 900;
   opacity: 0;
-  animation: coin-drop var(--duree-pointage) cubic-bezier(0.4, 0, 0.8, 0.6) forwards;
+  animation: coin-drop var(--duree-piece) ease-in forwards;
 }
 
-.tirelire-pig {
-  transform-origin: 50% 90%;
-  animation: pig-bounce var(--duree-pointage) ease-out;
+.tirelire-eclat {
+  position: absolute;
+  left: calc(50% - 12px);
+  top: 34px;
+  z-index: 20;
+  font-size: 24px;
+  line-height: 1;
+  opacity: 0;
+  animation: coin-sparkle 0.55s ease-out var(--arrivee-piece) forwards;
 }
+
+/* Deux animations identiques, alternées à chaque pointage, pour rejouer le rebond sans recréer le cochon
+   (le niveau d'or part ainsi de l'ancien niveau). */
+.tirelire-pig-a,
+.tirelire-pig-b {
+  transform-origin: 50% 90%;
+  animation: pig-bounce-a var(--duree-pointage) ease-out var(--arrivee-piece);
+}
+.tirelire-pig-b { animation-name: pig-bounce-b; }
 
 .tirelire-niveau {
-  transition: height var(--duree-niveau) ease;
+  transition: height var(--duree-niveau) ease var(--arrivee-piece);
 }
 
 @keyframes coin-drop {
-  0% { opacity: 1; transform: translateY(0) rotateY(0); }
-  80% { opacity: 1; transform: translateY(46px) rotateY(360deg); }
-  100% { opacity: 0; transform: translateY(54px) rotateY(540deg); }
+  0% { opacity: 0; transform: translateY(0) scale(0.4) rotateY(0); }
+  15% { opacity: 1; transform: translateY(4px) scale(1.1) rotateY(0); }
+  30% { opacity: 1; transform: translateY(2px) scale(1) rotateY(180deg); }
+  80% { opacity: 1; transform: translateY(62px) scale(1) rotateY(720deg); }
+  100% { opacity: 0; transform: translateY(80px) scale(0.9) rotateY(900deg); }
 }
 
-@keyframes pig-bounce {
+@keyframes coin-sparkle {
+  0% { opacity: 0; transform: scale(0.3) rotate(0); }
+  40% { opacity: 1; transform: scale(1.2) rotate(15deg); }
+  100% { opacity: 0; transform: translateY(-14px) scale(0.9) rotate(30deg); }
+}
+
+@keyframes pig-bounce-a {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.07, 0.93); }
+  65% { transform: scale(0.98, 1.03); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pig-bounce-b {
   0% { transform: scale(1); }
   35% { transform: scale(1.07, 0.93); }
   65% { transform: scale(0.98, 1.03); }
@@ -212,8 +245,10 @@ a[class*='shadow-bonbon']:active {
 
 /* Mouvement réduit : plus de pièce animée, le niveau et le texte changent sans transition. */
 @media (prefers-reduced-motion: reduce) {
-  .tirelire-coin { display: none; }
-  .tirelire-pig { animation: none; }
+  .tirelire-coin,
+  .tirelire-eclat { display: none; }
+  .tirelire-pig-a,
+  .tirelire-pig-b { animation: none; }
   .tirelire-niveau { transition: none; }
 }
 

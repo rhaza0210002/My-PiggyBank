@@ -11,7 +11,9 @@ interface TirelireProps {
 
 const PIG_SRC = '/brand/cochon-tirelire.png';
 const BODY_MASK_SRC = '/brand/cochon-tirelire-masque.png';
-/** Part de la hauteur de l'image remplie quand la tirelire est pleine : jusqu'à la fente, pas les oreilles. */
+/** Hauteur d'or (en % de l'image) : dès la première pièce le ventre commence à se remplir (les pattes
+ * seules ne se verraient pas), et la tirelire pleine l'est jusqu'à la fente, pas les oreilles. */
+const BELLY_START_PERCENT = 14;
 const FULL_HEIGHT_PERCENT = 90;
 // Pochoir du corps rose seulement : l'or ne recouvre ni les traits, ni les yeux, ni le groin, ni les joues.
 const PIG_MASK = {
@@ -35,24 +37,29 @@ export default function Tirelire({ pointed, goal = DAILY_GOAL, tick }: TirelireP
 
   return (
     <div className="flex items-center justify-center gap-4">
-      <div className="relative w-[160px] shrink-0 pt-6 sm:w-[200px]">
+      <div className="relative w-[160px] shrink-0 pt-14 sm:w-[200px]">
+        {/* La pièce est sous le cochon : elle disparaît derrière son dos en entrant dans la fente. */}
         {tick > 0 && (
-          <span key={`coin-${tick}`} aria-hidden="true" className="tirelire-coin">
-            €
-          </span>
+          <>
+            <span key={`coin-${tick}`} aria-hidden="true" className="tirelire-coin">
+              €
+            </span>
+            <span key={`eclat-${tick}`} aria-hidden="true" className="tirelire-eclat">
+              ✨
+            </span>
+          </>
         )}
         <div
-          key={`pig-${tick}`}
           role="img"
           aria-label={`Tirelire du jour : ${spoken}`}
           data-niveau={String(level)}
-          className={`relative ${tick > 0 ? 'tirelire-pig' : ''}`}
+          className={`relative z-10 ${tick > 0 ? (tick % 2 ? 'tirelire-pig-a' : 'tirelire-pig-b') : ''}`}
         >
           <Image src={PIG_SRC} alt="" width={431} height={332} loading="eager" className="h-auto w-full" />
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden" style={PIG_MASK}>
             <div
               className="tirelire-niveau absolute inset-x-0 bottom-0 bg-piece"
-              style={{ height: `${level * FULL_HEIGHT_PERCENT}%` }}
+              style={{ height: `${level > 0 ? BELLY_START_PERCENT + level * (FULL_HEIGHT_PERCENT - BELLY_START_PERCENT) : 0}%` }}
             />
           </div>
         </div>
