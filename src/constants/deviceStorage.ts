@@ -21,7 +21,7 @@ export const DEVICE_STORAGE: DeviceStorageEntry[] = [
     name: 'sb-…-auth-token',
     kind: 'Cookie',
     role: 'Session : te garde connecté de façon sécurisée. Peut être découpé en plusieurs morceaux (.0, .1…) s’il est long.',
-    duration: 'Jusqu’à ta déconnexion (au plus 400 jours)',
+    duration: 'Jusqu’à ta déconnexion, ou 24 h sans utiliser l’app',
     category: 'Strictement nécessaire',
   },
   {

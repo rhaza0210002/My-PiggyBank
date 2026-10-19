@@ -48,10 +48,13 @@ describe('stockage sur l’appareil', () => {
   });
 
   it('n’utilise ni sessionStorage, ni IndexedDB, ni cookie écrit à la main', () => {
-    const offenders = files
-      .filter(({ code }) => /sessionStorage|indexedDB|document\.cookie/.test(code))
-      .map(({ path }) => path);
+    const offenders = files.filter(({ code }) => /sessionStorage|indexedDB/.test(code)).map(({ path }) => path);
     expect(offenders).toEqual([]);
+  });
+
+  it('n’écrit de cookie que pour la session Supabase (durée raccourcie)', () => {
+    const writers = files.filter(({ code }) => /document\.cookie/.test(code)).map(({ path }) => path);
+    expect(writers).toEqual(['lib/supabaseClient.ts']);
   });
 
   it('n’embarque aucun outil de mesure d’audience, de publicité ou de suivi d’erreurs', () => {
