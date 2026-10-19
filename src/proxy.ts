@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { withSessionMaxAge } from '@/lib/sessionCookie';
 import { NextResponse, type NextRequest } from 'next/server';
 import {
   AUTH_CALLBACK_ROUTE,
@@ -46,7 +47,7 @@ export async function proxy(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         supabaseResponse = nextWithCsp();
         cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options),
+          supabaseResponse.cookies.set(name, value, withSessionMaxAge(options)),
         );
       },
     },
