@@ -94,6 +94,7 @@ if (!args.has('--garder-donnees')) {
     say('La remise à neuf a échoué : rien n’est lancé.');
     process.exit(1);
   }
+  spawnSync(process.execPath, [path.join('scripts', 'admin-local.mjs')], { stdio: 'inherit' });
 }
 
 // Une construction ordinaire n'a ni le bouton de retours ni le relais vers la base : on ne la réutilise que

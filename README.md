@@ -22,7 +22,7 @@ Variables d'environnement (`.env.local`, jamais commité) :
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clé publique (anon) du projet |
 
 Scripts : `yarn dev`, `yarn build`, `yarn lint`, `yarn typecheck`, `yarn test`, et pour la base locale
-`yarn db:start`, `yarn db:stop`, `yarn db:reset`, `yarn db:migration <nom>`.
+`yarn db:start`, `yarn db:stop`, `yarn db:reset`, `yarn db:migration <nom>`, `yarn db:admin`.
 
 ## Base de données (Supabase)
 
@@ -51,6 +51,8 @@ yarn db:reset                       # rejoue toutes les migrations + seed.sql su
   l'app a besoin partout (prod comprise), sans les règles aux noms personnels.
 - `supabase/seed.sql` (base locale seulement) : deux comptes fictifs et un petit budget :
   `dev@piggybank.local` / `piggybank-dev` et `admin@piggybank.local` / `piggybank-admin` (administrateur).
+- Ton compte admin est recréé dans la base locale après chaque remise à neuf (`yarn db:reset`, séance de
+  test), avec `LOCAL_ADMIN_EMAIL` et `LOCAL_ADMIN_PASSWORD` de `.env.local` ; `yarn db:admin` le recrée à la main.
 - `.env.local` en dev : `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:55321`, et les clés `ANON_KEY` et
   `SERVICE_ROLE_KEY` affichées par `npx supabase status -o env`. Les valeurs de prod ne servent qu'à Vercel.
 
