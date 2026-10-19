@@ -11,6 +11,7 @@ import { useGamification } from '@/hooks/useGamification';
 import { suggestCategory, type LabeledCategory } from '@/utils/categorySuggestion';
 import { XP_CATCH_UP_BONUS, XP_PER_COMPLETE_MONTH, XP_PER_OPERATION } from '@/utils/gamification';
 import { isCurrentUserAdmin } from '@/services/adminService';
+import { isRealTransactionsGroup } from '@/utils/budgetComparison';
 import { ROUTES } from '@/constants/routes';
 import {
   getCategories,
@@ -200,6 +201,7 @@ export default function RapprochementPage() {
   const current = queue[0];
   const readyIds = transactions.filter((item) => item.category_id).map((item) => item.id);
   const month = progress?.currentMonth;
+  const pointingGroups = data?.categoryGroups.filter(isRealTransactionsGroup) ?? [];
 
   const quickCategories = (() => {
     if (!data) return [];
@@ -360,15 +362,16 @@ export default function RapprochementPage() {
           </div>
         )}
 
-        {data && (
+        {/* Créer une catégorie au pointage : administrateur seulement, et toujours dans « Transactions réelles ». */}
+        {data && isAdmin && pointingGroups.length > 0 && (
           <details className="rounded-2xl border-[1.5px] border-dashed border-bordure bg-surface-douce px-3 py-1">
             <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold text-texte">
-              {isAdmin ? 'Créer une catégorie (administrateur)' : 'Créer ma propre catégorie'}
+              Créer une catégorie (administrateur)
             </summary>
             <div className="pb-2">
               <NewCategoryForm
-                shared={isAdmin}
-                groups={data.categoryGroups}
+                shared
+                groups={pointingGroups}
                 categories={data.categories}
                 onCreated={(category) =>
                   setData((current) =>

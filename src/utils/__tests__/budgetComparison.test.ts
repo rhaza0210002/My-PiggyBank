@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getDifference, isIncomeGroup } from '@/utils/budgetComparison';
+import { getDifference, isIncomeGroup, isRealTransactionsGroup } from '@/utils/budgetComparison';
 
 describe('isIncomeGroup', () => {
   it('reconnaît le groupe Revenus', () => {
@@ -27,5 +27,13 @@ describe('getDifference', () => {
 
   it('revenu : négatif quand il manque de l’argent', () => {
     expect(getDifference(true, 571.97, 0)).toBeCloseTo(-571.97);
+  });
+});
+
+describe('isRealTransactionsGroup', () => {
+  it('reconnaît le groupe des catégories du pointage, et lui seul', () => {
+    expect(isRealTransactionsGroup({ label: 'transac_reelle' })).toBe(true);
+    expect(isRealTransactionsGroup({ label: 'reserve' })).toBe(false);
+    expect(isRealTransactionsGroup({ label: null })).toBe(false);
   });
 });
