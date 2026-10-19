@@ -167,7 +167,7 @@ a[class*='shadow-bonbon']:active {
   scale: 0.97;
 }
 
-/* Tirelire : la pièce tombe dans la fente, le cochon rebondit et ferme l'œil, le niveau de pièces monte. */
+/* Tirelire : la pièce tombe dans la fente, le cochon rebondit et se remplit d'or. */
 .tirelire-coin {
   position: absolute;
   left: calc(50% - 13px);
@@ -193,14 +193,8 @@ a[class*='shadow-bonbon']:active {
   animation: pig-bounce var(--duree-pointage) ease-out;
 }
 
-.tirelire-pig .tirelire-oeil {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: pig-happy 0.9s ease-in-out;
-}
-
 .tirelire-niveau {
-  transition: transform var(--duree-niveau) ease;
+  transition: height var(--duree-niveau) ease;
 }
 
 @keyframes coin-drop {
@@ -216,16 +210,10 @@ a[class*='shadow-bonbon']:active {
   100% { transform: scale(1); }
 }
 
-@keyframes pig-happy {
-  0%, 100% { transform: scaleY(1); }
-  20%, 70% { transform: scaleY(0.15); }
-}
-
 /* Mouvement réduit : plus de pièce animée, le niveau et le texte changent sans transition. */
 @media (prefers-reduced-motion: reduce) {
   .tirelire-coin { display: none; }
-  .tirelire-pig,
-  .tirelire-pig .tirelire-oeil { animation: none; }
+  .tirelire-pig { animation: none; }
   .tirelire-niveau { transition: none; }
 }
 
