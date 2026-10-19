@@ -2,6 +2,7 @@ import { createBrowserClient, parseCookieHeader, serializeCookieHeader } from '@
 import { ROUTES } from '@/constants/routes';
 import { createFreshSessionFetch } from '@/lib/freshSessionFetch';
 import { withSessionMaxAge } from '@/lib/sessionCookie';
+import { browserSupabaseUrl, isSupabaseViaApp, sessionCookieName } from '@/lib/supabaseUrl';
 import { endDemo } from '@/services/demoStore';
 import { invalidateCache } from '@/utils/memoryCache';
 
@@ -30,8 +31,12 @@ const freshSessionFetch = createFreshSessionFetch({
 
 // Client navigateur : la session est stockée dans des cookies pour que le proxy puisse la lire,
 // avec la même durée de vie courte que côté serveur (voir sessionCookie).
-export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey, {
+const viaApp = isSupabaseViaApp();
+const origin = typeof window === 'undefined' ? null : window.location.origin;
+
+export const supabase = createBrowserClient(browserSupabaseUrl(supabaseUrl, origin, viaApp), supabaseAnonKey, {
   global: { fetch: freshSessionFetch },
+  ...(viaApp ? { cookieOptions: { name: sessionCookieName(supabaseUrl) } } : {}),
   cookies: {
     getAll: () => parseCookieHeader(document.cookie).map(({ name, value }) => ({ name, value: value ?? '' })),
     setAll: (cookiesToSet) =>

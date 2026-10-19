@@ -31,7 +31,7 @@ Scripts : `yarn dev`, `yarn build`, `yarn lint`, `yarn typecheck`, `yarn test`, 
 | Environnement | Où | Données |
 |---|---|---|
 | **Dev** | Supabase local dans Docker (`yarn db:start`, API sur `http://127.0.0.1:55321`) | fictives (`supabase/seed.sql`) |
-| **Test** | local aussi, exposé aux testeurs par le tunnel Cloudflare de `yarn seance-test` | fictives |
+| **Test** | la même base locale, **remise à neuf** par `yarn seance-test` (sauf `--garder-donnees`) ; les testeurs la joignent par l'app (`/supabase`), seule exposée par le tunnel Cloudflare | fictives |
 | **Prod** | projet Supabase « my PiggyBank » (`uwszahzlzopzguvkrliu`) | les vraies |
 
 **Toute modification de la base passe par un fichier de `supabase/migrations/`**, jamais à la main dans

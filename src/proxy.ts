@@ -91,5 +91,6 @@ function redirectWithCookies(request: NextRequest, source: NextResponse, pathnam
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)'],
+  // /supabase : appels à la base relayés pendant une séance de test (next.config.ts), sans session à vérifier.
+  matcher: ['/((?!supabase/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)'],
 };
