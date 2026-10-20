@@ -37,12 +37,18 @@ const origin = typeof window === 'undefined' ? null : window.location.origin;
 export const supabase = createBrowserClient(browserSupabaseUrl(supabaseUrl, origin, viaApp), supabaseAnonKey, {
   global: { fetch: freshSessionFetch },
   ...(viaApp ? { cookieOptions: { name: sessionCookieName(supabaseUrl) } } : {}),
+  // Côté serveur (pré-rendu des pages client), pas de document : aucune session à lire ni à écrire.
   cookies: {
-    getAll: () => parseCookieHeader(document.cookie).map(({ name, value }) => ({ name, value: value ?? '' })),
-    setAll: (cookiesToSet) =>
+    getAll: () =>
+      typeof document === 'undefined'
+        ? []
+        : parseCookieHeader(document.cookie).map(({ name, value }) => ({ name, value: value ?? '' })),
+    setAll: (cookiesToSet) => {
+      if (typeof document === 'undefined') return;
       cookiesToSet.forEach(({ name, value, options }) => {
         document.cookie = serializeCookieHeader(name, value, withSessionMaxAge(options));
-      }),
+      });
+    },
   },
 });
 
