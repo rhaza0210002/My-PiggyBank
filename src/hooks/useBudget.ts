@@ -8,6 +8,7 @@ import {
   getCategories,
   getCategoriesGroupKey,
 } from "@/services/transactionCategoryService";
+import { isRealTransactionsGroup } from "@/utils/budgetComparison";
 
 /** Montant saisi : un nombre de 0 à 1 000 000 €, au centime près (virgule acceptée). */
 export function parseBudgetAmount(amount: string): number {
@@ -34,7 +35,8 @@ export const useBudget = () => {
           getBudgetEntries(year),
         ]);
         // La base est la seule source : rien n'est gardé dans le navigateur (une valeur affichée est enregistrée).
-        const groups = categoryGroups.map((categoryGroup) => {
+        // Les catégories du pointage ne se planifient pas : leur groupe reste hors du tableau de budget.
+        const groups = categoryGroups.filter((categoryGroup) => !isRealTransactionsGroup(categoryGroup)).map((categoryGroup) => {
           const groupKey = categoryGroup.label || String(categoryGroup.id);
           const rows = categories
             .filter((category) => category.cat_group_key === categoryGroup.id)
